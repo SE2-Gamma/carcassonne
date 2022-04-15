@@ -51,7 +51,7 @@ public class LobbyActivity extends AppCompatActivity {
             }
         });
 
-        binding.tvPlayerCount.setText(R.string.player_count + " " + playerList.size() + "/5");
+        binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
 
 
 
