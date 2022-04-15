@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bf15724d-b231-4da0-bd83-5717e0d9444b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../core/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/main/java/at/aau/se2/gamma/test/TestHere.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/commands/BaseCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/commands/InitialJoinCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/commands/InitialSetNameCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/impl/BaseModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/impl/GameState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/impl/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/impl/Session.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/interfaces/SessionInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/states/ClientState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/server/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/server/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/commands/BaseCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/commands/InitialJoinCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/commands/InitialSetNameCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/impl/BaseModel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/impl/GameState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/impl/Player.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/impl/Session.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/interfaces/SessionInterface.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/states/ClientState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/server/ClientThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/server/Server.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/server/models/Player.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/commands/BaseCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/commands/InitialJoinCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/commands/InitialSetNameCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/impl/BaseModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/impl/GameState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/impl/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/impl/Session.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/interfaces/SessionInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/states/ClientState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/server/ClientThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/server/Server.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/server/models/Player.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/../core">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="server" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="server" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="server" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="27qkULuq4mN8spcj5GYYtkoHw1q" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.Server">
+    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="at.aau.se2.gamma.server.Server" />
+      <module name="server.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="at.aau.se2.gamma.server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="server [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.server [build]" />
+        <item itemvalue="Application.Server" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bf15724d-b231-4da0-bd83-5717e0d9444b" name="Changes" comment="" />
+      <created>1650055021069</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1650055021069</updated>
+      <workItem from="1650055022501" duration="770000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

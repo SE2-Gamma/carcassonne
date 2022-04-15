@@ -19,6 +19,7 @@ import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.test.TestHere;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,5 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         ServerThread serverThread = new ServerThread();
         serverThread.start();
+
+        TestHere testHere = new TestHere();
     }
 }
