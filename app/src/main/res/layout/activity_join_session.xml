@@ -6,4 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".views.JoinSessionActivity">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="548dp"
+        android:layout_height="69dp"
+        android:text="Hallo Stratege! Bitte gebt den Game-Key in das  Feld ein, um euer Abenteuer zu beginnen."
+        android:textAlignment="center"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/fontSizeBig"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.105" />
+
+    <EditText
+        android:id="@+id/pt_InputKey"
+        android:layout_width="253dp"
+        android:layout_height="54dp"
+        android:backgroundTint="@color/primary"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text="Game Key"
+        android:textColor="@color/primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.035" />
+
+    <Button
+        android:id="@+id/btn_Enter"
+        android:layout_width="253dp"
+        android:layout_height="52dp"
+        android:text="Los gehts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pt_InputKey"
+        app:layout_constraintVertical_bias="0.175" />
 </androidx.constraintlayout.widget.ConstraintLayout>
