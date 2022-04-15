@@ -15,6 +15,20 @@
         android:text="Carcassonne" />
 
     <Button
+        android:id="@+id/btn_navigate_create_session"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_session"
+        style="@style/PrimaryButton"/>
+
+    <Button
+        android:id="@+id/btn_navigate_join_session"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join Session"
+        style="@style/PrimaryButton"/>
+
+    <Button
         android:id="@+id/btn_ui_elements"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

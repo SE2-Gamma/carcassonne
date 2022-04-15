@@ -8,22 +8,40 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
+import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
+import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    public ActivityMainBinding binding;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-        Button btn = findViewById(R.id.btn_ui_elements);
-        btn.setOnClickListener(new View.OnClickListener() {
+        binding.btnNavigateCreateSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, UIElementsActivity.class);
-                startActivity(intent);
-                //startActivity(new Intent(MainActivity.this, Launcher.class));
+                startActivity(new Intent(MainActivity.this, CreateSessionActivity.class));
+            }
+        });
+
+        binding.btnNavigateJoinSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, JoinSessionActivity.class));
+            }
+        });
+
+        binding.btnUiElements.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, UIElementsActivity.class));
             }
         });
     }

@@ -15,6 +15,10 @@ ext {
 android {
     compileSdk 32
 
+    buildFeatures {
+        viewBinding true
+    }
+
     defaultConfig {
         applicationId "at.aau.se2.gamma.carcassonne"
         minSdk 21
