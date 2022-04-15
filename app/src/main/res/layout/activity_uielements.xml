@@ -33,7 +33,7 @@
         android:id="@+id/btn_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TestPrimary"
+        android:text="@string/test"
         style="@style/PrimaryButton"/>
 
     <Button

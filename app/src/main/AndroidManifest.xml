@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Carcassonne">
 
+        <activity android:name=".Launcher" />
         <activity
             android:name=".views.UIElementsActivity"
             android:exported="false" />

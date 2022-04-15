@@ -2,7 +2,6 @@
 <resources>
 
     <!-- Base -->
-
     <style name="BaseButton" parent="TextAppearance.AppCompat">
         <item name="android:padding">@dimen/spaceDefault</item>
     </style>
@@ -12,7 +11,6 @@
     </style>
 
     <!-- Button -->
-
     <style name="PrimaryButton" parent="BaseButton">
         <item name="android:textColor">@color/white</item>
         <item name="android:backgroundTint">@color/primary</item>
@@ -26,7 +24,6 @@
     </style>
 
     <!-- TextView -->
-
     <style name="DefaultTextView" parent="BaseTextView">
         <item name="android:textSize">@dimen/fontSizeDefault</item>
     </style>
