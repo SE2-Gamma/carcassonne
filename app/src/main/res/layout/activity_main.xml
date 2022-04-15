@@ -9,26 +9,16 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:gravity="center"
         android:layout_height="wrap_content"
+        style="@style/H1TextView"
         android:text="Carcassonne" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_ui_elements"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TestPrimary"
+        android:text="UI Elements (Dev)"
         style="@style/PrimaryButton"/>
-
-    <Button
-        android:id="@+id/secbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TestSecondary"
-        android:foregroundTint="@color/white"
-        android:backgroundTint="@color/black"
-        style="@style/SecondaryButton"/>
 
 </LinearLayout>
