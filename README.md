@@ -49,5 +49,22 @@ Main: main-server
 Dev: dev-server
 Feature: issue-{feature-number}-server
 
-### Steps
+### Initial Steps
+#### git clone
+    `git clone git@github.com:SE2-Gamma/carcassonne.git`
+    https://jdblischak.github.io/2014-09-18-chicago/novice/git/05-sshkeys.html
+#### git pull
+    `git pull`
 
+### Work on new issue
+#### git pull
+    `git pull`
+
+#### create new branch
+    `git checkout -b issue-x-app`
+    `git push --set-upstream origin issue-x-app`
+
+#### commit changes
+    `git add .`
+    `git commit -m "issue-x-app: my changes"`
+    `git push`
