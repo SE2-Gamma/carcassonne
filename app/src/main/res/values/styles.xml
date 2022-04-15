@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Base -->
+
     <style name="BaseButton" parent="TextAppearance.AppCompat">
-        <item name="android:radius">@dimen/radiusDefault</item>
         <item name="android:padding">@dimen/spaceDefault</item>
     </style>
+
+    <style name="BaseTextView" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- Button -->
 
     <style name="PrimaryButton" parent="BaseButton">
         <item name="android:textColor">@color/white</item>
@@ -16,4 +24,21 @@
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">@color/primary</item>
     </style>
+
+    <!-- TextView -->
+
+    <style name="DefaultTextView" parent="BaseTextView">
+        <item name="android:textSize">@dimen/fontSizeDefault</item>
+    </style>
+
+    <style name="H1TextView" parent="BaseTextView">
+        <item name="android:textSize">@dimen/fontSizeSuperBig</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="H2TextView" parent="BaseTextView">
+        <item name="android:textSize">@dimen/fontSizeBig</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

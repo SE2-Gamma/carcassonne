@@ -9,26 +9,38 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_1"
         android:layout_width="match_parent"
-        android:gravity="center"
         android:layout_height="wrap_content"
-        android:text="Carcassonne" />
+        style="@style/H1TextView"
+        android:text="H1" />
+
+    <TextView
+        android:id="@+id/tv_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/H2TextView"
+        android:text="H2" />
+
+    <TextView
+        android:id="@+id/tv_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/DefaultTextView"
+        android:text="default text" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TestPrimary"
         style="@style/PrimaryButton"/>
 
     <Button
-        android:id="@+id/secbutton"
+        android:id="@+id/btn_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TestSecondary"
-        android:foregroundTint="@color/white"
-        android:backgroundTint="@color/black"
         style="@style/SecondaryButton"/>
 
 </LinearLayout>
