@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="cb7a8bc1-99f1-4da6-8299-3ba10695ec32" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/arm64-v8a/libgdx-box2d.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/arm64-v8a/libgdx.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/armeabi-v7a/libgdx-box2d.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/armeabi-v7a/libgdx.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/armeabi/libgdx-box2d.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/armeabi/libgdx.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/x86/libgdx-box2d.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/x86/libgdx.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/x86_64/libgdx-box2d.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/libs/x86_64/libgdx.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/proguard-rules.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/androidTest/java/at/aau/se2/gamma/carcassonne/ExampleInstrumentedTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/assets/badlogic.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/at/aau/se2/gamma/carcassonne/Launcher.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/at/aau/se2/gamma/carcassonne/MyGame.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/at/aau/se2/gamma/carcassonne/network/ServerThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/at/aau/se2/gamma/carcassonne/views/CreateSessionActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/at/aau/se2/gamma/carcassonne/views/JoinSessionActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/at/aau/se2/gamma/carcassonne/views/LobbyActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/at/aau/se2/gamma/carcassonne/views/UIElementsActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/layout/activity_create_session.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/layout/activity_join_session.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/layout/activity_lobby.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/layout/activity_main.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/layout/activity_uielements.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-hdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-hdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-mdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-mdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-xhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-xxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values-night/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values/colors.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values/dimens.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values/styles.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app/src/test/java/at/aau/se2/gamma/carcassonne/ExampleUnitTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/at/aau/se2/gamma/core/commands/BaseCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/at/aau/se2/gamma/core/commands/InitialJoin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/at/aau/se2/gamma/core/models/impl/BaseModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/at/aau/se2/gamma/core/models/impl/GameState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/at/aau/se2/gamma/core/models/impl/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/at/aau/se2/gamma/core/models/impl/Session.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/at/aau/se2/gamma/core/models/interfaces/SessionInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../newFile.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/at/aau/se2/gamma/server/ClientThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/at/aau/se2/gamma/server/Server.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/at/aau/se2/gamma/server/models/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../settings.gradle" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="27qOZRMRYEteifVkbUIEG1dx62b" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/mrader/development/aau/carcassonne/server/server/src",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="at.aau.se2.gamma.server.Server" />
+      <module name="server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="at.aau.se2.gamma.server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Server" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cb7a8bc1-99f1-4da6-8299-3ba10695ec32" name="Changes" comment="" />
+      <created>1650044207421</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1650044207421</updated>
+      <workItem from="1650044208704" duration="296000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
