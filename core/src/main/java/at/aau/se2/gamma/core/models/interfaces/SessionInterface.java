@@ -1,6 +1,7 @@
 package at.aau.se2.gamma.core.models.interfaces;
 
-import models.impl.GameState;
+import at.aau.se2.gamma.core.models.impl.GameState;
+
 
 public interface SessionInterface {
     GameState gameState = null;
