@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spaces -->
+    <dimen name="spaceDefault">8dp</dimen>
+    <dimen name="spaceSmall">4dp</dimen>
+    <dimen name="spaceBig">16dp</dimen>
+    <dimen name="spaceSuperBig">24dp</dimen>
+
+    <!-- Font Size -->
+    <dimen name="fontSizeDefault">14sp</dimen>
+    <dimen name="fontSizeSmall">12sp</dimen>
+    <dimen name="fontSizeBig">18sp</dimen>
+    <dimen name="fontSizeSuperBig">24sp</dimen>
+
+    <!-- Radius -->
+    <dimen name="radiusDefault">8dp</dimen>
+</resources>
