@@ -2,6 +2,8 @@ package models.impl;
 
 import models.interfaces.PlayerInterface;
 
-public class Player extends BaseModel implements PlayerInterface {
-    
+import java.io.Serializable;
+
+public class Player extends BaseModel implements PlayerInterface, Serializable {
+
 }

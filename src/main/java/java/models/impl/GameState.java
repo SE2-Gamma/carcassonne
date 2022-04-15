@@ -2,5 +2,8 @@ package models.impl;
 
 import models.interfaces.GameStateInterface;
 
-public class GameState extends BaseModel implements GameStateInterface {
+import java.io.Serializable;
+
+public class GameState extends BaseModel implements GameStateInterface, Serializable {
+
 }

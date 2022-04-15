@@ -2,6 +2,8 @@ package models.impl;
 
 import models.interfaces.SessionInterface;
 
-public class Session extends BaseModel implements SessionInterface {
+import java.io.Serializable;
+
+public class Session extends BaseModel implements SessionInterface, Serializable {
 
 }
