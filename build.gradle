@@ -1,20 +1,19 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '7.1.2' apply false
-    id 'com.android.library' version '7.1.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.5.30' apply false
-    id "org.sonarqube" version "3.3"
-    id 'org.jetbrains.kotlin.jvm' version '1.5.30' apply false
+    id 'java'
 }
 
-sonarqube {
-  properties {
-    property "sonar.projectKey", "SE2-Gamma_carcassonne"
-    property "sonar.organization", "se2-gamma"
-    property "sonar.host.url", "https://sonarcloud.io"
-  }
+group 'at.aau.se2.gamma'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
 }
