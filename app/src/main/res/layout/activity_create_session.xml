@@ -4,6 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".views.CreateSessionActivity">
+
+    <TextView
+        android:id="@+id/textView_instruction_sessionname"
+        android:layout_width="349dp"
+        android:layout_height="35dp"
+        android:text="Please Insert a name for your game!"
+        android:textAlignment="center"
+        android:textAppearance="@style/H2TextView"
+        android:textColor="@color/secondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editText_sessionname"
+        android:layout_width="172dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:textColor="@color/tertiary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_instruction_sessionname"
+        android:autofillHints="" />
+
+    <TextView
+        android:id="@+id/textView_sessionid"
+        android:layout_width="159dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:minHeight="48dp"
+        android:text="error"
+        android:textAlignment="center"
+        android:textAppearance="@style/H1TextView"
+        android:textColor="@color/tertiary"
+        android:textIsSelectable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_instruction_sessionid" />
+
+    <Button
+        android:id="@+id/button_navigate_lobby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="See lobby"
+        app:iconTint="@color/primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_sessionid" />
+
+    <TextView
+        android:id="@+id/textView_instruction_sessionid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Use this session-id to invite friends to your game:"
+        android:textAppearance="@style/H2TextView"
+        android:textColor="@color/secondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_sessionname" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
