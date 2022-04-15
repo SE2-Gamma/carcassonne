@@ -1,1 +1,53 @@
-#carcassonne
+#Carcassonne
+
+## Grundsätzliches
+### App
+Gibt Spielzug von Spieler an Server.
+Bekommt GameObject vom Server, wenn jemand einen Spielzug gemacht hat.
+Library: LibGDX (https://ivanludvig.github.io/blog/2019/06/23/integrating-libgdx-into-android-project.html)
+
+### Server
+Managed die ganzen Sessions
+Pro Session gibt es ein GameObject
+GameObject enthält aktuelles Spielfeld, Spieler, Spielerposition, Punktestand, Status vom Spiel (Runde, etc.)
+Kommunikation über JavaRMI
+
+## Projektstruktur 
+### App
+Api
+ - handled die ganze Kommunikation mit Server
+Models
+ - BaseModel
+Storage (optional)
+Utils
+Viewmodels
+Views
+   - Button
+     - BaseButton
+     - PrimaryButton
+     - SecondaryButton
+   - BaseActivity
+   - BaseFragment
+
+### Server
+GameLogic
+Client
+ - Interface für JavaRMI, für Kommunikation (zb. machSpielzug, update)
+Session
+Model (gleich wie in App)
+ - BaseModel
+Utils
+
+## Git-Regeln
+### App
+Main: main-app
+Dev: dev-app
+Feature: issue-{feature-number}-app
+
+### Server
+Main: main-server
+Dev: dev-server
+Feature: issue-{feature-number}-server
+
+### Steps
+
