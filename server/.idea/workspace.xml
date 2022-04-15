@@ -5,77 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf15724d-b231-4da0-bd83-5717e0d9444b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../core/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../core/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../core/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../core/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/main/java/at/aau/se2/gamma/test/TestHere.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/commands/BaseCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/commands/InitialJoinCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/commands/InitialSetNameCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/impl/BaseModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/impl/GameState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/impl/Player.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/impl/Session.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/models/interfaces/SessionInterface.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/core/src/main/java/at/aau/se2/gamma/core/states/ClientState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/server/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/server/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/network/ServerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/network/ServerThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../android/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/commands/BaseCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/commands/InitialJoinCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/commands/InitialSetNameCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/impl/BaseModel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/impl/GameState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/impl/Player.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/impl/Session.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/models/interfaces/SessionInterface.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/core/states/ClientState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/server/ClientThread.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/server/Server.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/server/at/aau/se2/gamma/server/models/Player.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/commands/BaseCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/commands/InitialJoinCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/commands/InitialSetNameCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/impl/BaseModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/impl/GameState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/impl/Player.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/impl/Session.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/models/interfaces/SessionInterface.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/core/states/ClientState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/server/ClientThread.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/server/Server.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/at/aau/se2/gamma/server/models/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/0f527682715435375d7e6a9a09e2c874/results.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/1d9787744da4cb7e2c86d4f4cd0556d7/results.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/6f51d2885e306789ed2a59571b2f8ab9/results.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/6f51d2885e306789ed2a59571b2f8ab9/transformed/desugar_graph.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/6f51d2885e306789ed2a59571b2f8ab9/transformed/main/at/aau/se2/gamma/test/TestHere.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/e829d875d245c435c663b0bf17a4df29/results.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/classes/java/main/at/aau/se2/gamma/test/TestHere.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/libs/test-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/build/tmp/jar/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/src/main/java/at/aau/se2/gamma/test/TestHere.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +150,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1650055021069</updated>
-      <workItem from="1650055022501" duration="770000" />
+      <workItem from="1650055022501" duration="2056000" />
     </task>
     <servers />
   </component>

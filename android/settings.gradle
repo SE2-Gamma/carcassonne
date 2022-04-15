@@ -14,7 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Carcassonne"
 include ':app'
-include ':test'
-project(':test').projectDir = new File(settingsDir, '../test')
 include ':core'
 project(':core').projectDir = new File(settingsDir, '../core')
