@@ -14,7 +14,7 @@ Kommunikation über JavaRMI
 
 ## Projektstruktur 
 ### App
-Api
+Network
  - handled die ganze Kommunikation mit Server
 Models
  - BaseModel
