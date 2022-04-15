@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Carcassonne">
         <activity
+            android:name=".views.SelectNameActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.LobbyActivity"
             android:exported="false"
             android:screenOrientation="landscape" />
@@ -30,11 +33,9 @@
         <activity
             android:name=".views.UIElementsActivity"
             android:exported="false"
-
             android:screenOrientation="landscape" />
         <activity
             android:name=".MainActivity"
-
             android:exported="true"
             android:screenOrientation="landscape">
             <intent-filter>

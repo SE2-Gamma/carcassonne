@@ -7,12 +7,14 @@
         <entry key="..\:/Users/phili/StudioProjects/carcassonneCopy/app/src/main/res/layout/activity_join_session.xml" value="0.23958333333333334" />
         <entry key="..\:/Users/phili/StudioProjects/carcassonneCopy/app/src/main/res/layout/activity_lobby.xml" value="0.2203125" />
         <entry key="..\:/Users/phili/StudioProjects/carcassonneCopy/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/phili/StudioProjects/carcassonneCopy/app/src/main/res/layout/activity_select_name.xml" value="0.23958333333333334" />
+        <entry key="..\:/Users/phili/StudioProjects/carcassonneCopy/app/src/main/res/layout/activity_start.xml" value="0.33" />
         <entry key="..\:/Users/phili/StudioProjects/carcassonneCopy/app/src/main/res/layout/activity_uielements.xml" value="0.2203125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.18885869565217392" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

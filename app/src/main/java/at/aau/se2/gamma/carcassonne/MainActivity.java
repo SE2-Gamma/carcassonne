@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
+import at.aau.se2.gamma.carcassonne.views.SelectNameActivity;
 import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,7 +28,10 @@ public class MainActivity extends AppCompatActivity {
         binding.btnNavigateCreateSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, CreateSessionActivity.class));
+
+                //TODO: Kommunikation mit Server für Random Key einer Lobby
+
+                startActivity(new Intent(MainActivity.this, SelectNameActivity.class));
             }
         });
 
