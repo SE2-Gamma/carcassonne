@@ -15,6 +15,7 @@ import java.net.Socket;
 
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
+import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
@@ -52,7 +53,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ServerThread serverThread = new ServerThread();
+        ServerThread serverThread = ServerThread.init("192.168.0.47", 1234, new ServerThread.ConnectionHandler() {
+            @Override
+            public void onConnectionFinished() {
+                Logger.debug("Connection created");
+            }
+
+            @Override
+            public void onServerFailure() {
+                Logger.error("Error at server initial connection");
+            }
+
+            @Override
+            public void onServerResponse(BaseCommand command) {
+                Logger.debug("RESPONSE: "+command.getPayload());
+            }
+        });
         serverThread.start();
     }
 }

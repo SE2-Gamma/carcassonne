@@ -5,33 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf15724d-b231-4da0-bd83-5717e0d9444b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/ServerResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/ServerResponseCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/utils/RandomUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/network/ServerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/network/ServerThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/BaseCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/BaseCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/states/ClientState.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/states/ClientState.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/BaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/BaseCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/states/ClientState.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/states/ClientState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/0f527682715435375d7e6a9a09e2c874/results.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/1d9787744da4cb7e2c86d4f4cd0556d7/results.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/6f51d2885e306789ed2a59571b2f8ab9/results.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/6f51d2885e306789ed2a59571b2f8ab9/transformed/desugar_graph.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/6f51d2885e306789ed2a59571b2f8ab9/transformed/main/at/aau/se2/gamma/test/TestHere.dex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/.transforms/e829d875d245c435c663b0bf17a4df29/results.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/classes/java/main/at/aau/se2/gamma/test/TestHere.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/libs/test-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/build/tmp/jar/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/main/java/at/aau/se2/gamma/test/TestHere.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,6 +83,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2"
@@ -137,8 +126,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.server [build]" />
         <item itemvalue="Application.Server" />
+        <item itemvalue="Gradle.server [build]" />
       </list>
     </recent_temporary>
   </component>
@@ -150,7 +139,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1650055021069</updated>
-      <workItem from="1650055022501" duration="2056000" />
+      <workItem from="1650055022501" duration="2362000" />
+      <workItem from="1650091198521" duration="399000" />
     </task>
     <servers />
   </component>
