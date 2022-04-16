@@ -1,6 +1,8 @@
 package at.aau.se2.gamma.core;
 
-public class ServerResponse {
+import java.io.Serializable;
+
+public class ServerResponse implements Serializable {
     public enum StatusCode {
         SUCCESS,
         FAILURE
@@ -12,6 +14,14 @@ public class ServerResponse {
     public ServerResponse(Object payload, StatusCode statusCode) {
         this.payload = payload;
         this.statusCode = statusCode;
+    }
+
+    public static ServerResponse success(Object payload) {
+        return new ServerResponse(payload, StatusCode.SUCCESS);
+    }
+
+    public static ServerResponse failure(Object payload) {
+        return new ServerResponse(payload, StatusCode.FAILURE);
     }
 
     public StatusCode getStatusCode() {

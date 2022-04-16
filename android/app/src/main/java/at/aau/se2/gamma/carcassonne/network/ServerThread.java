@@ -60,6 +60,11 @@ public class ServerThread extends Thread {
     }
 
     public void sendCommand(BaseCommand command) {
+        // TODO: add request command to queue (because of the requestID), and
+        // add a callback to this method, which is also in the queue
+        // if we have a ServerResponse with the same requestID
+        // return the response with the help of the callback
+        // public void sendCommand(BaseCommand command, AnyCallbackInterface callback)
         try {
             objectOutputStream.writeObject(command);
         } catch (IOException e) {
