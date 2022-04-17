@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.LinkedList;
 
 public class ClientThread implements Runnable {
     private Socket socket;
@@ -68,7 +69,12 @@ public class ClientThread implements Runnable {
     }
 
     private ServerResponseCommand createGameCommand(CreateGameCommand command) {
-        return null;
+        LinkedList<Object>list=(LinkedList<Object>) command.getPayload();
+        String GameID=(String)list.getFirst();
+        Player player=(Player)list.getFirst();
+        Session session=Server.SessionHandler.createSession(GameID,player);
+        return new ServerResponseCommand(new ServerResponse(session, ServerResponse.StatusCode.SUCCESS),
+                command.getRequestId());
     }
 
     public ServerResponseCommand initialJoin(InitialJoinCommand command){

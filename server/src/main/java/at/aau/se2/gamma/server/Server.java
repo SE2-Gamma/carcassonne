@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 import at.aau.se2.gamma.core.ServerResponse;
+import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.server.models.Player;
 
@@ -17,12 +18,30 @@ public  class Server implements Runnable {
     LinkedList<Player> activePlayers =new LinkedList<>();
 
     public static class SessionHandler{
-        LinkedList<Session> sessions=new LinkedList<Session>();
-        public Session createSession(){
-return null;
+        static LinkedList<Session> sessions=new LinkedList<Session>(); //todo check concurrency problems
+        public static Session createSession(String sessionID,Player player){
+            for (Session session:sessions
+                 ) {
+                if(session.getId()==sessionID){
+                    System.out.println("Spiel bereits vorhanden");
+                    throw new IllegalArgumentException("Spiel bereits vorhanden");
+                }
+            }
+
+            Session session= new Session(sessionID);
+            //session.joinGame(player); //todo fix Player core and palyer server
+            return session;
         }
-        public Session joinSession(String sessionID){
-return null;
+        public Session joinSession(String sessionID, Player player){
+            for (Session session:sessions
+            ) {
+                if(session.getId()==sessionID){
+                    System.out.println("spiel gefunden");
+                    //session.joinGame(player);  todo: fix Player (server) and Player (core)
+                    return session;
+                }
+            }
+            throw new IllegalArgumentException("cant find session");
         }
 
     }

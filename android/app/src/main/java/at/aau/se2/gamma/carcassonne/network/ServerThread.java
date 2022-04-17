@@ -11,11 +11,14 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Observable;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
+import at.aau.se2.gamma.core.models.impl.Player;
 
 public class ServerThread extends Thread {
 
@@ -32,7 +35,7 @@ public class ServerThread extends Thread {
     private Socket socket;
     public static ServerThread instance;
     ConnectionHandler connectionHandler;
-    private LinkedList<BaseCommand> commandQueue=new LinkedList<>();
+    private LinkedBlockingDeque<BaseCommand> commandQueue=new LinkedBlockingDeque<>();
 
     private ServerThread(String address, int port, ConnectionHandler connectionHandler) {
         this.address = address;
@@ -56,7 +59,11 @@ public class ServerThread extends Thread {
                 BaseCommand command= null;
 
                 try {
-                    command = new InitialSetNameCommand("bodo");
+                    /*LinkedList<Object>temp=new LinkedList<>();
+                    temp.add("gamename");
+                    temp.add(new Player());
+                    sendCommand(new CreateGameCommand(temp));*/
+                    command=commandQueue.pop();
                     objectOutputStream.writeObject(command);
                     BaseCommand response = (BaseCommand) objectInputStream.readObject(); //changed from command to response for clarity
                     connectionHandler.onServerResponse(response);
@@ -68,7 +75,7 @@ public class ServerThread extends Thread {
                 } catch (NoSuchElementException e) { //todo: handle avoiding busy waiting
                     e.printStackTrace();
                 }
-                sleep(1000*2);
+                //sleep(10000*2);
             }
         } catch (Exception e) {
 
