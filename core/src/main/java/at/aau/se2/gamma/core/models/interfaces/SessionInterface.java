@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 
 public interface SessionInterface {
-    GameState gameState = null;
+    GameState gameState = null; //variablen in interfaces sind final und können nicht verändert werden, daher sinnlos. braucht man das interface dann noch?
     String id = null;
-    int asd = 0;
+
     ArrayList<Player> players = new ArrayList<>();
     
 }
