@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //TODO: Kommunikation mit Server für Random Key einer Lobby
 
-                startActivity(new Intent(MainActivity.this, SelectNameActivity.class));
+                startActivity(new Intent(MainActivity.this, CreateSessionActivity.class));
             }
         });
 

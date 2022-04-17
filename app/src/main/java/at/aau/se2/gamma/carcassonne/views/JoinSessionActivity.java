@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityJoinSessionBinding;
-import at.aau.se2.gamma.carcassonne.views.SelectNameActivity;
 
 public class JoinSessionActivity extends AppCompatActivity {
 
