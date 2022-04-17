@@ -2,6 +2,7 @@ package at.aau.se2.gamma.server;
 
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
@@ -21,6 +22,7 @@ public class ClientThread implements Runnable {
     private Player player;
     private ObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
+    private boolean running;
 
     public ClientThread(Socket socket) {
         this.socket = socket;
@@ -28,36 +30,68 @@ public class ClientThread implements Runnable {
 
     @Override
     public void run() {
+        running=true;
         this.player = new Player();
         this.clientState = ClientState.INITIAl;
         try {
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            while(true) {
+            while(running) {
                 BaseCommand command = (BaseCommand) objectInputStream.readObject();
-                if (command.getState().equals(clientState)) {
-                    if (command instanceof InitialJoinCommand) {
-                    } else if (command instanceof InitialSetNameCommand) {
-                        System.out.println("set name: "+command.getPayload());
-                        this.player.setName((String) command.getPayload());
-                        sendCommand(ServerResponseCommand.
-                                fromRequestCommand(command, ServerResponse.success("Hello "+this.player.getName())));
-                    }
-                } else {
-                    System.out.println("command not suitable for current state");
-                }
+                ServerResponseCommand response=handleCommand(command);
+
+                System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
+                objectOutputStream.writeObject(response);
             }
         } catch (Exception e) {
             System.out.println("EXCEPTION");
             e.printStackTrace();
         }
     }
+    private ServerResponseCommand handleCommand(BaseCommand command) {
 
+        if (command.getState().equals(clientState)) {
+
+            if (command instanceof InitialJoinCommand) {
+                return initialJoin((InitialJoinCommand) command);
+            } else if (command instanceof InitialSetNameCommand) {
+                return initialSetName((InitialSetNameCommand) command);
+            } else if (command instanceof ServerResponseCommand) {
+            } else if (command instanceof CreateGameCommand) {
+                return createGameCommand((CreateGameCommand)command);
+            } else {
+                System.out.println("command not suitable for current state");
+            }
+
+        }
+        return new ServerResponseCommand(new ServerResponse("Invalid command", ServerResponse.StatusCode.FAILURE),command.getRequestId());
+    }
+
+    private ServerResponseCommand createGameCommand(CreateGameCommand command) {
+        return null;
+    }
+
+    public ServerResponseCommand initialJoin(InitialJoinCommand command){
+
+        return new ServerResponseCommand(new ServerResponse("Initial join", ServerResponse.StatusCode.SUCCESS),command.getRequestId());
+    }
+    public ServerResponseCommand initialSetName(InitialSetNameCommand command){
+        System.out.println("set name: "+command.getPayload());
+        this.player.setName((String) command.getPayload());
+        return new ServerResponseCommand(new ServerResponse("Initial Set Name", ServerResponse.StatusCode.SUCCESS),command.getRequestId());
+       /*  sendCommand(ServerResponseCommand.
+                fromRequestCommand(command, ServerResponse.success("Hello "+this.player.getName())));*/
+
+    }
     public void sendCommand(BaseCommand command) {
         try {
             this.objectOutputStream.writeObject(command);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void terminate(){
+        running=false;
+        //todo: implement
     }
 }

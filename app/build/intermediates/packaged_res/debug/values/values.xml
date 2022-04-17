@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="black">#FF000000</color>
+    <color name="primary">#4CAF50</color>
+    <color name="secondary">#FFC107</color>
+    <color name="tertiary">#009688</color>
+    <color name="white">#FFFFFFFF</color>
+    <dimen name="fontSizeBig">18sp</dimen>
+    <dimen name="fontSizeDefault">14sp</dimen>
+    <dimen name="fontSizeSmall">12sp</dimen>
+    <dimen name="fontSizeSuperBig">24sp</dimen>
+    <dimen name="spaceBig">16dp</dimen>
+    <dimen name="spaceDefault">8dp</dimen>
+    <dimen name="spaceSmall">4dp</dimen>
+    <dimen name="spaceSuperBig">24dp</dimen>
+    <string name="app_name">Carcassonne</string>
+    <style name="BaseButton" parent="TextAppearance.AppCompat">
+        <item name="android:padding">@dimen/spaceDefault</item>
+    </style>
+    <style name="BaseTextView" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="DefaultTextView" parent="BaseTextView">
+        <item name="android:textSize">@dimen/fontSizeDefault</item>
+    </style>
+    <style name="H1TextView" parent="BaseTextView">
+        <item name="android:textSize">@dimen/fontSizeSuperBig</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="H2TextView" parent="BaseTextView">
+        <item name="android:textSize">@dimen/fontSizeBig</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="PrimaryButton" parent="BaseButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:backgroundTint">@color/primary</item>
+    </style>
+    <style name="SecondaryButton" parent="BaseButton">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/primary</item>
+    </style>
+    <style name="Theme.Carcassonne" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary</item>
+        <item name="colorOnSecondary">@color/black</item>
+        
+        <item name="android:statusBarColor" ns1:targetApi="l">?attr/colorPrimaryVariant</item>
+        
+    </style>
+</resources>
