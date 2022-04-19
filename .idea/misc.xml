@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Leonp/AndroidStudioProjects/carcassonne/app/src/main/res/layout/activity_lobby.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/Leonp/AndroidStudioProjects/carcassonne/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/Leonp/AndroidStudioProjects/carcassonne/app/src/main/res/layout/activity_uielements.xml" value="0.358695652173913" />
         <entry key="app/src/main/res/drawable/rounded_corner.xml" value="0.1395" />
         <entry key="app/src/main/res/layout/activity_create_session.xml" value="0.2359375" />
         <entry key="app/src/main/res/layout/activity_join_session.xml" value="0.221875" />
