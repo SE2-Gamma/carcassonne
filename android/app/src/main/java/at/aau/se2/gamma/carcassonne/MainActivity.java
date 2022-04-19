@@ -19,7 +19,9 @@ import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
+import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,16 +59,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onConnectionFinished() {
                 Logger.debug("Connection created");
+                ServerThread.instance.sendCommand(new InitialSetNameCommand("mrader"), new ServerThread.RequestResponseHandler() {
+                    @Override
+                    public void onFinished(ServerResponse response, Object payload, BaseCommand request) {
+                        Logger.debug("HEY, RESPONSE :)");
+                    }
+
+                    @Override
+                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                        Logger.debug("NOOOOOO :(");
+                    }
+                });
             }
 
             @Override
-            public void onServerFailure() {
+            public void onServerFailure(Exception e) {
                 Logger.error("Error at server initial connection");
-            }
-
-            @Override
-            public void onServerResponse(BaseCommand command) {
-                Logger.debug("RESPONSE: "+command.getPayload());
+                e.printStackTrace();
             }
         });
         serverThread.start();

@@ -5,13 +5,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf15724d-b231-4da0-bd83-5717e0d9444b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/StringResponseCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/error/ErrorCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/network/ServerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/network/ServerThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/a878b944b01314be497edd4489834a74/transformed/desugar_graph.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/a878b944b01314be497edd4489834a74/transformed/desugar_graph.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/a878b944b01314be497edd4489834a74/transformed/main/at/aau/se2/gamma/core/models/impl/Session.dex" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/a878b944b01314be497edd4489834a74/transformed/main/at/aau/se2/gamma/core/models/impl/Session.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/a878b944b01314be497edd4489834a74/transformed/main/at/aau/se2/gamma/core/models/interfaces/SessionInterface.dex" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/a878b944b01314be497edd4489834a74/transformed/main/at/aau/se2/gamma/core/models/interfaces/SessionInterface.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/ServerResponse$StatusCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/ServerResponse$StatusCode.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/ServerResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/ServerResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/BaseCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/BaseCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/CreateGameCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/CreateGameCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/InitialJoinCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/InitialJoinCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/InitialSetNameCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/InitialSetNameCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/ServerResponseCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/ServerResponseCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/BaseModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/BaseModel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/GameState.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/GameState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/Player.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/Session.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/Session.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/interfaces/SessionInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/interfaces/SessionInterface.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/states/ClientState.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/states/ClientState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/utils/RandomUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/utils/RandomUtil.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/ServerResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/ServerResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$ClientHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$ClientHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$SessionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$SessionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/models/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/models/Player.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +108,11 @@
     "project.structure.side.proportion": "0.2"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="at.aau.se2.gamma.core.commands" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.Server">
     <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="at.aau.se2.gamma.server.Server" />
@@ -132,7 +164,7 @@
       <option name="presentableId" value="Default" />
       <updated>1650055021069</updated>
       <workItem from="1650055022501" duration="2362000" />
-      <workItem from="1650091198521" duration="698000" />
+      <workItem from="1650091198521" duration="5251000" />
     </task>
     <servers />
   </component>

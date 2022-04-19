@@ -47,7 +47,7 @@ public  class Server implements Runnable {
     }
 
     public static void main(String[] args) throws IOException {
-        Server server = new Server("192.168.0.170", 1234, maxPlayers);
+        Server server = new Server("192.168.0.47", 1234, maxPlayers);
         System.out.println("server running");
         server.run();
 
