@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 Logger.debug("Connection created");
                 ServerThread.instance.sendCommand(new InitialSetNameCommand("mrader"), new ServerThread.RequestResponseHandler() {
                     @Override
-                    public void onFinished(ServerResponse response, Object payload, BaseCommand request) {
+                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                         Logger.debug("HEY, RESPONSE :)");
                     }
 

@@ -74,7 +74,6 @@ public class ClientThread implements Runnable {
     }
 
     public ServerResponseCommand initialJoin(InitialJoinCommand command){
-
         return new ServerResponseCommand(new ServerResponse("Initial join", ServerResponse.StatusCode.SUCCESS),command.getRequestId());
     }
     public ServerResponseCommand initialSetName(InitialSetNameCommand command){

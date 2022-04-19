@@ -6,33 +6,23 @@ import android.util.Pair;
 
 import androidx.annotation.RequiresApi;
 
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.compression.lzma.Base;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
-import java.util.Observable;
 import java.util.Optional;
-import java.util.concurrent.LinkedBlockingDeque;
 
 import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
-import at.aau.se2.gamma.core.commands.CreateGameCommand;
-import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
-import at.aau.se2.gamma.core.models.impl.Player;
 
 public class ServerThread extends Thread {
-
     public interface RequestResponseHandler {
-        void onFinished(ServerResponse response, Object payload, BaseCommand request);
+        void onResponse(ServerResponse response, Object payload, BaseCommand request);
         void onFailure(ServerResponse response, Object payload, BaseCommand request);
     }
 
@@ -92,7 +82,7 @@ public class ServerThread extends Thread {
                                 if (command instanceof ErrorCommand) {
                                     pair.second.onFailure(response, command.getPayload(), pair.first);
                                 } else {
-                                    pair.second.onFinished(response, command.getPayload(), pair.first);
+                                    pair.second.onResponse(response, command.getPayload(), pair.first);
                                 }
                             } else {
                                 Logger.error("Unknown RequestID");
