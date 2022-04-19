@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/carcassonne_girl"
     tools:context=".views.JoinSessionActivity">
 
     <TextView
@@ -47,4 +48,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pt_InputKey"
         app:layout_constraintVertical_bias="0.175" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
