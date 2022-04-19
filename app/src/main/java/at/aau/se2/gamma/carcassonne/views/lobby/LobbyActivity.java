@@ -26,6 +26,7 @@ public class LobbyActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        //Get/Update Player List From Server
         List<LobbyPlayerDisplay> playerList;
         playerList = Arrays.asList(
                 new LobbyPlayerDisplay("player1"),
@@ -35,6 +36,7 @@ public class LobbyActivity extends AppCompatActivity {
                 new LobbyPlayerDisplay("player5")
         );
 
+        //Disconnect from lobby
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -52,8 +54,6 @@ public class LobbyActivity extends AppCompatActivity {
         });
 
         binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
-
-
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(playerList, LobbyActivity.this);
         binding.rvLobby.setAdapter(adapter);

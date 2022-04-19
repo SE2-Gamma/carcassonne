@@ -28,7 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lobby_player_display, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lobby_player_display_cardview, parent, false);
         return new ViewHolder(v);
     }
 
@@ -53,8 +53,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_player_name;
         public Button btn_kick_player;
-        //public ActivityLobbyBinding binding;
-
 
         public ViewHolder(View itemView) {
             super(itemView);

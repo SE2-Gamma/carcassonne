@@ -4,7 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/bernh/Documents/Uni/SS2022/Software Engineering II/carcassonne/app/src/main/res/layout/activity_lobby.xml" value="0.25" />
-        <entry key="..\:/Users/bernh/Documents/Uni/SS2022/Software Engineering II/carcassonne/app/src/main/res/layout/item_lobby_player_display.xml" value="0.35507246376811596" />
+        <entry key="..\:/Users/bernh/Documents/Uni/SS2022/Software Engineering II/carcassonne/app/src/main/res/layout/item_lobby_player_display.xml" value="0.33" />
+        <entry key="..\:/Users/bernh/Documents/Uni/SS2022/Software Engineering II/carcassonne/app/src/main/res/layout/item_lobby_player_display_cardview.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.18885869565217392" />
       </map>
     </option>

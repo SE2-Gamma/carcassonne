@@ -4,19 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.lobby.LobbyActivity">
+    tools:context=".views.lobby.LobbyActivity"
+    android:background="@color/cardview_shadow_start_color">
+
+
 
     <TextView
         android:id="@+id/tv_lobby_name"
         style="@style/H1TextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Lobbyname"
+        android:background="@color/white"
+        android:padding="12dp"
+        android:layout_marginRight="@dimen/spaceDefault"
+        android:layout_marginLeft="@dimen/spaceDefault"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.042" />
+        app:layout_constraintVertical_bias="0.047" />
 
     <TextView
         android:id="@+id/tv_player_count"
