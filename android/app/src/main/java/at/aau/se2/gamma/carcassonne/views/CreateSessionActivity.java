@@ -10,6 +10,7 @@ import at.aau.se2.gamma.carcassonne.MainActivity;
 import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityCreateSessionBinding;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
+import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 
 public class CreateSessionActivity extends AppCompatActivity {
 
