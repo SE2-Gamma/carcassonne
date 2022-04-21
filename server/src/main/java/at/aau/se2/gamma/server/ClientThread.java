@@ -118,9 +118,9 @@ public class ClientThread extends Thread {
         }
         System.out.print("  current state: "+clientState);
         //getpayload
-        LinkedList<Object>list=(LinkedList<Object>) command.getPayload();
-        Player player=(Player) list.pop();
-        String GameID=(String)list.pop();
+
+       // Player player=(Player) list.pop();
+         String GameID= (String) command.getPayload();
 
         //check player
     /*    try {Server.identify(player);} catch (NoSuchElementException e) {
@@ -130,7 +130,7 @@ public class ClientThread extends Thread {
         }*/
         //create session
         try {
-            session = Server.SessionHandler.createSession(GameID,player);
+            session = Server.SessionHandler.createSession(GameID,this.player);
         } catch (IllegalArgumentException e) {
             System.err.println("Spiel bereits vorhanden");
           return  ResponseCreator.getError(command,"Server bereits vorhanden", Codes.ERROR.SESSION_ALREADY_EXISTS);
@@ -151,9 +151,9 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command,"Not in initialState", Codes.ERROR.WRONG_STATE);
         }
         //getpayload
-        LinkedList<Object> list=(LinkedList<Object>) command.getPayload();
-        String sessionID= (String) list.pop();
-        Player player= (Player) list.pop();
+        //LinkedList<Object> list=(LinkedList<Object>) command.getPayload();
+        String sessionID= (String) command.getPayload();
+        //Player player= (Player) list.pop();
         //checkplayer
         try {
             Server.identify(player);
