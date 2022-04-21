@@ -9,7 +9,7 @@ public class ExampleTest {
     // this is for the git demo
     @Test
     public void failure() {
-        assertEquals(4, 2+2);
+        assertEquals(5, 2+2);
     }
 
     @Test
