@@ -36,6 +36,21 @@ public  class Server implements Runnable {
 
 
         }
+        public static Player getPLayer(String SessionID,String playerID){
+            for (Session session:sessions
+                 ) {
+                if(session.getId().equals(SessionID)){
+                    for (Player player: session.players
+                         ) {
+                        if(player.getId().equals(playerID)){
+                            return player;
+                        }
+                    }
+                    throw new NoSuchElementException("No such player in given session");
+                }
+            }
+            throw new NoSuchElementException("no such session found");
+        }
         public static Session joinSession(String sessionID, Player player)throws NoSuchElementException{
             Session temp= getSession(sessionID);
             temp.joinGame(player);
@@ -76,7 +91,15 @@ public  class Server implements Runnable {
     public Server(String address, int port, int maxClients) throws IOException {
         this.socket = new ServerSocket(port, maxClients, InetAddress.getByName(address));
     }
-
+    public static ServerPlayer getServerPlayer(String playerID){
+        for (ServerPlayer player:activeServerPlayers
+             ) {
+            if(player.getId().equals(playerID)){
+                return player;
+            }
+        }
+    throw new NoSuchElementException("no player with matching ID");
+    }
     @Override
     public void run() {
         ClientHandler clientHandler=new ClientHandler();

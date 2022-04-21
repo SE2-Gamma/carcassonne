@@ -12,4 +12,9 @@ public class globalVariables {
     }
 
     private static String defaultname="XXXXXXXXXXXX";
+
+    private static String defaultID="-1";
+    public static String getDefaultID() {
+        return defaultID;
+    }
 }

@@ -7,6 +7,7 @@ public class Codes {
         WRONG_STATE,
         NO_SESSION_FOUND,
         NAME_ALREADY_TAKEN,
+        NO_PLAYER_WITH_MATCHING_ID,
 
     }
     public enum SUCCESS {

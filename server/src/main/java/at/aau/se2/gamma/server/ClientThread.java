@@ -3,7 +3,6 @@ package at.aau.se2.gamma.server;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.error.Codes;
-import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.states.ClientState;
@@ -28,6 +27,7 @@ public class ClientThread extends Thread {
     private ObjectOutputStream objectOutputStream;
     private boolean running;
 
+
     public ClientThread(Socket socket) {
         this.socket = socket;
     }
@@ -46,6 +46,7 @@ public class ClientThread extends Thread {
 
                 System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
                 objectOutputStream.writeObject(response);
+
             }
         } catch (Exception e) {
             System.out.println("EXCEPTION");
@@ -69,7 +70,10 @@ public class ClientThread extends Thread {
             return requestUserListCommandByID((RequestUserListCommandByID)command);
         } else if (command instanceof RequestUserListCommand) {
             return requestUserListCommand((RequestUserListCommand)command);
-        }else {
+        }else if(command instanceof KickPlayerCommand) {
+            return kickPlayer((KickPlayerCommand) command);
+        }
+        else{
             System.out.println("command not suitable for current state");
         }
 
@@ -97,7 +101,8 @@ public class ClientThread extends Thread {
         System.out.print(" //current state: "+clientState +"//");
         return new ServerResponseCommand(ServerResponse.success(namelist), command.getRequestId());
     }
-    private BaseCommand requestUserListCommand(RequestUserListCommand command){
+
+   private BaseCommand requestUserListCommand(RequestUserListCommand command){
         System.out.print(" //current state: "+clientState+"//");
         if(!(clientState==ClientState.LOBBY||clientState==ClientState.GAME)){
             return ResponseCreator.getError(command,"must be in Lobby or in Game", Codes.ERROR.WRONG_STATE);
@@ -111,6 +116,7 @@ public class ClientThread extends Thread {
         System.out.print ("// current state: "+ clientState+"// ");
         return ResponseCreator.getSuccess(command,namelist);
     }
+
     private BaseCommand createGameCommand(CreateGameCommand command) {
         //check state
         if(clientState!=ClientState.INITIAl){
@@ -177,6 +183,7 @@ public class ClientThread extends Thread {
 
         return ResponseCreator.getSuccess(command,session);
     }
+
     public BaseCommand initialSetName(InitialSetNameCommand command){
         //todo check github Vorschlag in issue commentary
         System.out.print(" //current state: "+clientState+"//");
@@ -210,6 +217,23 @@ public class ClientThread extends Thread {
         return ResponseCreator.getSuccess(command,ID);
     }
 
+    public BaseCommand kickPlayer(KickPlayerCommand command) {
+        String playerID = (String) command.getPayload();
+        System.out.print("//attempting to kick//");
+        Player tempplayer;
+        try {
+            tempplayer = session.getPlayer(playerID);
+            System.out.print("//finding ID//");
+        } catch (NoSuchElementException e) {
+            return ResponseCreator.getError(command, "no such player found", Codes.ERROR.NO_PLAYER_WITH_MATCHING_ID);
+        }
+        System.out.print("//id found//");
+if(session.voteKick(tempplayer)){
+    //todo: alert kicked player
+}
+
+        return ResponseCreator.getSuccess(command, "vote issued");
+    }
     public void sendCommand(BaseCommand command) {
         try {
             this.objectOutputStream.writeObject(command);
