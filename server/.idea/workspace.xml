@@ -5,12 +5,41 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf15724d-b231-4da0-bd83-5717e0d9444b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/desugar_graph.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/desugar_graph.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/impl/BaseModel.dex" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/impl/BaseModel.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/impl/GameState.dex" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/impl/GameState.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/impl/Player.dex" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/impl/Player.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/impl/Session.dex" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/impl/Session.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.dex" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/interfaces/GameStateInterface.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.dex" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/interfaces/PlayerInterface.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/interfaces/SessionInterface.dex" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/models/interfaces/SessionInterface.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/network/ClientRemote.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/network/ClientRemoteImpl.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/network/Server.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/network/SessionCommunication.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/network/SessionCommunicationInterface.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/network/Testing/PlayingGroundClient.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/.transforms/9e4399926a70b7ec1d0278420a0aa20a/transformed/main/at/aau/se2/gamma/core/network/Testing/test.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$ClientHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$ClientHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$/../core">
@@ -57,24 +86,18 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
   <component name="ProjectId" id="27qkULuq4mN8spcj5GYYtkoHw1q" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
-  }
-}]]></component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../Software engineering 2/Carcassonne/Carcassonne/server" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="at.aau.se2.gamma.core.commands" />

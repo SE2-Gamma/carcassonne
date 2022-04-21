@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ServerThread serverThread = ServerThread.init("192.168.0.47", 1234, new ServerThread.ConnectionHandler() {
+        ServerThread serverThread = ServerThread.init("192.168.0.170", 1234, new ServerThread.ConnectionHandler() {
             @Override
             public void onConnectionFinished() {
                 Logger.debug("Connection created");

@@ -47,7 +47,7 @@ public  class Server implements Runnable {
     }
 
     public static void main(String[] args) throws IOException {
-        Server server = new Server("192.168.0.47", 1234, maxPlayers);
+        Server server = new Server("192.168.0.170", 1234, maxPlayers);
         System.out.println("server running");
         server.run();
 
@@ -85,7 +85,9 @@ public  class Server implements Runnable {
                         Player player=new Player();
                         player.setClientThread(clientThread);
                         activePlayers.add(player);
+
                         clientThread.run();
+                        System.out.println("acitve players: "+ activePlayers.size());
 
                     }else{
                         System.err.println("Too many Players"); //todo: Clientside: add notification that the server is full

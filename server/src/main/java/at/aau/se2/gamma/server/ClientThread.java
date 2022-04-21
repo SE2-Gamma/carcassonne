@@ -35,10 +35,14 @@ public class ClientThread implements Runnable {
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             while(running) {
                 BaseCommand command = (BaseCommand) objectInputStream.readObject();
+                System.out.println("command received");
                 ServerResponseCommand response=handleCommand(command);
+                System.out.println("command handled");
 
-                System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
+
                 objectOutputStream.writeObject(response);
+                System.out.println("response sent");
+                System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
             }
         } catch (Exception e) {
             System.out.println("EXCEPTION");
