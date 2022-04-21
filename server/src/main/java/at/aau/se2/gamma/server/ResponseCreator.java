@@ -2,6 +2,7 @@ package at.aau.se2.gamma.server;
 
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.PayloadResponseCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
 import at.aau.se2.gamma.core.commands.StringResponseCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
@@ -19,7 +20,7 @@ public class ResponseCreator {
         return new ServerResponseCommand(ServerResponse.failure(error), command.getRequestId());
 
     }
-    static public ServerResponseCommand getSuccess(BaseCommand command, String message){
-        return new ServerResponseCommand(ServerResponse.success(new StringResponseCommand(message)),command.getRequestId());
+    static public ServerResponseCommand getSuccess(BaseCommand command, Object payload){
+        return new ServerResponseCommand(ServerResponse.success(new PayloadResponseCommand(payload)), command.getRequestId());
     }
 }

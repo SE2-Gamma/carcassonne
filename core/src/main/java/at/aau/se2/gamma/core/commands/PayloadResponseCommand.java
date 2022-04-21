@@ -2,20 +2,19 @@ package at.aau.se2.gamma.core.commands;
 
 import at.aau.se2.gamma.core.states.ClientState;
 
-public class InitialSetNameCommand extends BaseCommand {
-//Payload: String name
-    //return: String unique PlayerID
-    public InitialSetNameCommand(Object payload) {
+public class PayloadResponseCommand extends BaseCommand {
+
+    public PayloadResponseCommand(Object payload) {
         super(payload);
     }
 
     @Override
     public String getKey() {
-        return "setname";
+        return "payload-response";
     }
 
     @Override
     public ClientState getState() {
-        return ClientState.INITIAl;
+        return ClientState.ANY;
     }
 }

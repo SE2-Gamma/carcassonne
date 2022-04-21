@@ -109,7 +109,7 @@ public class ClientThread extends Thread {
         }
         System.out.print( "  // players requested: "+ Arrays.toString(namelist.toArray()) +"//");
         System.out.print ("// current state: "+ clientState+"// ");
-        return new ServerResponseCommand(ServerResponse.success(namelist), command.getRequestId());
+        return ResponseCreator.getSuccess(command,namelist);
     }
     private BaseCommand createGameCommand(CreateGameCommand command) {
         //check state
@@ -142,7 +142,7 @@ public class ClientThread extends Thread {
         clientState=ClientState.LOBBY;
         System.out.print(" //current state: "+clientState +"//");
         System.out.print(" //SessionID: "+session.getId()+"//  ");
-        return new ServerResponseCommand(ServerResponse.success(session), command.getRequestId());
+        return ResponseCreator.getSuccess(command,session);
     }
 
     public BaseCommand initialJoin(InitialJoinCommand command){
@@ -173,10 +173,9 @@ public class ClientThread extends Thread {
         }
         //set state
         clientState=ClientState.LOBBY;
-        LinkedList<Object>passlist=new LinkedList<>();
-        passlist.add(session);
-        passlist.add(ID);
-        return new ServerResponseCommand(ServerResponse.success(passlist),command.getRequestId());
+
+
+        return ResponseCreator.getSuccess(command,session);
     }
     public BaseCommand initialSetName(InitialSetNameCommand command){
         //todo check github Vorschlag in issue commentary
@@ -208,7 +207,7 @@ public class ClientThread extends Thread {
         System.out.print("// serverplayer set//");
 
         System.out.print ("// current state: "+ clientState+"// ");
-        return ResponseCreator.getSuccess(command,"player accepted");
+        return ResponseCreator.getSuccess(command,ID);
     }
 
     public void sendCommand(BaseCommand command) {
