@@ -2,4 +2,9 @@
     <string name="app_name">Carcassonne</string>
     <string name="test">TestName</string>
     <string name="create_session">Create Session</string>
+    <string name="activity_create_session_textView_sessionid_default_text">error</string>
+    <string name="activity_create_session_textView_instruction_sessionname_default">Please insert a name for your game!</string>
+    <string name="activity_create_session_editText_sessionname_default">Name</string>
+    <string name="activity_create_session_button_navigate_lobby_text">See lobby</string>
+    <string name="activity_create_session_textView_instruction_sessionid_text">Use this session-id to invite friends to your game:</string>
 </resources>
