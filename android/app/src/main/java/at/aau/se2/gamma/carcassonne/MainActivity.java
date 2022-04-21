@@ -55,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        binding.btnGameplayTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, Launcher.class));
+            }
+        });
+
         ServerThread serverThread = ServerThread.init("192.168.0.47", 1234, new ServerThread.ConnectionHandler() {
             @Override
             public void onConnectionFinished() {
