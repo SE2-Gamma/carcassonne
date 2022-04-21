@@ -20,9 +20,9 @@ jobs:
         cache: gradle
 
     - name: Grant execute permission for gradlew
-      run: chmod +x app/gradlew
+      run: chmod +x android/gradlew
     - name: Build with Gradle
       env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./app/gradlew build jacocoTestReport sonarqube --info
+      run: ./android/gradlew build jacocoTestReport sonarqube --info
