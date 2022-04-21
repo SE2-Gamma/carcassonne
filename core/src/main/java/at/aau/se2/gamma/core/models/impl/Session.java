@@ -1,12 +1,13 @@
 package at.aau.se2.gamma.core.models.impl;
 
-import at.aau.se2.gamma.core.models.interfaces.SessionInterface;
-
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Objects;
 
-public class Session extends BaseModel implements SessionInterface, Serializable {
+public class Session extends BaseModel implements Serializable {
     String id=null;
     int maxPlayers=5;
+    public ArrayList<Player> players = new ArrayList<>();
     public String getId() {
         return id;
     }
@@ -15,8 +16,8 @@ public class Session extends BaseModel implements SessionInterface, Serializable
             throw new IllegalArgumentException("Spiel voll");
         }
         for (Player a:players
-             ) {
-            if(a.getId()== player.getId()){
+        ) {
+            if(Objects.equals(a.getId(), player.getId())){
                 throw new IllegalArgumentException("Spieler bereits vorhanden");
             }
         }

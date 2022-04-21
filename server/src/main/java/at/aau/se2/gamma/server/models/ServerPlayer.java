@@ -1,12 +1,24 @@
 package at.aau.se2.gamma.server.models;
 
+import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.interfaces.PlayerInterface;
 import at.aau.se2.gamma.server.ClientThread;
 
-public class Player implements PlayerInterface {
+public class ServerPlayer implements PlayerInterface {
     private ClientThread clientThread;
     private String id;
     private String name;
+    private Player player;
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+
 
     public ClientThread getClientThread() {
         return clientThread;

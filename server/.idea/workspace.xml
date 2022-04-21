@@ -5,12 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf15724d-b231-4da0-bd83-5717e0d9444b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/KickPlayerCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/RequestUserListCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/RequestUserListCommandByID.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/error/Codes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/utils/globalVariables.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ResponseCreator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/models/ServerPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/InitialJoinCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/InitialJoinCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/Session.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/Session.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/interfaces/SessionInterface.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/CreateGameCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/CreateGameCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/InitialJoinCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/InitialJoinCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/models/impl/Session.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/models/impl/Session.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/models/interfaces/SessionInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$ClientHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$ClientHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$SessionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$SessionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/models/Player.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/models/Player.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$/../core">
@@ -51,33 +81,40 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
   <component name="ProjectId" id="27qkULuq4mN8spcj5GYYtkoHw1q" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
-  }
-}]]></component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="at.aau.se2.gamma.core.utils" />
       <recent name="at.aau.se2.gamma.core.commands" />
+      <recent name="at.aau.se2.gamma.core.commands.error" />
+      <recent name="at.aau.se2.gamma.server" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Server">
