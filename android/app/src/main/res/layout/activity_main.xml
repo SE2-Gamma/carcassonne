@@ -9,31 +9,41 @@
     tools:context=".MainActivity">
 
     <TextView
+        style="@style/H1TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/H1TextView"
-        android:text="Carcassonne" />
+        android:fontFamily="cursive"
+        android:text="Carcassonne"
+        android:textAllCaps="false"
+        android:textColor="@color/primary"
+        android:textSize="48sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btn_navigate_create_session"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/create_session"
-        style="@style/PrimaryButton"/>
+        style="@style/PrimaryButton"
+        android:layout_width="219dp"
+        android:layout_height="82dp"
+        android:insetTop="@dimen/spaceSuperBig"
+        android:insetBottom="@dimen/spaceDefault"
+        android:text="@string/create_session" />
 
     <Button
         android:id="@+id/btn_navigate_join_session"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Join Session"
-        style="@style/PrimaryButton"/>
+        style="@style/PrimaryButton"
+        android:layout_width="218dp"
+        android:layout_height="64dp"
+        android:insetTop="@dimen/spaceDefault"
+        android:insetBottom="@dimen/spaceDefault"
+        android:text="Join Session" />
 
     <Button
         android:id="@+id/btn_ui_elements"
+        style="@style/PrimaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="UI Elements (Dev)"
-        style="@style/PrimaryButton"/>
+        android:insetBottom="@dimen/spaceDefault"
+        android:text="UI Elements (Dev)" />
 
     <Button
         android:id="@+id/btn_gameplay_test"

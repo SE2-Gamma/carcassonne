@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         binding.btnNavigateCreateSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: Kommunikation mit Server für Random Key einer Lobby
+
                 startActivity(new Intent(MainActivity.this, CreateSessionActivity.class));
             }
         });

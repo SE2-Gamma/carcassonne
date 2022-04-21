@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/layout/activity_join_session.xml" value="0.221875" />
         <entry key="app/src/main/res/layout/activity_lobby.xml" value="0.2359375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_select_name.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_lobby_player_display_cardview.xml" value="0.1" />
       </map>
     </option>
