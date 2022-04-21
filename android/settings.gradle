@@ -1,3 +1,4 @@
+<<<<<<< HEAD:android/settings.gradle
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -16,3 +17,8 @@ rootProject.name = "Carcassonne"
 include ':app'
 include ':core'
 project(':core').projectDir = new File(settingsDir, '../core')
+=======
+rootProject.name = 'carcassonne'
+include 'app'
+
+>>>>>>> f134a1bacec23b82a8fae9ea93226866580346f5:settings.gradle

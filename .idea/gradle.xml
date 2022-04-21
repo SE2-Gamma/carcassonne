@@ -4,7 +4,6 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/android" />
         <option name="resolveModulePerSourceSet" value="false" />
@@ -21,11 +20,15 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$/server" />
         <option name="modules">
           <set>
+<<<<<<< HEAD
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/server" />
+=======
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+>>>>>>> f134a1bacec23b82a8fae9ea93226866580346f5
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -1,0 +1,8 @@
+package models.interfaces;
+
+import models.impl.GameState;
+
+public interface SessionInterface {
+    GameState gameState = null;
+    String id = null;
+}
