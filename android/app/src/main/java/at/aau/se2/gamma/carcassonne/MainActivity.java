@@ -19,6 +19,7 @@ import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
+import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         binding.btnNavigateCreateSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: Kommunikation mit Server für Random Key einer Lobby
+
                 startActivity(new Intent(MainActivity.this, CreateSessionActivity.class));
             }
         });
@@ -52,6 +55,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, UIElementsActivity.class));
+            }
+        });
+
+        binding.btnGameplayTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, Launcher.class));
+            }
+        });
+
+        binding.btnViewLobby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, LobbyActivity.class));
             }
         });
 
