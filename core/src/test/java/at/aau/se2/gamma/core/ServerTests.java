@@ -4,6 +4,7 @@ import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.DisconnectCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
+import at.aau.se2.gamma.core.commands.KickPlayerCommand;
 import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.utils.ServerResponseDecrypter;
@@ -120,6 +121,25 @@ running=true;
                 e.printStackTrace();
             }
         }
+    }
+    @Test
+    void testKickCommand(){
+        LinkedList<String> list= null;
+        try {
+            out.writeObject(new InitialSetNameCommand("test"));
+            ServerResponseDecrypter.payloadRetriever(in);
+            out.writeObject(new CreateGameCommand("mygame"));
+            ServerResponseDecrypter.payloadRetriever(in);
+            out.writeObject(new KickPlayerCommand("test"));
+            ServerResponseDecrypter.payloadRetriever(in);
+            out.writeObject(new RequestUserListCommand(null));
+            list = (LinkedList<String>) ServerResponseDecrypter.payloadRetriever(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        assertEquals(list.size(),0);
     }
    /* @Test
     void testJoinGameCommand(){
