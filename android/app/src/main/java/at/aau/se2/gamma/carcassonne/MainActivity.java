@@ -22,7 +22,11 @@ import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.CreateGameCommand;
+import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
+import at.aau.se2.gamma.core.commands.KickPlayerCommand;
+import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 import at.aau.se2.gamma.core.utils.globalVariables;
 
 public class MainActivity extends AppCompatActivity {
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onConnectionFinished() {
                 Logger.debug("Connection created");
-                ServerThread.instance.sendCommand(new InitialSetNameCommand("bodo"), new ServerThread.RequestResponseHandler() {
+                ServerThread.instance.sendCommand(new InitialSetNameCommand("leona"), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                         Logger.debug("HEY, RESPONSE :)");
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         Logger.debug("NOOOOOO :(");
                     }
                 });
+
             }
 
             @Override

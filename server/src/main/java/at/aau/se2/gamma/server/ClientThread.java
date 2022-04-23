@@ -47,11 +47,13 @@ public class ClientThread extends Thread {
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             while(running) {
                 BaseCommand command = (BaseCommand) objectInputStream.readObject();
+
                 BaseCommand response=handleCommand(command);
 
                 System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
-                objectOutputStream.writeObject(response);
-
+                if(!(command instanceof DisconnectCommand)) {
+                    objectOutputStream.writeObject(response);
+                }
             }
             System.out.println("stopped");
         } catch(SocketException socketException){
@@ -93,6 +95,8 @@ public class ClientThread extends Thread {
             return requestUserListCommand((RequestUserListCommand)command);
         }else if(command instanceof KickPlayerCommand) {
             return kickPlayer((KickPlayerCommand) command);
+        }else if(command instanceof DisconnectCommand){
+            return disconnectPlayer((DisconnectCommand) command);
         }
         else{
             System.out.println("command not suitable for current state");
@@ -236,7 +240,23 @@ public class ClientThread extends Thread {
         System.out.print ("// current state: "+ clientState+"// ");
         return ResponseCreator.getSuccess(command,ID);
     }
+    public BaseCommand disconnectPlayer(DisconnectCommand command){ //todo: implement errors
+        if(clientState.equals(ClientState.LOBBY)){
+            session.removePlayer(player);
+        }
+        if(clientState.equals(ClientState.GAME)){
+            //todo: implement
+        }
+        Server.activeServerPlayers.remove(serverPlayer);
+        try {
+            terminate();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        return ResponseCreator.getSuccess(command,"Player sucessfully removed.also you shouldnt be receiving this");
+    }
     public BaseCommand kickPlayer(KickPlayerCommand command) {
         String playername = (String) command.getPayload();
         System.out.print("//attempting to kick//");
