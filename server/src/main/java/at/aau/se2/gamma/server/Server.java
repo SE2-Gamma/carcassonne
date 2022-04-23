@@ -80,7 +80,15 @@ public  class Server implements Runnable {
         return uniqueID++;
     }
 
-
+    public static Player getPlayerbyName(String playername){
+        for (ServerPlayer serverplayer:activeServerPlayers
+             ) {
+            if(serverplayer.getName().equals(playername)){
+                return serverplayer.getPlayer();
+            }
+        }
+        throw new NoSuchElementException("no player found with matching name");
+    }
     public Server(String address, int port, int maxClients) throws IOException {
         this.socket = new ServerSocket(port, maxClients, InetAddress.getByName(address));
     }

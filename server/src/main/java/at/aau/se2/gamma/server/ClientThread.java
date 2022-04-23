@@ -238,18 +238,19 @@ public class ClientThread extends Thread {
     }
 
     public BaseCommand kickPlayer(KickPlayerCommand command) {
-        String playerID = (String) command.getPayload();
+        String playername = (String) command.getPayload();
         System.out.print("//attempting to kick//");
         Player tempplayer;
+        //String playerID=Server.identify(playername);
         try {
-            tempplayer = session.getPlayer(playerID);
-            System.out.print("//finding ID//");
+            tempplayer = Server.getPlayerbyName(playername);
+            System.out.print("//finding player//");
         } catch (NoSuchElementException e) {
-            return ResponseCreator.getError(command, "no such player found", Codes.ERROR.NO_PLAYER_WITH_MATCHING_ID);
+            return ResponseCreator.getError(command, "no such player found", Codes.ERROR.NO_PLAYER_WITH_MATCHING_NAME);
         }
-        System.out.print("//id found//");
-if(session.voteKick(tempplayer)){
-    //todo: alert kicked player
+        System.out.print("//player found//");
+if(session.voteKick(tempplayer,player)){
+    //todo: alert kicked player1
 }
 
         return ResponseCreator.getSuccess(command, "vote issued");

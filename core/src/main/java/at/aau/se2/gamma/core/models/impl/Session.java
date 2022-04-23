@@ -3,10 +3,7 @@ package at.aau.se2.gamma.core.models.impl;
 import at.aau.se2.gamma.core.utils.KickOffer;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.SynchronousQueue;
 
 public class Session extends BaseModel implements Serializable {
@@ -37,14 +34,14 @@ public class Session extends BaseModel implements Serializable {
     public GameState getGameState() {
         return gameState;
     }
-    public boolean voteKick(Player player) {
+    public boolean voteKick(Player player,Player votee) {
         int votes = 0;
         getPlayer(player.getId()); //to throw exception if player is not here
         boolean checker = true;
         for (KickOffer kickoffer : kickOffers
         ) {
             if (kickoffer.getPlayer().getId().equals(player.getId())) {
-                votes = kickoffer.vote();
+                votes = kickoffer.vote(votee);
                 checker = false;
             }
         }
@@ -52,7 +49,7 @@ public class Session extends BaseModel implements Serializable {
         if (checker) {
             offer = new KickOffer(player);
             kickOffers.add(offer);
-            votes=offer.vote();
+            votes=offer.vote(votee);
         }
 
 
@@ -63,9 +60,12 @@ public class Session extends BaseModel implements Serializable {
         System.out.print("//voting to kick player " + player.getName());
         System.out.print("//"+votes + " out of " + tobeat + " to kick//");
         if (tobeat <= votes) {
+            kickOffers.remove(offer);
             removePlayer(player);
+            System.out.println("//player kicked//");
             return true;
         }
+        System.out.println("//not enough votes to kick//");
        return false;
     }
     public void removePlayer(Player player){
