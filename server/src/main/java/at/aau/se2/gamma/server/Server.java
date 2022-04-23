@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.*;
 
-import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.utils.globalVariables;
@@ -101,7 +100,7 @@ public  class Server implements Runnable {
         thread.start();
     }
 
-    public boolean closeClientHandler(){
+    public boolean closeAll(){
         for (ServerPlayer serverplayer:activeServerPlayers
              ) {
            ClientThread clientThread= serverplayer.getClientThread();
@@ -176,7 +175,25 @@ public  class Server implements Runnable {
         }
 
     }
+    public static Server server=null;
     static Scanner scanner=new Scanner(System.in);
+    public static boolean startServer(){
+        try {
+            server = new Server(globalVariables.getAdress(), globalVariables.getPort(), maxPlayers);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Thread thread=new Thread(server);
+        thread.start();
+
+        System.out.println("server running");
+        return true;
+    }
+    public static boolean closeServer(){
+        server.closeAll();
+        return true;
+    }
     public static void main(String[] args) throws IOException {
 
         Server server = new Server(globalVariables.getAdress(), globalVariables.getPort(), maxPlayers);
@@ -186,9 +203,7 @@ public  class Server implements Runnable {
         System.out.println("server running");
         scanner.nextLine();
         System.out.println("closing clienthandler");
-        if(server.closeClientHandler()){
-
-        }
+        server.closeAll();
 
 
     }
