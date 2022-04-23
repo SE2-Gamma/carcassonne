@@ -240,7 +240,14 @@ public class ClientThread extends Thread {
         System.out.print ("// current state: "+ clientState+"// ");
         return ResponseCreator.getSuccess(command,ID);
     }
+
     public BaseCommand disconnectPlayer(DisconnectCommand command){ //todo: implement errors
+        System.out.print("//todo: disconnect player "+player.getName()+"//");
+        try {
+            objectOutputStream.writeObject(ResponseCreator.getSuccess(command,"Disconnect initiated"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if(clientState.equals(ClientState.LOBBY)){
             session.removePlayer(player);
         }
@@ -254,9 +261,10 @@ public class ClientThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        System.out.print("//player successfully removed//");
         return ResponseCreator.getSuccess(command,"Player sucessfully removed.also you shouldnt be receiving this");
     }
+
     public BaseCommand kickPlayer(KickPlayerCommand command) {
         String playername = (String) command.getPayload();
         System.out.print("//attempting to kick//");
@@ -282,6 +290,11 @@ if(session.voteKick(tempplayer,player)){
             e.printStackTrace();
         }
     }
+
+
+    //-----------------------utility methods------------------------------------------------------------------
+
+
     public void terminate() throws IOException {
 
         running=false;

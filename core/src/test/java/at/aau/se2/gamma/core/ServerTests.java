@@ -1,9 +1,11 @@
 package at.aau.se2.gamma.core;
 
+import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.DisconnectCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
 import at.aau.se2.gamma.core.commands.PayloadResponseCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
+import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.utils.ServerResponseDecrypter;
 import at.aau.se2.gamma.core.utils.globalVariables;
 
@@ -42,17 +44,21 @@ ObjectOutputStream objectOutputStream=null;
     public void destroyConnection(){
         try {
             objectOutputStream.writeObject(new DisconnectCommand(null));
-        } catch (IOException e) {
+            ServerResponseDecrypter.payloadRetriever(objectInputStream);
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
     @Test
     public void testInitialSetName() {
         String ID = null;
+        String ID2=null;
         try {
             objectOutputStream.writeObject(new InitialSetNameCommand("bodo"));
             ID= (String) ServerResponseDecrypter.payloadRetriever(objectInputStream);
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -61,7 +67,21 @@ ObjectOutputStream objectOutputStream=null;
 
         assertEquals(ID, "0");
 
+
     }
 
-
+    @Test
+    void TestCreateLobby() {
+        try {
+            objectOutputStream.writeObject(new InitialSetNameCommand("bodo"));
+            ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            objectOutputStream.writeObject(new CreateGameCommand("testGame"));
+            Session session=(Session)ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            assertEquals(session.getId(),"testGame");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
