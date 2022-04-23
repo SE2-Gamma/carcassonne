@@ -19,5 +19,6 @@ public class globalVariables {
     }
 
     public static int getPort() {
+        return port;
     }
 }
