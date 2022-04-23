@@ -12,6 +12,7 @@ import java.util.LinkedList;
 
 public class ResponseCreator {
     static public ServerResponseCommand getError(BaseCommand command, String message, Codes.ERROR code){
+        System.err.println(message);
         LinkedList<Object>list=new LinkedList<>();
         list.add(message);
         list.add(command.getRequestId());

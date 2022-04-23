@@ -3,10 +3,9 @@ package at.aau.se2.gamma.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.*;
 
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.models.impl.Player;
@@ -19,7 +18,7 @@ public  class Server implements Runnable {
     private static int uniqueID=0; //todo check concurrency problems
     private final ServerSocket socket;
     static LinkedList<ServerPlayer> activeServerPlayers =new LinkedList<>(); //todo check concurrency problems
-
+    ClientHandler clientHandler=null;
     public static class SessionHandler{
         static LinkedList<Session> sessions=new LinkedList<Session>(); //todo check concurrency problems
         public static Session createSession(String sessionID, Player player){
@@ -81,12 +80,7 @@ public  class Server implements Runnable {
     public static int getUniqueID(){
         return uniqueID++;
     }
-    public static void main(String[] args) throws IOException {
-        Server server = new Server(globalVariables.getAdress(), 1234, maxPlayers);
-        System.out.println("server running");
-        server.run();
 
-    }
 
     public Server(String address, int port, int maxClients) throws IOException {
         this.socket = new ServerSocket(port, maxClients, InetAddress.getByName(address));
@@ -102,27 +96,48 @@ public  class Server implements Runnable {
     }
     @Override
     public void run() {
-        ClientHandler clientHandler=new ClientHandler();
-        clientHandler.run();
-
+        clientHandler=new ClientHandler();
+        Thread thread=new Thread(clientHandler);
+        thread.start();
     }
 
-    public ServerResponse removePlayer(ServerPlayer player){
-        //outdated
-        //need to match player and serverplayer id to properly kill clientthread
-        try {
-            activeServerPlayers.remove(player);
-            player.getClientThread().terminate();
-        } catch (NoSuchElementException e) {
-            return new ServerResponse("Player not found", ServerResponse.StatusCode.FAILURE);
+    public boolean closeClientHandler(){
+        for (ServerPlayer serverplayer:activeServerPlayers
+             ) {
+           ClientThread clientThread= serverplayer.getClientThread();
+
+            try {
+
+                clientThread.terminate();
+                Socket socket=clientThread.getSocket();
+                socket.close();
+
+            }  catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return new ServerResponse("Some error", ServerResponse.StatusCode.FAILURE);
+        clientHandler.terminate();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            System.out.println("serversocket closed intentionally");
+            e.printStackTrace();
+        }
+
+
+        return true;
     }
+
 
     public class ClientHandler implements Runnable{
+        private boolean running=false;
+        public void terminate(){
+            running=false;
+        }
         @Override
         public void run() {
-            while(true){
+            running=true;
+            while(running){
                 try {
                     if(activeServerPlayers.size()< maxPlayers) {
 
@@ -146,11 +161,37 @@ public  class Server implements Runnable {
                     }else{
                         System.err.println("Too many Players"); //todo: Clientside: add notification that the server is full
                     }
-                } catch (IOException e) {
+                }catch (SocketException socketException){
+                    if(!running){
+                        System.out.println("serversocket closed intentionally");
+                    }else{
+                        socketException.printStackTrace();
+                    }
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+
         }
 
     }
+    static Scanner scanner=new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+
+        Server server = new Server(globalVariables.getAdress(), globalVariables.getPort(), maxPlayers);
+        Thread thread=new Thread(server);
+        thread.start();
+
+        System.out.println("server running");
+        scanner.nextLine();
+        System.out.println("closing clienthandler");
+        if(server.closeClientHandler()){
+
+        }
+
+
+    }
+
+
 }

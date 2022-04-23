@@ -16,7 +16,7 @@ public class KickOffer {
 
     Player player;
     int counter=0;
-
+//todo: implement function to ensure a player can only issue one vote
 
 
 }

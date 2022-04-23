@@ -12,9 +12,12 @@ public class globalVariables {
     }
 
     private static String defaultname="XXXXXXXXXXXX";
-
+    private static int port=1234;
     private static String defaultID="-1";
     public static String getDefaultID() {
         return defaultID;
+    }
+
+    public static int getPort() {
     }
 }

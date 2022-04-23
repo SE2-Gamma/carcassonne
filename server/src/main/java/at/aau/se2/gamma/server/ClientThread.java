@@ -12,17 +12,22 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 public class ClientThread extends Thread {
+
+
     private Socket socket;
     private ClientState clientState;
     private Session session;
     private Player player;
     private String ID;
     private ServerPlayer serverPlayer;
+
+
     private ObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
     private boolean running;
@@ -48,10 +53,26 @@ public class ClientThread extends Thread {
                 objectOutputStream.writeObject(response);
 
             }
-        } catch (Exception e) {
+            System.out.println("stopped");
+        } catch(SocketException socketException){
+            if(!running){
+                System.out.println(serverPlayer.getName()+" closed internally");
+            }else{
+                socketException.printStackTrace();
+            }
+        }
+        catch (Exception e) {
             System.out.println("EXCEPTION");
             e.printStackTrace();
         }
+        try {
+            objectInputStream.close();
+            objectOutputStream.close();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
     }
 
 //--------------------------commandhandler-----------------------------------------
@@ -196,7 +217,6 @@ public class ClientThread extends Thread {
         for (ServerPlayer serverplayer:Server.activeServerPlayers
         ) {
             if( serverplayer.getName().equals(name)){
-                System.err.println("Name bereits vergeben");
                 return ResponseCreator.getError(command,"Name bereits vergeben", Codes.ERROR.NAME_ALREADY_TAKEN);
             }
         }
@@ -241,9 +261,13 @@ if(session.voteKick(tempplayer)){
             e.printStackTrace();
         }
     }
-    public void terminate(){
+    public void terminate() throws IOException {
+
         running=false;
-        //todo: implement
+
+    }
+    public void closeStreams() throws IOException {
+
     }
     public String getID() {
         return ID;
@@ -260,5 +284,11 @@ if(session.voteKick(tempplayer)){
     public void setServerPlayer(ServerPlayer serverPlayer) {
         this.serverPlayer = serverPlayer;
     }
+    public Socket getSocket() {
+        return socket;
+    }
+
+
+
 
 }
