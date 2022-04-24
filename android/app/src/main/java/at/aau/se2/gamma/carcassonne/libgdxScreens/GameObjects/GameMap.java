@@ -20,14 +20,14 @@ public class GameMap {
 
 
     public GameMap(OrthographicCamera playercam, Viewport gameviewport, SpriteBatch batch){
-        Texture errorTexture = new Texture("testTexture.jpg");
+        //Texture errorTexture = new Texture("testTexture.jpg");
         this.playercam = playercam;
         this.gameviewport = gameviewport;
         this.batch = batch;
         Playingfield = new GameCard[145][145];
-        shaperender= new ShapeRenderer();
+        //shaperender= new ShapeRenderer();
 
-        Texture errortexture = new Texture("testTexture.jpg");
+        //Texture errortexture = new Texture("testTexture.jpg");
 
         //setting all coordinates of all possible fields
       //  for(int i = 0; i<Playingfield.length; i++){
@@ -70,9 +70,13 @@ public class GameMap {
 
     }
 
+    public void setGamecard(int x, int y, GameCard card){
+        Playingfield[x][y] = card;
+    }
+
     public void dispose(){
         //batch.dispose();
-        shaperender.dispose();
+       // shaperender.dispose();
     }
 
 
