@@ -45,6 +45,7 @@ public class CreateSessionActivity extends AppCompatActivity {
                     new SendThread(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                            Log.d("server-com", "response vom server: " + response.toString());
                             binding.buttonNavigateLobby.setVisibility(View.VISIBLE);
                             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
 
