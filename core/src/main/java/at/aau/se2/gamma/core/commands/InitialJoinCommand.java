@@ -3,13 +3,10 @@ package at.aau.se2.gamma.core.commands;
 import at.aau.se2.gamma.core.states.ClientState;
 
 public class InitialJoinCommand extends BaseCommand {
-    //Payload= linked List
-    //entry1= Player
-    //entry2= SessionID
+    //Payload= String SessionID
     //
-    //return= LinkedList
-    //entry1: session
-    //entry2: uniqePlayerID String
+    //return= Session session
+
     public InitialJoinCommand(Object payload) {
         super(payload);
     }
