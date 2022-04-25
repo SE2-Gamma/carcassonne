@@ -3,36 +3,38 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="bf15724d-b231-4da0-bd83-5717e0d9444b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/KickPlayerCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/RequestUserListCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/RequestUserListCommandByID.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/error/Codes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/utils/globalVariables.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ResponseCreator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/models/ServerPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/InitialJoinCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/commands/InitialJoinCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/Session.class" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/impl/Session.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/build/classes/java/main/at/aau/se2/gamma/core/models/interfaces/SessionInterface.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/libs/core-1.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/CreateGameCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/CreateGameCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/InitialJoinCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/commands/InitialJoinCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/models/impl/Session.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/models/impl/Session.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../core/src/main/java/at/aau/se2/gamma/core/models/interfaces/SessionInterface.java" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../core/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/at/aau/se2/gamma/carcassonne/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/res/layout/activity_join_session.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/res/layout/activity_join_session.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/res/layout/activity_select_name.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/res/layout/activity_select_name.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/ClientThread.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$ClientHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$ClientHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$SessionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server$SessionHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/Server.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/at/aau/se2/gamma/server/models/Player.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/ClientThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/aau/se2/gamma/server/models/Player.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,8 +108,9 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/StudioProjects/carcassonne1/server" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -147,9 +150,7 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -185,5 +186,36 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="740" y="271" key="FileChooserDialogImpl" timestamp="1650655121280">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="740" y="271" key="FileChooserDialogImpl/0.0.1920.1032/-1920.0.1920.1032@0.0.1920.1032" timestamp="1650655121280" />
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom" timestamp="1650655341543">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1032/-1920.0.1920.1032@0.0.1920.1032" timestamp="1650655341543" />
+    <state width="1860" height="276" key="GridCell.Tab.0.center" timestamp="1650655341543">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1860" height="276" key="GridCell.Tab.0.center/0.0.1920.1032/-1920.0.1920.1032@0.0.1920.1032" timestamp="1650655341543" />
+    <state width="1860" height="276" key="GridCell.Tab.0.left" timestamp="1650655341543">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1860" height="276" key="GridCell.Tab.0.left/0.0.1920.1032/-1920.0.1920.1032@0.0.1920.1032" timestamp="1650655341543" />
+    <state width="1860" height="276" key="GridCell.Tab.0.right" timestamp="1650655341543">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1860" height="276" key="GridCell.Tab.0.right/0.0.1920.1032/-1920.0.1920.1032@0.0.1920.1032" timestamp="1650655341543" />
+    <state x="625" y="220" key="NewModule_or_Project.wizard" timestamp="1650655041625">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="625" y="220" key="NewModule_or_Project.wizard/0.0.1920.1032/-1920.0.1920.1032@0.0.1920.1032" timestamp="1650655041625" />
+    <state x="777" y="430" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1650654737304">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="777" y="430" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1032/-1920.0.1920.1032@0.0.1920.1032" timestamp="1650654737304" />
   </component>
 </project>
