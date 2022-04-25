@@ -4,13 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import at.aau.se2.gamma.carcassonne.MainActivity;
 import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityCreateSessionBinding;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
+import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
+import at.aau.se2.gamma.core.ServerResponse;
+import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.CreateGameCommand;
 
 public class CreateSessionActivity extends AppCompatActivity {
 
@@ -19,16 +24,42 @@ public class CreateSessionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_create_session);
-
         binding = ActivityCreateSessionBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
 
+        String sessionName = "";
+
+        binding.buttonNavigateLobby.setVisibility(View.INVISIBLE);
+        binding.textViewError.setVisibility(View.INVISIBLE);
+
+        binding.buttonCreateSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String sessionName = binding.editTextSessionname.getText().toString();
+                if(sessionName.length()>0) {
+                    ServerThread.instance.sendCommand(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
+                        @Override
+                        public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                            binding.buttonNavigateLobby.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                            binding.textViewError.setText("Error");
+                            binding.textViewError.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }
+        });
+
         binding.buttonNavigateLobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(CreateSessionActivity.this, LobbyActivity.class));
+                Intent intent = new Intent(CreateSessionActivity.this, LobbyActivity.class);
+                intent.putExtra("GameKey", sessionName);
+                startActivity(intent);
             }
         });
     }
