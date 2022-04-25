@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.net.Socket;
 
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
+import at.aau.se2.gamma.carcassonne.network.SendThread;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
@@ -42,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
         binding.tvServerError.setVisibility((View.INVISIBLE));
 
-        binding.pbMenu.setVisibility(View.VISIBLE);
-
         ServerThread serverThread = ServerThread.init("192.168.178.27", 1234, new ServerThread.ConnectionHandler() {
             @Override
             public void onConnectionFinished() {
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onServerFailure(Exception e) {
-                //Logger.error("Error at server initial connection");
+                Logger.error("Error at server initial connection");
                 binding.tvServerError.setVisibility(View.VISIBLE);
                 e.printStackTrace();
             }
@@ -78,8 +77,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+
                 Intent intent = new Intent(MainActivity.this, CreateSessionActivity.class);
                 startActivity(intent);
+
             }
         });
 
