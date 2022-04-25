@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ServerTests {
+    /*
 Socket socket=null;
 ObjectInputStream in =null;
 ObjectOutputStream out =null;
