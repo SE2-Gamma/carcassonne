@@ -10,7 +10,7 @@ Library: LibGDX (https://ivanludvig.github.io/blog/2019/06/23/integrating-libgdx
 Managed die ganzen Sessions
 Pro Session gibt es ein GameObject
 GameObject enthält aktuelles Spielfeld, Spieler, Spielerposition, Punktestand, Status vom Spiel (Runde, etc.)
-Kommunikation über JavaRMI
+Kommunikation über Sockets
 
 ## Projektstruktur 
 ### App

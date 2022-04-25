@@ -4,6 +4,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/carcasonne"
     tools:context=".views.CreateSessionActivity">
+
+    <TextView
+        android:id="@+id/textView_instruction_sessionname"
+        android:layout_width="349dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="136dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="@string/activity_create_session_textView_instruction_sessionname_default"
+        android:textAlignment="center"
+        android:textAppearance="@style/H2TextView"
+        android:textColor="@color/secondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editText_sessionname"
+        android:layout_width="172dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:inputType="textPersonName"
+        android:text="@string/activity_create_session_editText_sessionname_default"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_instruction_sessionname" />
+
+    <Button
+        android:id="@+id/button_navigate_lobby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="172dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="@string/activity_create_session_button_navigate_lobby_text"
+        android:textColor="@color/secondary"
+        app:iconTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_sessionname"
+        app:layout_constraintVertical_bias="0.383" />
+
+    <Button
+        android:id="@+id/button_create_session"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Session"
+        android:textColor="@color/secondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_navigate_lobby"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_sessionname"
+        app:layout_constraintVertical_bias="0.383" />
+
+    <TextView
+        android:id="@+id/textView_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Error"
+        android:textColor="#F44336"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_sessionname" />
+
+    <ProgressBar
+        android:id="@+id/progressBar_JoinSessionActivity"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:progressTint="@color/primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.976"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.955"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

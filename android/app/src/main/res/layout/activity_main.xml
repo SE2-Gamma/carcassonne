@@ -9,30 +9,66 @@
     tools:context=".MainActivity">
 
     <TextView
+        style="@style/H1TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/H1TextView"
-        android:text="Carcassonne" />
+        android:fontFamily="cursive"
+        android:text="Carcassonne"
+        android:textAllCaps="false"
+        android:textColor="@color/primary"
+        android:textSize="48sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btn_navigate_create_session"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/create_session"
-        style="@style/PrimaryButton"/>
+        style="@style/PrimaryButton"
+        android:layout_width="219dp"
+        android:layout_height="82dp"
+        android:insetTop="@dimen/spaceSuperBig"
+        android:insetBottom="@dimen/spaceDefault"
+        android:text="@string/create_session" />
 
     <Button
         android:id="@+id/btn_navigate_join_session"
+        style="@style/PrimaryButton"
+        android:layout_width="218dp"
+        android:layout_height="64dp"
+        android:insetTop="@dimen/spaceDefault"
+        android:insetBottom="@dimen/spaceDefault"
+        android:text="Join Session" />
+
+    <TextView
+        android:id="@+id/tv_ServerError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Join Session"
-        style="@style/PrimaryButton"/>
+        android:text="Verbindung zum Server fehlgeschlagen, bitte überprüfe deine Internetverbindung und versuche es erneut!" />
+
+    <ProgressBar
+        android:id="@+id/pb_menu"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="131dp"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btn_ui_elements"
+        style="@style/PrimaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="UI Elements (Dev)"
+        android:insetBottom="@dimen/spaceDefault"
+        android:text="UI Elements (Dev)" />
+
+    <Button
+        android:id="@+id/btn_gameplay_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gameplay Test Funktions (Dev)"
+        style="@style/PrimaryButton"/>
+
+    <Button
+        android:id="@+id/btn_view_lobby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Lobby (Dev)"
         style="@style/PrimaryButton"/>
 
 </LinearLayout>
