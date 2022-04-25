@@ -47,6 +47,10 @@ public class CreateSessionActivity extends AppCompatActivity {
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                             binding.buttonNavigateLobby.setVisibility(View.VISIBLE);
                             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
+
+                            Intent intent = new Intent(CreateSessionActivity.this, SelectNameActivity.class);
+                            intent.putExtra("GameKey", sessionName);
+                            startActivity(intent);
                         }
 
                         @Override
