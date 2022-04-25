@@ -32,22 +32,26 @@ public class CreateSessionActivity extends AppCompatActivity {
 
         binding.buttonNavigateLobby.setVisibility(View.INVISIBLE);
         binding.textViewError.setVisibility(View.INVISIBLE);
+        binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
 
         binding.buttonCreateSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.progressBarJoinSessionActivity.setVisibility(View.VISIBLE);
                 String sessionName = binding.editTextSessionname.getText().toString();
                 if(sessionName.length()>0) {
                     ServerThread.instance.sendCommand(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                             binding.buttonNavigateLobby.setVisibility(View.VISIBLE);
+                            binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                         }
 
                         @Override
                         public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
                             binding.textViewError.setText("Error");
                             binding.textViewError.setVisibility(View.VISIBLE);
+                            binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                         }
                     });
                 }
