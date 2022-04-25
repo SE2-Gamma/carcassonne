@@ -18,12 +18,17 @@ public  class Server implements Runnable {
     private final ServerSocket socket;
     static LinkedList<ServerPlayer> activeServerPlayers =new LinkedList<>(); //todo check concurrency problems
     ClientHandler clientHandler=null;
+    public static Server server=null;
+    static Scanner scanner=new Scanner(System.in);
+    //---------------classes
     public static class SessionHandler{
+
         static LinkedList<Session> sessions=new LinkedList<Session>(); //todo check concurrency problems
+
         public static Session createSession(String sessionID, Player player){
 
             try {
-               getSession(sessionID);
+                getSession(sessionID);
             } catch (NoSuchElementException e) {
                 Session session= new Session(sessionID);
                 session.joinGame(player);
@@ -36,10 +41,10 @@ public  class Server implements Runnable {
         }
         public static Player getPLayer(String SessionID,String playerID){
             for (Session session:sessions
-                 ) {
+            ) {
                 if(session.getId().equals(SessionID)){
                     for (Player player: session.players
-                         ) {
+                    ) {
                         if(player.getId().equals(playerID)){
                             return player;
                         }
@@ -66,76 +71,6 @@ public  class Server implements Runnable {
         }
 
     }
-    public static ServerPlayer identify(Player player){
-        //matches ServerPLayer and players
-        for (ServerPlayer serverplayer:activeServerPlayers
-        ) {
-            if(serverplayer.getId().equals(player.getId())){
-                return serverplayer;
-            }
-        }
-        throw new NoSuchElementException("No such player");
-    }
-    public static int getUniqueID(){
-        return uniqueID++;
-    }
-
-    public static Player getPlayerbyName(String playername){
-        for (ServerPlayer serverplayer:activeServerPlayers
-             ) {
-            if(serverplayer.getName().equals(playername)){
-                return serverplayer.getPlayer();
-            }
-        }
-        throw new NoSuchElementException("no player found with matching name");
-    }
-    public Server(String address, int port, int maxClients) throws IOException {
-        this.socket = new ServerSocket(port, maxClients, InetAddress.getByName(address));
-    }
-    public static ServerPlayer getServerPlayer(String playerID){
-        for (ServerPlayer player:activeServerPlayers
-             ) {
-            if(player.getId().equals(playerID)){
-                return player;
-            }
-        }
-    throw new NoSuchElementException("no player with matching ID");
-    }
-    @Override
-    public void run() {
-        clientHandler=new ClientHandler();
-        Thread thread=new Thread(clientHandler);
-        thread.start();
-    }
-
-    public boolean closeAll(){
-        for (ServerPlayer serverplayer:activeServerPlayers
-             ) {
-           ClientThread clientThread= serverplayer.getClientThread();
-
-            try {
-
-                clientThread.terminate();
-                Socket socket=clientThread.getSocket();
-                socket.close();
-
-            }  catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        clientHandler.terminate();
-        try {
-            socket.close();
-        } catch (IOException e) {
-            System.out.println("serversocket closed intentionally");
-            e.printStackTrace();
-        }
-
-
-        return true;
-    }
-
-
     public class ClientHandler implements Runnable{
         private boolean running=false;
         public void terminate(){
@@ -183,8 +118,49 @@ public  class Server implements Runnable {
         }
 
     }
-    public static Server server=null;
-    static Scanner scanner=new Scanner(System.in);
+    public Server(String address, int port, int maxClients) throws IOException {
+        this.socket = new ServerSocket(port, maxClients, InetAddress.getByName(address));
+    }
+    //----------------utility methods
+    public static ServerPlayer identify(Player player){
+        //matches ServerPLayer and players
+        for (ServerPlayer serverplayer:activeServerPlayers
+        ) {
+            if(serverplayer.getId().equals(player.getId())){
+                return serverplayer;
+            }
+        }
+        throw new NoSuchElementException("No such player");
+    }
+    public static int getUniqueID(){
+        return uniqueID++;
+    }
+    public static Player getPlayerbyName(String playername){
+        for (ServerPlayer serverplayer:activeServerPlayers
+        ) {
+            if(serverplayer.getName().equals(playername)){
+                return serverplayer.getPlayer();
+            }
+        }
+        throw new NoSuchElementException("no player found with matching name");
+    }
+    public static ServerPlayer getServerPlayer(String playerID){
+        for (ServerPlayer player:activeServerPlayers
+        ) {
+            if(player.getId().equals(playerID)){
+                return player;
+            }
+        }
+        throw new NoSuchElementException("no player with matching ID");
+    }
+
+    //-----------server
+    @Override
+    public void run() {
+        clientHandler=new ClientHandler();
+        Thread thread=new Thread(clientHandler);
+        thread.start();
+    }
     public static boolean startServer(){
         try {
             server = new Server(globalVariables.getAdress(), globalVariables.getPort(), maxPlayers);
@@ -202,6 +178,35 @@ public  class Server implements Runnable {
         server.closeAll();
         return true;
     }
+    public boolean closeAll(){
+        for (ServerPlayer serverplayer:activeServerPlayers
+        ) {
+            ClientThread clientThread= serverplayer.getClientThread();
+
+            try {
+
+                clientThread.terminate();
+                Socket socket=clientThread.getSocket();
+                socket.close();
+
+            }  catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        clientHandler.terminate();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            System.out.println("serversocket closed intentionally");
+            e.printStackTrace();
+        }
+
+
+        return true;
+    }
+
+
+
     public static void main(String[] args) throws IOException {
 
         Server server = new Server(globalVariables.getAdress(), globalVariables.getPort(), maxPlayers);
