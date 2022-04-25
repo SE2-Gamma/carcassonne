@@ -22,7 +22,12 @@ import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.CreateGameCommand;
+import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
+import at.aau.se2.gamma.core.commands.KickPlayerCommand;
+import at.aau.se2.gamma.core.commands.RequestUserListCommand;
+import at.aau.se2.gamma.core.utils.globalVariables;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,11 +77,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ServerThread serverThread = ServerThread.init("192.168.0.47", 1234, new ServerThread.ConnectionHandler() {
+        ServerThread serverThread = ServerThread.init(globalVariables.getAdress(), 1234, new ServerThread.ConnectionHandler() {
             @Override
             public void onConnectionFinished() {
                 Logger.debug("Connection created");
-                ServerThread.instance.sendCommand(new InitialSetNameCommand("mrader"), new ServerThread.RequestResponseHandler() {
+                ServerThread.instance.sendCommand(new InitialSetNameCommand("leona"), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                         Logger.debug("HEY, RESPONSE :)");
@@ -87,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         Logger.debug("NOOOOOO :(");
                     }
                 });
+
             }
 
             @Override
