@@ -37,6 +37,18 @@
         android:insetBottom="@dimen/spaceDefault"
         android:text="Join Session" />
 
+    <TextView
+        android:id="@+id/tv_ServerError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Verbindung zum Server fehlgeschlagen, bitte überprüfe deine Internetverbindung und versuche es erneut!" />
+
+    <ProgressBar
+        android:id="@+id/pb_menu"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="131dp"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/btn_ui_elements"
         style="@style/PrimaryButton"
