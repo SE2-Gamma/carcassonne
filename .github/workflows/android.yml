@@ -2,9 +2,8 @@ name: Android CI
 
 on:
   push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, development ]
 
 jobs:
   build:
@@ -21,9 +20,9 @@ jobs:
         cache: gradle
 
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x android/gradlew
     - name: Build with Gradle
       env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew build jacocoTestReport sonarqube --info
+      run: cd android && ./gradlew build jacocoTestReport sonarqube --info
