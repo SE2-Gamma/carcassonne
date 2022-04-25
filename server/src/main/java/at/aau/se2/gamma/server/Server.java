@@ -9,7 +9,7 @@ import java.util.*;
 
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Session;
-import at.aau.se2.gamma.core.utils.globalVariables;
+import at.aau.se2.gamma.core.utils.GlobalVariables;
 import at.aau.se2.gamma.server.models.ServerPlayer;
 
 public  class Server implements Runnable {
@@ -91,7 +91,7 @@ public  class Server implements Runnable {
 
                         ServerPlayer serverPlayer =new ServerPlayer();
                         serverPlayer.setId(String.valueOf(tempID));
-                        serverPlayer.setName(globalVariables.getDefaultname());
+                        serverPlayer.setName(GlobalVariables.getDefaultname());
                         serverPlayer.setClientThread(clientThread);
                         activeServerPlayers.add(serverPlayer);
 
@@ -163,7 +163,7 @@ public  class Server implements Runnable {
     }
     public static boolean startServer(){
         try {
-            server = new Server(globalVariables.getAdress(), globalVariables.getPort(), maxPlayers);
+            server = new Server(GlobalVariables.getAdress(), GlobalVariables.getPort(), maxPlayers);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -209,7 +209,7 @@ public  class Server implements Runnable {
 
     public static void main(String[] args) throws IOException {
 
-        Server server = new Server(globalVariables.getAdress(), globalVariables.getPort(), maxPlayers);
+        Server server = new Server(GlobalVariables.getAdress(), GlobalVariables.getPort(), maxPlayers);
         Thread thread=new Thread(server);
         thread.start();
 

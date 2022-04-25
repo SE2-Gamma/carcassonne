@@ -1,28 +1,5 @@
 package at.aau.se2.gamma.core;
 
-import at.aau.se2.gamma.core.commands.CreateGameCommand;
-import at.aau.se2.gamma.core.commands.DisconnectCommand;
-import at.aau.se2.gamma.core.commands.InitialJoinCommand;
-import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
-import at.aau.se2.gamma.core.commands.KickPlayerCommand;
-import at.aau.se2.gamma.core.commands.RequestUserListCommand;
-import at.aau.se2.gamma.core.models.impl.Session;
-import at.aau.se2.gamma.core.utils.ServerResponseDecrypter;
-import at.aau.se2.gamma.core.utils.globalVariables;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.util.LinkedList;
-
-
-import static org.junit.jupiter.api.Assertions.*;
-
 
 public class ServerTests {
     /*
@@ -33,7 +10,7 @@ ObjectOutputStream out =null;
     @BeforeEach
     public void buildConnection(){
         try {
-            socket=new Socket(globalVariables.getAdress(),globalVariables.getPort());
+            socket=new Socket(GlobalVariables.getAdress(),GlobalVariables.getPort());
             out =new ObjectOutputStream(socket.getOutputStream());
             in =new ObjectInputStream(socket.getInputStream());
 
@@ -111,7 +88,7 @@ ObjectOutputStream out =null;
         public void run() {
 running=true;
             try {
-                Socket socket2=new Socket(globalVariables.getAdress(),globalVariables.getPort());
+                Socket socket2=new Socket(GlobalVariables.getAdress(),GlobalVariables.getPort());
 
                 ObjectInputStream in2 =new ObjectInputStream(socket2.getInputStream());
                 ObjectOutputStream out2 =new ObjectOutputStream(socket2.getOutputStream());

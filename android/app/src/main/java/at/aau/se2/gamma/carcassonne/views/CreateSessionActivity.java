@@ -11,11 +11,13 @@ import at.aau.se2.gamma.carcassonne.MainActivity;
 import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityCreateSessionBinding;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
+import at.aau.se2.gamma.carcassonne.network.SendThread;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.CreateGameCommand;
+import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 
 public class CreateSessionActivity extends AppCompatActivity {
 
@@ -40,7 +42,7 @@ public class CreateSessionActivity extends AppCompatActivity {
                 binding.progressBarJoinSessionActivity.setVisibility(View.VISIBLE);
                 String sessionName = binding.editTextSessionname.getText().toString();
                 if(sessionName.length()>0) {
-                    ServerThread.instance.sendCommand(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
+                    new SendThread(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                             binding.buttonNavigateLobby.setVisibility(View.VISIBLE);
@@ -53,7 +55,7 @@ public class CreateSessionActivity extends AppCompatActivity {
                             binding.textViewError.setVisibility(View.VISIBLE);
                             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                         }
-                    });
+                    }).start();
                 }
             }
         });
