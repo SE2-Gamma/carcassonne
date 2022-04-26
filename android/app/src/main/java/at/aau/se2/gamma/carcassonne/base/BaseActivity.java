@@ -69,7 +69,6 @@ public class BaseActivity extends AppCompatActivity {
             });
         } catch (NoServerInstanceException e) {
             Logger.error(e.getMessage());
-            e.printStackTrace();
         }
     }
 
