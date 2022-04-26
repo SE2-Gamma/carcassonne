@@ -14,7 +14,7 @@ public class ExampleTest {
 
     @Test
     public void player() {
-        Player player = new Player();
+        Player player = new Player("t1", "t2");
         player.setId("1sd");
         assertEquals("1sd", player.getId());
     }
