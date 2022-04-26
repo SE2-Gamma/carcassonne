@@ -1,6 +1,6 @@
 package at.aau.se2.gamma.carcassonne.views;
 
-import androidx.appcompat.app.AppCompatActivity;
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 
-public class JoinSessionActivity extends AppCompatActivity {
+public class JoinSessionActivity extends BaseActivity {
 
     private ActivityJoinSessionBinding binding;
 
@@ -40,7 +40,7 @@ public class JoinSessionActivity extends AppCompatActivity {
                 if(userInput.length()>0) {
                     binding.pbJoinSessionActivity.setVisibility(View.VISIBLE);
                     binding.tvError.setVisibility(View.INVISIBLE);
-                    SendThread thread = new SendThread(new InitialJoinCommand(userInput), new ServerThread.RequestResponseHandler() {
+                    sendServerCommand(new InitialJoinCommand(userInput), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
 
@@ -56,7 +56,6 @@ public class JoinSessionActivity extends AppCompatActivity {
                             binding.tvError.setVisibility(View.VISIBLE);
                         }
                     });
-                    thread.start();
                     binding.pbJoinSessionActivity.setVisibility(View.INVISIBLE);
                 }else{
                     binding.tvError.setText("Bitte gib einen Game Key ein!");

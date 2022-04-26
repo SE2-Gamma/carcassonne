@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
@@ -19,7 +19,7 @@ import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     public ActivityMainBinding binding;
 
@@ -32,11 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
         binding.tvServerError.setVisibility((View.INVISIBLE));
 
-        ServerThread serverThread = ServerThread.init(GlobalVariables.getAdress(), 1234, new ServerThread.ConnectionHandler() {
+        ServerThread serverThread = ServerThread.init(GlobalVariables.getAdress(), GlobalVariables.getPort(), new ServerThread.ConnectionHandler() {
             @Override
             public void onConnectionFinished() {
                 Logger.debug("Connection created");
-                ServerThread.instance.sendCommand(new InitialSetNameCommand("mrader"), new ServerThread.RequestResponseHandler() {
+
+                MainActivity.this.sendServerCommand(new InitialSetNameCommand("mrader"), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                         Logger.debug("HEY, RESPONSE :)");
