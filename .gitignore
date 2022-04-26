@@ -9,10 +9,13 @@
 **/.idea/assetWizardSettings.xml
 **/.idea/gradle.xml
 **/.idea/workspace.xml
+**/.idea/misc.xml
+**/.idea/vcs.xml
 **/.idea/deploymentTargetDropDown.xml
 .DS_Store
 **/build
 **/captures
+**/out
 .externalNativeBuild
 .cxx
 local.properties
