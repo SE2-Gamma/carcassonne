@@ -1,9 +1,12 @@
 package at.aau.se2.gamma.carcassonne.base;
 
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import at.aau.se2.gamma.carcassonne.exceptions.NoServerInstanceException;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
+import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 
@@ -65,6 +68,7 @@ public class BaseActivity extends AppCompatActivity {
                 }
             });
         } catch (NoServerInstanceException e) {
+            Logger.error(e.getMessage());
             e.printStackTrace();
         }
     }
