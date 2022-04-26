@@ -1,12 +1,12 @@
 package at.aau.se2.gamma.carcassonne.views;
 
-import androidx.appcompat.app.AppCompatActivity;
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
 import android.os.Bundle;
 
 import at.aau.se2.gamma.carcassonne.R;
 
-public class UIElementsActivity extends AppCompatActivity {
+public class UIElementsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

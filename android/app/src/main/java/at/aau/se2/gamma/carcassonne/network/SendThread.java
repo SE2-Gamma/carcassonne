@@ -11,6 +11,6 @@ public class SendThread extends Thread{
     }
     @Override
     public void run(){
-        ServerThread.instance.sendCommand(command,handler);
+        ServerThread.instance.handleClientRequest(command,handler);
     }
 }
