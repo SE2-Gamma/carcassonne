@@ -54,9 +54,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onServerFailure(Exception e) {
-                Logger.error("Error at server initial connection");
-                binding.tvServerError.setVisibility(View.VISIBLE);
-                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Logger.error("Error at server initial connection");
+                        binding.tvServerError.setVisibility(View.VISIBLE);
+                        e.printStackTrace();
+                    }
+                });
             }
         });
         serverThread.start();
