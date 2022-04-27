@@ -1,11 +1,15 @@
 package at.aau.se2.gamma.core.utils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class GlobalVariables {
     public static String getAdress() {
+
         return adress;
     }
 
-    static String adress="192.168.0.47";
+    static String adress="localhost";
 
     public static String getDefaultname() {
         return defaultname;
