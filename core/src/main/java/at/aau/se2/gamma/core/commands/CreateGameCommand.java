@@ -4,10 +4,7 @@ import at.aau.se2.gamma.core.states.ClientState;
 
 public class CreateGameCommand extends BaseCommand{
 
-    //Payload = LinkedList<Object>
-    //1. entry: String SessionID (gamename)
-    //2. entry: Player player (der PLayer wird auch zur session hinzugefügt)
-    //
+    //Payload = String SessionID
     //serverResponseCommand payload=Session
     public CreateGameCommand(Object payload) {
         super(payload);

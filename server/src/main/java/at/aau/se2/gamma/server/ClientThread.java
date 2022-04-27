@@ -3,7 +3,6 @@ package at.aau.se2.gamma.server;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.error.Codes;
-import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.states.ClientState;
@@ -13,20 +12,26 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 public class ClientThread extends Thread {
+
+
     private Socket socket;
     private ClientState clientState;
     private Session session;
     private Player player;
     private String ID;
     private ServerPlayer serverPlayer;
+
+
     private ObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
     private boolean running;
+
 
     public ClientThread(Socket socket) {
         this.socket = socket;
@@ -42,15 +47,34 @@ public class ClientThread extends Thread {
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             while(running) {
                 BaseCommand command = (BaseCommand) objectInputStream.readObject();
+
                 BaseCommand response=handleCommand(command);
 
                 System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
-                objectOutputStream.writeObject(response);
+                if(!(command instanceof DisconnectCommand)) {
+                    objectOutputStream.writeObject(response);
+                }
             }
-        } catch (Exception e) {
+            System.out.println("stopped");
+        } catch(SocketException socketException){
+            if(!running){
+                System.out.println(serverPlayer.getName()+" closed internally");
+            }else{
+                socketException.printStackTrace();
+            }
+        }
+        catch (Exception e) {
             System.out.println("EXCEPTION");
             e.printStackTrace();
         }
+        try {
+            objectInputStream.close();
+            objectOutputStream.close();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
     }
 
 //--------------------------commandhandler-----------------------------------------
@@ -69,7 +93,12 @@ public class ClientThread extends Thread {
             return requestUserListCommandByID((RequestUserListCommandByID)command);
         } else if (command instanceof RequestUserListCommand) {
             return requestUserListCommand((RequestUserListCommand)command);
-        }else {
+        }else if(command instanceof KickPlayerCommand) {
+            return kickPlayer((KickPlayerCommand) command);
+        }else if(command instanceof DisconnectCommand){
+            return disconnectPlayer((DisconnectCommand) command);
+        }
+        else{
             System.out.println("command not suitable for current state");
         }
 
@@ -97,7 +126,8 @@ public class ClientThread extends Thread {
         System.out.print(" //current state: "+clientState +"//");
         return new ServerResponseCommand(ServerResponse.success(namelist), command.getRequestId());
     }
-    private BaseCommand requestUserListCommand(RequestUserListCommand command){
+
+   private BaseCommand requestUserListCommand(RequestUserListCommand command){
         System.out.print(" //current state: "+clientState+"//");
         if(!(clientState==ClientState.LOBBY||clientState==ClientState.GAME)){
             return ResponseCreator.getError(command,"must be in Lobby or in Game", Codes.ERROR.WRONG_STATE);
@@ -109,8 +139,9 @@ public class ClientThread extends Thread {
         }
         System.out.print( "  // players requested: "+ Arrays.toString(namelist.toArray()) +"//");
         System.out.print ("// current state: "+ clientState+"// ");
-        return new ServerResponseCommand(ServerResponse.success(namelist), command.getRequestId());
+        return ResponseCreator.getSuccess(command,namelist);
     }
+
     private BaseCommand createGameCommand(CreateGameCommand command) {
         //check state
         if(clientState!=ClientState.INITIAl){
@@ -118,9 +149,9 @@ public class ClientThread extends Thread {
         }
         System.out.print("  current state: "+clientState);
         //getpayload
-        LinkedList<Object>list=(LinkedList<Object>) command.getPayload();
-        Player player=(Player) list.pop();
-        String GameID=(String)list.pop();
+
+       // Player player=(Player) list.pop();
+         String GameID= (String) command.getPayload();
 
         //check player
     /*    try {Server.identify(player);} catch (NoSuchElementException e) {
@@ -130,7 +161,7 @@ public class ClientThread extends Thread {
         }*/
         //create session
         try {
-            session = Server.SessionHandler.createSession(GameID,player);
+            session = Server.SessionHandler.createSession(GameID,this.player);
         } catch (IllegalArgumentException e) {
             System.err.println("Spiel bereits vorhanden");
           return  ResponseCreator.getError(command,"Server bereits vorhanden", Codes.ERROR.SESSION_ALREADY_EXISTS);
@@ -142,7 +173,7 @@ public class ClientThread extends Thread {
         clientState=ClientState.LOBBY;
         System.out.print(" //current state: "+clientState +"//");
         System.out.print(" //SessionID: "+session.getId()+"//  ");
-        return new ServerResponseCommand(ServerResponse.success(session), command.getRequestId());
+        return ResponseCreator.getSuccess(command,session);
     }
 
     public BaseCommand initialJoin(InitialJoinCommand command){
@@ -151,9 +182,9 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command,"Not in initialState", Codes.ERROR.WRONG_STATE);
         }
         //getpayload
-        LinkedList<Object> list=(LinkedList<Object>) command.getPayload();
-        String sessionID= (String) list.pop();
-        Player player= (Player) list.pop();
+        //LinkedList<Object> list=(LinkedList<Object>) command.getPayload();
+        String sessionID= (String) command.getPayload();
+        //Player player= (Player) list.pop();
         //checkplayer
         try {
             Server.identify(player);
@@ -173,11 +204,11 @@ public class ClientThread extends Thread {
         }
         //set state
         clientState=ClientState.LOBBY;
-        LinkedList<Object>passlist=new LinkedList<>();
-        passlist.add(session);
-        passlist.add(ID);
-        return new ServerResponseCommand(ServerResponse.success(passlist),command.getRequestId());
+
+
+        return ResponseCreator.getSuccess(command,session);
     }
+
     public BaseCommand initialSetName(InitialSetNameCommand command){
         //todo check github Vorschlag in issue commentary
         System.out.print(" //current state: "+clientState+"//");
@@ -190,7 +221,6 @@ public class ClientThread extends Thread {
         for (ServerPlayer serverplayer:Server.activeServerPlayers
         ) {
             if( serverplayer.getName().equals(name)){
-                System.err.println("Name bereits vergeben");
                 return ResponseCreator.getError(command,"Name bereits vergeben", Codes.ERROR.NAME_ALREADY_TAKEN);
             }
         }
@@ -208,9 +238,51 @@ public class ClientThread extends Thread {
         System.out.print("// serverplayer set//");
 
         System.out.print ("// current state: "+ clientState+"// ");
-        return ResponseCreator.getSuccess(command,"player accepted");
+        return ResponseCreator.getSuccess(command,ID);
     }
 
+    public BaseCommand disconnectPlayer(DisconnectCommand command){ //todo: implement errors
+        System.out.print("//todo: disconnect player "+player.getName()+"//");
+        try {
+            objectOutputStream.writeObject(ResponseCreator.getSuccess(command,"Disconnect initiated"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(clientState.equals(ClientState.LOBBY)){
+            session.removePlayer(player);
+        }
+        if(clientState.equals(ClientState.GAME)){
+            //todo: implement
+        }
+        Server.activeServerPlayers.remove(serverPlayer);
+        try {
+            terminate();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.print("//player successfully removed//");
+        return ResponseCreator.getSuccess(command,"Player sucessfully removed.also you shouldnt be receiving this");
+    }
+
+    public BaseCommand kickPlayer(KickPlayerCommand command) {
+        String playername = (String) command.getPayload();
+        System.out.print("//attempting to kick//");
+        Player tempplayer;
+        //String playerID=Server.identify(playername);
+        try {
+            tempplayer = Server.getPlayerbyName(playername);
+            System.out.print("//finding player//");
+        } catch (NoSuchElementException e) {
+            return ResponseCreator.getError(command, "no such player found", Codes.ERROR.NO_PLAYER_WITH_MATCHING_NAME);
+        }
+        System.out.print("//player found//");
+if(session.voteKick(tempplayer,player)){
+    //todo: alert kicked player1
+}
+
+        return ResponseCreator.getSuccess(command, "vote issued");
+    }
     public void sendCommand(BaseCommand command) {
         try {
             this.objectOutputStream.writeObject(command);
@@ -218,9 +290,18 @@ public class ClientThread extends Thread {
             e.printStackTrace();
         }
     }
-    public void terminate(){
+
+
+    //-----------------------utility methods------------------------------------------------------------------
+
+
+    public void terminate() throws IOException {
+
         running=false;
-        //todo: implement
+
+    }
+    public void closeStreams() throws IOException {
+
     }
     public String getID() {
         return ID;
@@ -237,5 +318,11 @@ public class ClientThread extends Thread {
     public void setServerPlayer(ServerPlayer serverPlayer) {
         this.serverPlayer = serverPlayer;
     }
+    public Socket getSocket() {
+        return socket;
+    }
+
+
+
 
 }

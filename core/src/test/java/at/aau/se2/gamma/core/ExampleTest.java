@@ -18,4 +18,6 @@ public class ExampleTest {
         player.setId("1sd");
         assertEquals("1sd", player.getId());
     }
+
+
 }
