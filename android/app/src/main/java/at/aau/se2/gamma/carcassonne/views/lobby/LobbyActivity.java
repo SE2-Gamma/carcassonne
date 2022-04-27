@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import at.aau.se2.gamma.carcassonne.MainActivity;
 import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityLobbyBinding;
 
-public class LobbyActivity extends AppCompatActivity {
+public class LobbyActivity extends BaseActivity {
     public ActivityLobbyBinding binding;
 
     @Override

@@ -227,9 +227,7 @@ public class ClientThread extends Thread {
         System.out.println("  //set name: "+name+"//");
 
 
-        Player player=new Player();
-        player.setName(name);
-        player.setId(ID);
+        Player player=new Player(name, ID);
         this.player=player;
 
         this.serverPlayer.setPlayer(player);

@@ -1,6 +1,6 @@
 package at.aau.se2.gamma.carcassonne.views;
 
-import androidx.appcompat.app.AppCompatActivity;
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.View;
 
 import at.aau.se2.gamma.carcassonne.MainActivity;
 import at.aau.se2.gamma.carcassonne.R;
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityCreateSessionBinding;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.network.SendThread;
@@ -19,7 +20,7 @@ import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 
-public class CreateSessionActivity extends AppCompatActivity {
+public class CreateSessionActivity extends BaseActivity {
 
     public ActivityCreateSessionBinding binding;
 
