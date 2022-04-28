@@ -43,7 +43,28 @@ public class CreateSessionActivity extends BaseActivity {
                 binding.progressBarJoinSessionActivity.setVisibility(View.VISIBLE);
                 String sessionName = binding.editTextSessionname.getText().toString();
                 if(sessionName.length()>0) {
-                    new SendThread(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
+                    Log.d("SOUT", "if");
+                    CreateSessionActivity.this.sendServerCommand(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
+                        @Override
+                        public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                            Log.d("SOUT", "onResponse-----------------------------------");
+                            binding.buttonNavigateLobby.setVisibility(View.VISIBLE);
+                            binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
+
+                            Intent intent = new Intent(CreateSessionActivity.this, SelectNameActivity.class);
+                            intent.putExtra("GameKey", sessionName);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                            Log.d("SOUT", "onFailure++++++++++++++++++++++++++++++++++");
+                            binding.textViewError.setText("Error");
+                            binding.textViewError.setVisibility(View.VISIBLE);
+                            binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                    /*new SendThread(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                             Log.d("server-com", "response vom server: " + response.toString());
@@ -61,7 +82,7 @@ public class CreateSessionActivity extends BaseActivity {
                             binding.textViewError.setVisibility(View.VISIBLE);
                             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                         }
-                    }).start();
+                    }).start();*/
                 }
             }
         });
