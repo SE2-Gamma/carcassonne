@@ -2,7 +2,6 @@ package at.aau.se2.gamma.carcassonne.network;
 
 import android.os.Build;
 import android.util.Log;
-import android.util.Pair;
 
 import androidx.annotation.RequiresApi;
 
@@ -17,6 +16,7 @@ import java.util.Optional;
 import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 
@@ -38,7 +38,7 @@ public class ServerThread extends Thread {
     private Socket socket;
     public static ServerThread instance;
     ConnectionHandler connectionHandler;
-    private ArrayList<Pair<BaseCommand, RequestResponseHandler>> requests = new ArrayList<>();
+    private ArrayList<ServerRequest> requests = new ArrayList<>();
 
     private ServerThread(String address, int port, ConnectionHandler connectionHandler) {
         this.address = address;
@@ -66,24 +66,17 @@ public class ServerThread extends Thread {
                     ServerResponse response = (ServerResponse) responseCommand.getPayload();
 
                     if(response.getPayload() instanceof BaseCommand) {
-                        BaseCommand command = (BaseCommand) response.getPayload();
                         String requestID = responseCommand.getRequestId();
 
                         // check if a requestID exists, and if this requestID match one requested requestID
                         if (requestID != null) {
-                            // get the command-handler pair with the requestID
-                            Optional<Pair<BaseCommand, RequestResponseHandler>> optHandlerPair = requests.stream().filter(pair -> pair.first.getRequestId() != null
-                                    && pair.first.getRequestId().equals(requestID)).findFirst();
+                            // get the command-handler serverRequest with the requestID
+                            Optional<ServerRequest> optHandleServerRequest = requests.stream().filter(serverRequest -> serverRequest.command.getRequestId() != null
+                                    && serverRequest.command.getRequestId().equals(requestID)).findFirst();
 
-                            if (optHandlerPair.isPresent()) {
-                                Pair<BaseCommand, RequestResponseHandler> pair = optHandlerPair.get();
-
-                                // check if there is an error, or a successful response
-                                if (command instanceof ErrorCommand) {
-                                    pair.second.onFailure(response, command.getPayload(), pair.first);
-                                } else {
-                                    pair.second.onResponse(response, command.getPayload(), pair.first);
-                                }
+                            if (optHandleServerRequest.isPresent()) {
+                                ServerRequest serverRequest = optHandleServerRequest.get();
+                                serverRequest.notifyClient(response);
                             } else {
                                 Logger.error("Unknown RequestID");
                             }
@@ -103,9 +96,13 @@ public class ServerThread extends Thread {
     }
 
     public void sendCommand(BaseCommand command, RequestResponseHandler handler) {
+        new SendThread(command, handler).start();
+    }
+
+    public void handleClientRequest(BaseCommand command, RequestResponseHandler handler) {
         // TODO: add timeout
         if(command.getRequestId() != null) {
-            requests.add(new Pair<>(command, handler));
+            requests.add(new ServerRequest(command, handler));
         }
 
        try {

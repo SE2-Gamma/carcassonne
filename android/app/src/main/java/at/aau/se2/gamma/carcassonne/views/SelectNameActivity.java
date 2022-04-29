@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
 import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.UtilityKlasse;
@@ -17,7 +17,7 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
 
-public class SelectNameActivity extends AppCompatActivity {
+public class SelectNameActivity extends BaseActivity {
 
     private ActivitySelectNameBinding binding;
     String filename = "nameFile";

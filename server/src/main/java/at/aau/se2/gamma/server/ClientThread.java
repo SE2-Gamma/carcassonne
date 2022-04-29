@@ -28,7 +28,7 @@ public class ClientThread extends Thread {
     private ServerPlayer serverPlayer;
 
 
-    private ObjectInputStream objectInputStream;
+    private SecureObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
     private boolean running;
 
@@ -43,7 +43,7 @@ public class ClientThread extends Thread {
         running=true;
         this.clientState = ClientState.INITIAl;
         try {
-            this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+            this.objectInputStream = new SecureObjectInputStream(socket.getInputStream());
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             while(running) {
                 BaseCommand command = (BaseCommand) objectInputStream.readObject();
@@ -227,9 +227,7 @@ public class ClientThread extends Thread {
         System.out.println("  //set name: "+name+"//");
 
 
-        Player player=new Player();
-        player.setName(name);
-        player.setId(ID);
+        Player player=new Player(name, ID);
         this.player=player;
 
         this.serverPlayer.setPlayer(player);
