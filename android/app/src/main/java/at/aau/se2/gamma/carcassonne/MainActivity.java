@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity {
             public void onConnectionFinished() {
                 Logger.debug("Connection created");
 
-                MainActivity.this.sendServerCommand(new InitialSetNameCommand("mrader"), new ServerThread.RequestResponseHandler() {
+                MainActivity.this.sendServerCommand(new InitialSetNameCommand("fgh"), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                         Logger.debug("HEY, RESPONSE :)");

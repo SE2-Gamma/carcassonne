@@ -67,7 +67,7 @@ public  class Server implements Runnable {
             for (Session session:sessions
             ) {
                 if(session.getId().equals(sessionID)){
-                    System.out.println("session found");
+                    System.out.print("//session found//");
                     return session;
                 }
             }

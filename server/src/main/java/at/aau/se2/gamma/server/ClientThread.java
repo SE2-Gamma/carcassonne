@@ -9,6 +9,7 @@ import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
 
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -208,6 +209,7 @@ lock();
     }
 
     public BaseCommand initialJoin(InitialJoinCommand command){
+        System.out.print("//startingstate: "+clientState+"//");
         //checkstate
         if(clientState!=ClientState.INITIAl){
             return ResponseCreator.getError(command,"Not in initialState", Codes.ERROR.WRONG_STATE);
@@ -216,15 +218,8 @@ lock();
         //LinkedList<Object> list=(LinkedList<Object>) command.getPayload();
         String sessionID= (String) command.getPayload();
         //Player player= (Player) list.pop();
-        //checkplayer
-        try {
-            Server.identify(player);
-        } catch (NoSuchElementException e) {
-            System.err.println("Player not connected");
-            e.printStackTrace();
-            return ResponseCreator.getError(command,"Player not connected", Codes.ERROR.PLAYER_NOT_CONNECTED);
 
-        }
+
         //join session
         try {
             session=Server.SessionHandler.joinSession(sessionID,player);
@@ -235,7 +230,14 @@ lock();
         }
         //set state
         clientState=ClientState.LOBBY;
-
+        LinkedList<String> namelist=new LinkedList<>();
+        for (Player player:session.players
+        ) {
+            namelist.add(player.getName());
+        }
+        namelist.add("test");
+        System.out.print( "  // players currently in lobby: "+ namelist +"//");
+        System.out.print("//currentState: "+clientState+"//");
 
         return ResponseCreator.getSuccess(command,session);
     }
@@ -258,7 +260,7 @@ lock();
         System.out.println("  //set name: "+name+"//");
 
 
-        Player player=new Player(name, ID);
+        Player player=new Player(ID, name);
         this.player=player;
 
         this.serverPlayer.setPlayer(player);
