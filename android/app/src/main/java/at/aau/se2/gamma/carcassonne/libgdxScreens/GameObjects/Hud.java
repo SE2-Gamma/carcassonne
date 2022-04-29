@@ -1,14 +1,23 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects;
 
+import android.graphics.fonts.Font;
+import android.util.Log;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -21,6 +30,7 @@ public class Hud {
     private SpriteBatch sb;
 
     private Label statusTestLabel;
+    private Label counterTestLabel;
     private Table table;
     private Label.LabelStyle labelstyle;
     private Texture errorTexture = new Texture("testTexture.jpg");
@@ -29,11 +39,14 @@ public class Hud {
     private Table previewTable;
     private Image currentImg;
 
+    float rotation;
+
+    private int counter;
+
 
     public Hud(SpriteBatch sb){
         this.sb = sb;
         viewport = new ScreenViewport();
-                //new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
 
@@ -51,22 +64,55 @@ public class Hud {
         table.add(statusTestLabel).expandX().pad(10);
         table.row(); //creates a new row
 
+        counterTestLabel = new Label(""+counter, labelstyle);
+        counterTestLabel.setFontScale(5f);
+        table.add(counterTestLabel);
+
+        Image arrowImage_left = new Image(new Texture("Arrow_left_thiccc.png"));
+        Image arrowImage_right = new Image(new Texture("Arrow_right_thiccc.png"));
 
         stage.addActor(table);
 
         currentImg = errorImg;
         currentImg.setDrawable(new TextureRegionDrawable(new Texture("testTexture.jpg")));
-        //currentImg = new Image(errorTexture);
-        //currentImg.setSize(384,384);
-        //add preview image
+        rotation = 0;
+
+        //setting up preview table, for CardPreview in the UI/HUD
         previewTable = new Table();
+        previewTable.add(arrowImage_left).align(Align.right).size(128,128);
+        previewTable.row();
         previewTable.setFillParent(true);
         previewTable.bottom();
         previewTable.align(Align.left | Align.bottom).pad(30);
-        currentImg.setScale(2);
-        previewTable.add(currentImg);
+        currentImg.setScale(1);
+        previewTable.add(currentImg).size(384, 384);
+
+        previewTable.add(arrowImage_right).align(Align.top).size(128,128);
 
         stage.addActor(previewTable);
+        counter = 0;
+
+        //adding listeners to arrows for rotation
+        arrowImage_left.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                counter++;
+                rotation +=90;
+                currentImg.addAction(Actions.parallel(Actions.rotateTo(rotation, 0.1f)));
+
+            }
+        });
+
+        arrowImage_right.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                counter++;
+                rotation -=90;
+                currentImg.addAction(Actions.parallel(Actions.rotateTo(rotation, 0.1f)));
+            }
+        });
 
     }
 
@@ -79,7 +125,10 @@ public class Hud {
             statusTestLabel.setText(debugText);
 
         }
-        //stage.act(Gdx.graphics.getDeltaTime());
+        counterTestLabel.setText(""+counter +" | rotation "+rotation);
+
+        currentImg.setOrigin(currentImg.getWidth()/2, currentImg.getHeight()/2);
+        stage.act();
         stage.draw();
     }
 
@@ -87,9 +136,10 @@ public class Hud {
         this.currentTexture = cardTexture;
         currentImg.setDrawable(new TextureRegionDrawable(currentTexture));
         //this.currentImg = new Image(this.currentTexture);
-    }
+        rotation = 0;
+        currentImg.setRotation(0);
 
-    //public
+    }
 
     public Camera returncam(){
         return stage.getCamera();
@@ -101,5 +151,18 @@ public class Hud {
 
     public Texture getCurrentTexture() {
         return this.currentTexture;
+    }
+
+    public Stage getStage(){
+        return stage;
+    }
+
+    public void setRotation (float rotation){
+        this.rotation = rotation%360;
+    }
+
+    public float getRotation(){
+
+        return rotation%360;
     }
 }

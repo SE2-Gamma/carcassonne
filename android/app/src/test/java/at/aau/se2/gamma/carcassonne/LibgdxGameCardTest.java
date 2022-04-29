@@ -10,10 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Or;
 
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
-import at.aau.se2.gamma.carcassonne.libgdxScreens.Utility.InputCalculations;
 
 public class LibgdxGameCardTest {
 
@@ -29,14 +27,14 @@ public class LibgdxGameCardTest {
 
     @Test
     public void GameCard_getGameCardImage_test(){
-        Assert.assertEquals(gc.getGameCardImage(), myTexture);
+        Assert.assertEquals(gc.getGameCardTexture(), myTexture);
     }
 
     @Test
     public void GameCard_setGameCardImage_test(){
         Texture newTexture = Mockito.mock(Texture.class);
-        gc.setGameCardImage(newTexture);
-        Assert.assertEquals(gc.getGameCardImage(), newTexture);
+        gc.setGameCardTexture(newTexture);
+        Assert.assertEquals(gc.getGameCardTexture(), newTexture);
     }
 
     @Test

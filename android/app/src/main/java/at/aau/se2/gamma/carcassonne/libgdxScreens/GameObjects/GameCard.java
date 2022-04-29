@@ -5,21 +5,27 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 public class GameCard {
-    private Texture gameCardImage;
+    private Texture gameCardTexture;
     private Vector2 position;
+    private float rotation;
 
     public GameCard(Texture texture, Vector2 position){
-        gameCardImage = texture;
+        gameCardTexture = texture;
         this.position = position;
+        this.rotation = 0;
     }
 
-    public Texture getGameCardImage() {
-        return gameCardImage;
+    public GameCard(Texture texture, Vector2 position, float rotation){
+        gameCardTexture = texture;
+        this.position = position;
+        this.rotation = rotation;
     }
 
-    public void setGameCardImage(Texture gameCardImage) {
-        this.gameCardImage = gameCardImage;
+    public Texture getGameCardTexture() {
+        return gameCardTexture;
     }
+
+    public void setGameCardTexture(Texture gameCardTexture) { this.gameCardTexture = gameCardTexture; }
 
     public Vector2 getPosition() {
         return position;
@@ -52,5 +58,21 @@ public class GameCard {
             return false;
         }else return true;
 
+    }
+
+    public void setRotation(float rotation){
+        this.rotation = rotation%360;
+    }
+
+    public void addRotation(float rotation){
+        this.rotation = (this.rotation + rotation)%360;
+    }
+
+    public void subtractRotation(float rotation){
+        this.rotation = (this.rotation - rotation)%360;
+    }
+
+    public float getRotation(){
+        return rotation;
     }
 }

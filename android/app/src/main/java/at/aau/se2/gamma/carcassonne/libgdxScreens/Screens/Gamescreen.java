@@ -3,6 +3,7 @@ package at.aau.se2.gamma.carcassonne.libgdxScreens.Screens;
 import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -76,7 +77,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         //setting up gesture detector
         gestureDetecor = new GestureDetector(this);
-        Gdx.input.setInputProcessor(gestureDetecor);
+        //Gdx.input.setInputProcessor(gestureDetecor); //replaced with InputMultiplexer for HUD and Gamescreen Inputs
 
         camPanGesture = new Vector2();
 
@@ -116,6 +117,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         //for showcase of functionality, placed a random starter card.
         myMap.setGamecard(73,73, new GameCard(textures[(int)(Math.random()*20)], new Vector2(73*144,73*144)));
 
+        InputMultiplexer im = new InputMultiplexer(hud.getStage(), gestureDetecor);
+        Gdx.input.setInputProcessor(im);
     }
 
     @Override
@@ -184,8 +187,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     @Override
     public boolean tap(float x, float y, int count, int button) {
         Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        myMap.setGamecard(mapPos, new GameCard(hud.getCurrentTexture(), new Vector2(0f,0f)));
-        hud.setNextCardTexture(textures[(int)(Math.random()*20)]);
+        if(myMap.setGamecard(mapPos, new GameCard(hud.getCurrentTexture(), new Vector2(0f,0f), hud.getRotation()))){
+            hud.setNextCardTexture(textures[(int)(Math.random()*20)]);
+            hud.setRotation(0);
+        }
         //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
         //Log.e("info", "button: "+button + " | count: "+count);
         return false;

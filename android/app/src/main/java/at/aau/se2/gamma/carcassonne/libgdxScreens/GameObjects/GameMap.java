@@ -45,24 +45,45 @@ public class GameMap {
 
         for(int i = 0; i<Playingfield.length; i++){
             for(int j=0; j<Playingfield[i].length; j++){
-                if(Playingfield[i][j] != null && Playingfield[i][j].getGameCardImage() != null){
+                if(Playingfield[i][j] != null && Playingfield[i][j].getGameCardTexture() != null){
                     if(Playingfield[i][j].isVisible((OrthographicCamera) playercam)){
-                        batch.draw(Playingfield[i][j].getGameCardImage(), Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y);
+                        batch.draw(Playingfield[i][j].getGameCardTexture(),
+                                Playingfield[i][j].getPosition().x,
+                                Playingfield[i][j].getPosition().y,
+                                Playingfield[i][j].getGameCardTexture().getWidth()/2,
+                                Playingfield[i][j].getGameCardTexture().getHeight()/2,
+                                Playingfield[i][j].getGameCardTexture().getWidth(),
+                                Playingfield[i][j].getGameCardTexture().getHeight(),
+                                1,
+                                1,
+                                Playingfield[i][j].getRotation(),
+                                0,
+                                0,
+                                Playingfield[i][j].getGameCardTexture().getWidth(),
+                                Playingfield[i][j].getGameCardTexture().getHeight(),
+                                false,
+                                false);
                     }
                 }
             }
         }
     }
 
-    public void setGamecard(Vector2 position, GameCard card){
+    //return true if card set, false if no card set
+    public boolean setGamecard(Vector2 position, GameCard card){
 
         if((position.x > 0 && position.y > 0)){
             int x = (int)position.x / 144;
             int y = (int)position.y / 144;
-            card.setPosition(new Vector2(x*144f, y*144f));
-            Playingfield[y][x] = card;
+            if(Playingfield[y][x] == null || Playingfield[y][x].getGameCardTexture() == null){
+                card.setPosition(new Vector2(x*144f, y*144f));
+                Playingfield[y][x] = card;
+                return true;
+            }
+
             //Log.e("info","------------------------------------------------- "+x+ " | "+y);
         }
+        return false;
 
 
     //Vector2 mapPos = new Vector2(0,0);
