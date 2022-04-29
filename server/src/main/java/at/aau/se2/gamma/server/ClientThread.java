@@ -26,7 +26,7 @@ public class ClientThread extends Thread {
     private Player player;
     private String ID;
     private ServerPlayer serverPlayer;
-
+    private boolean communicating =false;
 
     private SecureObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
@@ -46,15 +46,22 @@ public class ClientThread extends Thread {
             this.objectInputStream = new SecureObjectInputStream(socket.getInputStream());
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             while(running) {
-                BaseCommand command = (BaseCommand) objectInputStream.readObject();
 
+                checkingAvailability();
+                BaseCommand command = (BaseCommand) objectInputStream.readObject(); //potential issue. if server sends broadcast message while busy ready here might doublelock
+                lock();
                 BaseCommand response=handleCommand(command);
 
                 System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
+
                 if(!(command instanceof DisconnectCommand)) {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
+
                     objectOutputStream.writeObject(response);
                 }
+                 unlock();
+
+
             }
             System.out.println("stopped");
         } catch(SocketException socketException){
@@ -76,6 +83,29 @@ public class ClientThread extends Thread {
             e.printStackTrace();
         }
 
+    }
+
+    private void checkingAvailability() {
+        if(communicating){
+            while(communicating){
+                System.out.print("//bw.waiting for broadcast to finish//");
+            }
+        }
+    }
+    public void broadcastMessage(BaseCommand command){
+        System.out.println("checking availability");
+checkingAvailability();
+        System.out.println("available,locking");
+lock();
+        try {
+            System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(command));
+            objectOutputStream.writeObject(command);
+            System.out.println("message sent");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        unlock();
+        System.out.println("unlocking");
     }
 
 //--------------------------commandhandler-----------------------------------------
@@ -276,9 +306,8 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command, "no such player found", Codes.ERROR.NO_PLAYER_WITH_MATCHING_NAME);
         }
         System.out.print("//player found//");
-if(session.voteKick(tempplayer,player)){
-    //todo: alert kicked player1
-}
+       session.voteKick(tempplayer,player);
+
 
         return ResponseCreator.getSuccess(command, "vote issued");
     }
@@ -292,7 +321,12 @@ if(session.voteKick(tempplayer,player)){
 
 
     //-----------------------utility methods------------------------------------------------------------------
-
+    public void lock(){
+        communicating =true;
+    }
+    public void unlock(){
+        communicating =false;
+    }
 
     public void terminate() throws IOException {
 

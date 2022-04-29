@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.*;
 
+import at.aau.se2.gamma.core.ServerResponse;
+import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
@@ -71,7 +73,11 @@ public  class Server implements Runnable {
             }
             throw new NoSuchElementException("no Session with given ID found");
         }
-
+        public static void KickPlayer(String sessionID,Player tobekicked,Player votee){
+            if(getSession(sessionID).voteKick(tobekicked,votee)){
+                identify(tobekicked).getClientThread().broadcastMessage(new BroadcastCommand(new KickPlayerBroadcastCommand("you have been kicked")));
+            }
+        }
     }
     public class ClientHandler implements Runnable{
         private boolean running=false;
@@ -220,13 +226,26 @@ public  class Server implements Runnable {
     }
 
     public static void main(String[] args) throws IOException {
-
+        String input="null";
         Server server = new Server(GlobalVariables.getAdress(), GlobalVariables.getPort(), maxPlayers);
         Thread thread=new Thread(server);
         thread.start();
 
         System.out.println("server running");
-        scanner.nextLine();
+        while(!input.equals("stop")){
+            input= scanner.nextLine();
+            if(input.equals("broadcast")){
+                System.out.println("what do you want to broadcast?");
+                input=scanner.nextLine();
+                for (ServerPlayer a:activeServerPlayers
+                     ) {
+                    a.getClientThread().broadcastMessage( new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new StringBroadcastCommand(input))), "-1"));
+                }
+                System.out.println("sent");
+            }
+        }
+
+
         System.out.println("closing clienthandler");
         server.closeAll();
 

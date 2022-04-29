@@ -70,6 +70,8 @@ public class Session extends BaseModel implements Serializable {
     }
     public void removePlayer(Player player){
         players.remove(player);
+
+
     }
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
