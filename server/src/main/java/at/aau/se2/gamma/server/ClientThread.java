@@ -28,7 +28,7 @@ public class ClientThread extends Thread {
     private ServerPlayer serverPlayer;
 
 
-    private ObjectInputStream objectInputStream;
+    private SecureObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
     private boolean running;
 
@@ -43,7 +43,7 @@ public class ClientThread extends Thread {
         running=true;
         this.clientState = ClientState.INITIAl;
         try {
-            this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+            this.objectInputStream = new SecureObjectInputStream(socket.getInputStream());
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             while(running) {
                 BaseCommand command = (BaseCommand) objectInputStream.readObject();
