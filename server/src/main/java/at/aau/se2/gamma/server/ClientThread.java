@@ -52,6 +52,7 @@ public class ClientThread extends Thread {
 
                 System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
                 if(!(command instanceof DisconnectCommand)) {
+                    System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
                     objectOutputStream.writeObject(response);
                 }
             }
