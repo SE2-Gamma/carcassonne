@@ -1,6 +1,8 @@
 package at.aau.se2.gamma.server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -71,6 +73,7 @@ public  class Server implements Runnable {
         }
 
     }
+
     public class ClientHandler implements Runnable{
         private boolean running=false;
         public void terminate(){
@@ -205,7 +208,17 @@ public  class Server implements Runnable {
         return true;
     }
 
+    public static int sizeof(Object obj) throws IOException {
 
+        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
+
+        objectOutputStream.writeObject(obj);
+        objectOutputStream.flush();
+        objectOutputStream.close();
+
+        return byteOutputStream.toByteArray().length;
+    }
 
     public static void main(String[] args) throws IOException {
 
