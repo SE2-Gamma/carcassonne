@@ -1,4 +1,4 @@
-package at.aau.se2.gamma.server;
+package at.aau.se2.gamma.core;
 
 import java.io.*;
 

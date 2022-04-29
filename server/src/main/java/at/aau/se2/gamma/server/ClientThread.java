@@ -1,5 +1,6 @@
 package at.aau.se2.gamma.server;
 
+import at.aau.se2.gamma.core.SecureObjectInputStream;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.error.Codes;
@@ -9,7 +10,6 @@ import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
