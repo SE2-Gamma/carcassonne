@@ -59,6 +59,10 @@ public class CreateSessionActivity extends BaseActivity {
                             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                         }
                     });
+                }else {
+                    binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
+                    binding.textViewError.setVisibility(View.VISIBLE);
+                    binding.textViewError.setText("Choose a name for your game!");
                 }
             }
         });
