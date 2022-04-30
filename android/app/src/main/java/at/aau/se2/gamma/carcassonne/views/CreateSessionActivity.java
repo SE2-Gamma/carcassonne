@@ -3,9 +3,12 @@ package at.aau.se2.gamma.carcassonne.views;
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.ColorInt;
 
 import at.aau.se2.gamma.carcassonne.databinding.ActivityCreateSessionBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
@@ -41,18 +44,16 @@ public class CreateSessionActivity extends BaseActivity {
                     CreateSessionActivity.this.sendServerCommand(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                            Log.d("SOUT", "onResponse-----------------------------------");
+                            binding.textViewError.setVisibility(View.VISIBLE);
+                            binding.textViewError.setText("Session created!");
+                            binding.textViewError.setTextColor(Color.BLACK);
                             binding.buttonNavigateLobby.setVisibility(View.VISIBLE);
                             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
-
-                            Intent intent = new Intent(CreateSessionActivity.this, SelectNameActivity.class);
-                            intent.putExtra("GameKey", sessionName);
-                            startActivity(intent);
+                            binding.buttonCreateSession.setVisibility(View.INVISIBLE);
                         }
 
                         @Override
                         public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                            Log.d("SOUT", "onFailure++++++++++++++++++++++++++++++++++");
                             binding.textViewError.setVisibility(View.VISIBLE);
                             binding.textViewError.setText("Error");
                             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
