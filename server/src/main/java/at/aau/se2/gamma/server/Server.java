@@ -12,9 +12,9 @@ import java.util.*;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.models.impl.Player;
-import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 import at.aau.se2.gamma.server.models.ServerPlayer;
+import at.aau.se2.gamma.server.models.Session;
 
 public  class Server implements Runnable {
     static final int maxPlayers =10;
@@ -67,7 +67,8 @@ public  class Server implements Runnable {
             for (Session session:sessions
             ) {
                 if(session.getId().equals(sessionID)){
-                    System.out.print("//session found//");
+                    System.out.print("//session found//" +
+                            "");
                     return session;
                 }
             }

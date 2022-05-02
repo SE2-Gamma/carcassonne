@@ -5,9 +5,9 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.models.impl.Player;
-import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
+import at.aau.se2.gamma.server.models.Session;
 
 
 import java.io.IOException;
@@ -22,6 +22,7 @@ public class ClientThread extends Thread {
 
 
     private Socket socket;
+
     private ClientState clientState;
     private Session session;
     private Player player;
@@ -355,6 +356,14 @@ lock();
     }
     public Socket getSocket() {
         return socket;
+    }
+
+    public ClientState getClientState() {
+        return clientState;
+    }
+
+    public void setClientState(ClientState clientState) {
+        this.clientState = clientState;
     }
 
 

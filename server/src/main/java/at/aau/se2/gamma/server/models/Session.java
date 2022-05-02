@@ -1,6 +1,15 @@
-package at.aau.se2.gamma.core.models.impl;
+package at.aau.se2.gamma.server.models;
 
+import at.aau.se2.gamma.core.ServerResponse;
+import at.aau.se2.gamma.core.commands.BroadcastCommand;
+import at.aau.se2.gamma.core.commands.ServerResponseCommand;
+import at.aau.se2.gamma.core.commands.StringBroadcastCommand;
+import at.aau.se2.gamma.core.models.impl.BaseModel;
+import at.aau.se2.gamma.core.models.impl.GameState;
+import at.aau.se2.gamma.core.models.impl.Player;
+import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.KickOffer;
+import at.aau.se2.gamma.server.Server;
 
 import java.io.Serializable;
 import java.util.*;
@@ -70,6 +79,9 @@ public class Session extends BaseModel implements Serializable {
     }
     public void removePlayer(Player player){
         players.remove(player);
+        ServerPlayer tempserverplayer=Server.identify(player);
+        tempserverplayer.getClientThread().broadcastMessage( new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new StringBroadcastCommand("you have been kicked"))), "-1"));
+        tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
 
 
     }
