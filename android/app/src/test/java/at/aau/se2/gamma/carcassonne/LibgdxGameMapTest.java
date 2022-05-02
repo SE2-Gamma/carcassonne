@@ -53,6 +53,7 @@ public class LibgdxGameMapTest {
 
         myMap = new GameMap(playercam, gameviewport, sb);
         Mockito.doNothing().when(sb).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
+        Mockito.doNothing().when(sb).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean(), Mockito.anyBoolean());
 
     }
 
@@ -60,15 +61,15 @@ public class LibgdxGameMapTest {
     public void GameMap_draw_test(){
         //no textures set, thats why we have 0 sb.draw calls
         myMap.draw();
-        Mockito.verify(sb, Mockito.times(0)).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
+        Mockito.verify(sb, Mockito.times(0)).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean(), Mockito.anyBoolean());
 
         myMap.setGamecard(new Vector2(10,10), gc);
         myMap.draw();
-        Mockito.verify(sb, Mockito.times(1)).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
+        Mockito.verify(sb, Mockito.times(1)).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean(), Mockito.anyBoolean());
 
         myMap.setGamecard(1,0,gc);
         myMap.draw();
-        Mockito.verify(sb, Mockito.times(3)).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
+        Mockito.verify(sb, Mockito.times(3)).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean(), Mockito.anyBoolean());
 
         myMap.dispose();//does nothing currently, just added for code coverage
     }
