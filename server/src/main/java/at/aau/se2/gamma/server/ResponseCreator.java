@@ -22,7 +22,7 @@ public class ResponseCreator {
         return new ServerResponseCommand(ServerResponse.success(new PayloadResponseCommand(payload)), command.getRequestId());
     }
     static public ServerResponseCommand getBroadcastMessage(Object Payload){
-        return new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new PayloadBroadcastCommand(new PayloadBroadcastCommand(Payload)))), "-1");
+        return new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new PayloadBroadcastCommand(Payload))), "-1");
 
     }
     static public ServerResponseCommand getStringBroadcastMessage(String Payload){

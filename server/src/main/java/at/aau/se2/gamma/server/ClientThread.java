@@ -49,19 +49,21 @@ public class ClientThread extends Thread {
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             while(running) {
 
-                checkingAvailability();
+
                 BaseCommand command = (BaseCommand) objectInputStream.readObject(); //potential issue. if server sends broadcast message while busy ready here might doublelock
-                lock();
+
                 BaseCommand response=handleCommand(command);
 
                 System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
 
                 if(!(command instanceof DisconnectCommand)) {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
-
+                    checkingAvailability();
+                    lock();
                     objectOutputStream.writeObject(response);
+                    unlock();
                 }
-                 unlock();
+
 
 
             }
@@ -206,7 +208,7 @@ lock();
         clientState=ClientState.LOBBY;
         System.out.print(" //current state: "+clientState +"//");
         System.out.print(" //SessionID: "+session.getId()+"//  ");
-        return ResponseCreator.getSuccess(command,session);
+        return ResponseCreator.getSuccess(command,"Game Created");
     }
 
     public BaseCommand initialJoin(InitialJoinCommand command){
@@ -240,7 +242,7 @@ lock();
         System.out.print( "  // players currently in lobby: "+ namelist +"//");
         System.out.print("//currentState: "+clientState+"//");
         session.payloadBroadcastAllPlayers("A new player has joined the Lobby. Playername: "+player.getName()); //todo: check if this causes errors appside
-        return ResponseCreator.getSuccess(command,session);
+        return ResponseCreator.getSuccess(command,"successfully joined");
     }
 
     public BaseCommand initialSetName(InitialSetNameCommand command){

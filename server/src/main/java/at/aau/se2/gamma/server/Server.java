@@ -240,9 +240,18 @@ public  class Server implements Runnable {
                 input=scanner.nextLine();
                 for (ServerPlayer a:activeServerPlayers
                      ) {
-                    a.getClientThread().broadcastMessage( new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new StringBroadcastCommand(input))), "-1"));
+                    a.getClientThread().broadcastMessage( new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new PayloadBroadcastCommand(input))), "-1"));
                 }
                 System.out.println("sent");
+            }
+            if(input.equals("broadcast session")){
+                System.out.println("welche session soll gebroadcasted werden?");
+                for (Session session:SessionHandler.sessions
+                     ) {
+                    System.out.println(session.getId());
+                }
+                input=scanner.nextLine();
+                SessionHandler.getSession(input).payloadBroadcastAllPlayers(scanner.nextLine());
             }
         }
 
