@@ -31,15 +31,13 @@ public class MainActivity extends BaseActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        binding.pbMenu.setVisibility((View.GONE));
         binding.tvServerError.setVisibility((View.INVISIBLE));
         binding.btnNavigateCreateSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 Intent intent = new Intent(MainActivity.this, CreateSessionActivity.class);
                 startActivity(intent);
-
             }
         });
 
