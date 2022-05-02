@@ -25,4 +25,9 @@ public class ResponseCreator {
         return new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new PayloadBroadcastCommand(new PayloadBroadcastCommand(Payload)))), "-1");
 
     }
+    static public ServerResponseCommand getStringBroadcastMessage(String Payload){
+        return new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new StringBroadcastCommand(new PayloadBroadcastCommand(Payload)))), "-1");
+
+    }
+
 }

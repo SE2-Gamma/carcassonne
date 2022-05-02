@@ -69,6 +69,7 @@ public class Session extends BaseModel implements Serializable {
         int tobeat = players.size() / 2;
         System.out.print("//voting to kick player " + player.getName());
         System.out.print("//"+votes + " out of " + tobeat + " to kick//");
+        payloadBroadcastAllPlayers(ResponseCreator.getBroadcastMessage("Kick attempted."+votes+" out of "+tobeat+" to kick player "+player.getName()));
         if (tobeat <= votes) {
             kickOffers.remove(offer);
             removePlayer(player);

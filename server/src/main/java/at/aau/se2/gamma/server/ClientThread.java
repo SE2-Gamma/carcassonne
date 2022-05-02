@@ -239,7 +239,7 @@ lock();
         namelist.add("test");
         System.out.print( "  // players currently in lobby: "+ namelist +"//");
         System.out.print("//currentState: "+clientState+"//");
-
+        session.payloadBroadcastAllPlayers("A new player has joined the Lobby. Playername: "+player.getName()); //todo: check if this causes errors appside
         return ResponseCreator.getSuccess(command,session);
     }
 
