@@ -10,6 +10,7 @@ import android.view.View;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityJoinSessionBinding;
 import at.aau.se2.gamma.carcassonne.network.SendThread;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
+import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
@@ -46,7 +47,7 @@ public class JoinSessionActivity extends BaseActivity {
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
 
                                 Log.d("Com", response.toString());
-                                Intent intent = new Intent(JoinSessionActivity.this, SelectNameActivity.class);
+                                Intent intent = new Intent(JoinSessionActivity.this, LobbyActivity.class);
                                 intent.putExtra("GameKey", userInput);
                                 startActivity(intent);
                         }

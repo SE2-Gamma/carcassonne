@@ -37,6 +37,13 @@
         android:insetBottom="@dimen/spaceDefault"
         android:text="Join Session" />
 
+    <Button
+        android:id="@+id/btn_view_lobby"
+        style="@style/PrimaryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Lobby (Dev)" />
+
     <TextView
         android:id="@+id/tv_ServerError"
         android:layout_width="wrap_content"
@@ -62,13 +69,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Gameplay Test Funktions (Dev)"
-        style="@style/PrimaryButton"/>
-
-    <Button
-        android:id="@+id/btn_view_lobby"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Lobby (Dev)"
         style="@style/PrimaryButton"/>
 
 </LinearLayout>

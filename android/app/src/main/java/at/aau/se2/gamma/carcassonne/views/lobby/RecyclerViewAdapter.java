@@ -14,6 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import at.aau.se2.gamma.carcassonne.R;
+import at.aau.se2.gamma.carcassonne.network.SendThread;
+import at.aau.se2.gamma.carcassonne.network.ServerThread;
+import at.aau.se2.gamma.core.ServerResponse;
+import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.KickPlayerCommand;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
