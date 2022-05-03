@@ -20,6 +20,7 @@ import at.aau.se2.gamma.carcassonne.databinding.ActivityLobbyBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.PayloadResponseCommand;
 import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 
 public class LobbyActivity extends BaseActivity {
@@ -51,13 +52,22 @@ public class LobbyActivity extends BaseActivity {
             @Override
             public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                 Log.d("Server Response", "LobbyActivity");
-                LinkedList<String> players = (LinkedList<String>) response.getPayload();
-                playerList.clear();
+                //PayloadResponseCommand temp = (PayloadResponseCommand) payload;
+                LinkedList<String> players = (LinkedList<String>) payload;
+                for (String player:players
+                     ) {
+                    Log.d("LobbyActivity", player);
+                }
+
                 for(int i = 0; i < players.size(); i++) {
+                    playerList.set(i, new LobbyPlayerDisplay(players.get(i)));
+                }
+                /*for(int i = 0; i < players.size(); i++) {
                     playerList.add(new LobbyPlayerDisplay(players.get(i)));
                     Log.d("Check Player List", String.valueOf(playerList.get(i)));
-                }
+                }*/
                 adapter.notifyDataSetChanged();
+                binding.tvPlayerCount.setText(players.size());
             }
             @Override
             public void onFailure(ServerResponse response, Object payload, BaseCommand request) {

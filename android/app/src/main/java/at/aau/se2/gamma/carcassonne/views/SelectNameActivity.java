@@ -77,7 +77,6 @@ public class SelectNameActivity extends BaseActivity {
                         public void onServerFailure(Exception e) {
                             Logger.debug("NOOOOOO :(");
                             binding.pbSelectNameActivity.setVisibility(View.INVISIBLE);
-                            Toast.makeText(SelectNameActivity.this, "Connection failed", Toast.LENGTH_SHORT).show();
                         }
                     });
                     serverThread.start();
