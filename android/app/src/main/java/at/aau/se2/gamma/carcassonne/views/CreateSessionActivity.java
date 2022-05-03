@@ -46,8 +46,8 @@ public class CreateSessionActivity extends BaseActivity {
                     new SendThread(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                            Intent intent = new Intent(CreateSessionActivity.this, LobbyActivity.class);
-                            startActivity(intent);
+                            binding.buttonNavigateLobby.setVisibility(View.VISIBLE);
+                            binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                         }
 
                         @Override
