@@ -19,6 +19,7 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
+import at.aau.se2.gamma.core.commands.PayloadBroadcastCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
 import at.aau.se2.gamma.core.commands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
@@ -69,7 +70,7 @@ public class ServerThread extends Thread {
                     ServerResponse response = (ServerResponse) responseCommand.getPayload();
                     if(response.getPayload() instanceof BroadcastCommand){
                         BroadcastCommand broadcastCommand=(BroadcastCommand) response.getPayload();
-                        StringBroadcastCommand string=(StringBroadcastCommand) broadcastCommand.getPayload();
+                        PayloadBroadcastCommand string=(PayloadBroadcastCommand) broadcastCommand.getPayload();
                         Logger.error((String)string.getPayload());
                     }
                     if(response.getPayload() instanceof BaseCommand) {
