@@ -33,6 +33,50 @@ public class MainActivity extends BaseActivity {
 
         binding.pbMenu.setVisibility((View.GONE));
         binding.tvServerError.setVisibility((View.INVISIBLE));
+<<<<<<< HEAD
+=======
+
+        ServerThread serverThread = ServerThread.init(GlobalVariables.getAdress(), GlobalVariables.getPort(), new ServerThread.ConnectionHandler() {
+            @Override
+            public void onConnectionFinished() {
+                Logger.debug("Connection created");
+
+
+
+
+                MainActivity.this.sendServerCommand(new InitialSetNameCommand("mrader"), new ServerThread.RequestResponseHandler() {
+
+                    @Override
+                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                        Logger.debug("HEY, RESPONSE :)");
+                        binding.pbMenu.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                        Logger.debug("NOOOOOO :(");
+                        binding.pbMenu.setVisibility(View.INVISIBLE);
+
+                    }
+                });
+            }
+
+            @Override
+            public void onServerFailure(Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Logger.error("Error at server initial connection");
+                        binding.tvServerError.setVisibility(View.VISIBLE);
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
+        serverThread.start();
+
+
+>>>>>>> development
         binding.btnNavigateCreateSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

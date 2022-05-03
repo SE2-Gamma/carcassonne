@@ -1,6 +1,16 @@
-package at.aau.se2.gamma.core.models.impl;
+package at.aau.se2.gamma.server.models;
 
+import at.aau.se2.gamma.core.ServerResponse;
+import at.aau.se2.gamma.core.commands.BroadcastCommand;
+import at.aau.se2.gamma.core.commands.ServerResponseCommand;
+import at.aau.se2.gamma.core.commands.StringBroadcastCommand;
+import at.aau.se2.gamma.core.models.impl.BaseModel;
+import at.aau.se2.gamma.core.models.impl.GameState;
+import at.aau.se2.gamma.core.models.impl.Player;
+import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.KickOffer;
+import at.aau.se2.gamma.server.ResponseCreator;
+import at.aau.se2.gamma.server.Server;
 
 import java.io.Serializable;
 import java.util.*;
@@ -59,6 +69,7 @@ public class Session extends BaseModel implements Serializable {
         int tobeat = players.size() / 2;
         System.out.print("//voting to kick player " + player.getName());
         System.out.print("//"+votes + " out of " + tobeat + " to kick//");
+        payloadBroadcastAllPlayers(ResponseCreator.getBroadcastMessage("Kick attempted."+votes+" out of "+tobeat+" to kick player "+player.getName()));
         if (tobeat <= votes) {
             kickOffers.remove(offer);
             removePlayer(player);
@@ -69,7 +80,23 @@ public class Session extends BaseModel implements Serializable {
        return false;
     }
     public void removePlayer(Player player){
+        System.out.print("//removing player "+player.getName());
+        ServerPlayer tempserverplayer=Server.identify(player);
+        tempserverplayer.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been kicked"));
+        System.out.print("//notifying "+player.getName()+" he has been kicked");
+        tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
+        payloadBroadcastAllPlayers(player.getName()+" has been kicked");
+        System.out.print("//notifying all  "+player.getName()+"  has been kicked");
         players.remove(player);
+        System.out.print("//has been removed from session//");
+
+    }
+    public void payloadBroadcastAllPlayers(Object payload){
+        //todo catch potential errors
+        for (Player player:players
+             ) {
+            Server.identify(player).getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage(payload));
+        }
     }
     public void setGameState(GameState gameState) {
         this.gameState = gameState;

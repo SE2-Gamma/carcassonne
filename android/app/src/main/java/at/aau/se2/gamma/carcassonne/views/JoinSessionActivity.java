@@ -13,6 +13,7 @@ import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
+import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 
 public class JoinSessionActivity extends BaseActivity {
 

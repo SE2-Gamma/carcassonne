@@ -1,15 +1,16 @@
 package at.aau.se2.gamma.server;
 
+import at.aau.se2.gamma.core.SecureObjectInputStream;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.models.impl.Player;
-import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
+import at.aau.se2.gamma.server.models.Session;
+
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
@@ -21,12 +22,13 @@ public class ClientThread extends Thread {
 
 
     private Socket socket;
+
     private ClientState clientState;
     private Session session;
     private Player player;
     private String ID;
     private ServerPlayer serverPlayer;
-
+    private boolean communicating =false;
 
     private SecureObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
@@ -46,14 +48,24 @@ public class ClientThread extends Thread {
             this.objectInputStream = new SecureObjectInputStream(socket.getInputStream());
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             while(running) {
-                BaseCommand command = (BaseCommand) objectInputStream.readObject();
+
+
+                BaseCommand command = (BaseCommand) objectInputStream.readObject(); //potential issue. if server sends broadcast message while busy ready here might doublelock
 
                 BaseCommand response=handleCommand(command);
 
                 System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
+
                 if(!(command instanceof DisconnectCommand)) {
+                    System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
+                    checkingAvailability();
+                    lock();
                     objectOutputStream.writeObject(response);
+                    unlock();
                 }
+
+
+
             }
             System.out.println("stopped");
         } catch(SocketException socketException){
@@ -75,6 +87,29 @@ public class ClientThread extends Thread {
             e.printStackTrace();
         }
 
+    }
+
+    private void checkingAvailability() {
+        if(communicating){
+            while(communicating){
+                System.out.print("//bw.waiting for broadcast to finish//");
+            }
+        }
+    }
+    public void broadcastMessage(BaseCommand command){
+        System.out.println("checking availability");
+checkingAvailability();
+        System.out.println("available,locking");
+lock();
+        try {
+            System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(command));
+            objectOutputStream.writeObject(command);
+            System.out.println("message sent");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        unlock();
+        System.out.println("unlocking");
     }
 
 //--------------------------commandhandler-----------------------------------------
@@ -173,10 +208,11 @@ public class ClientThread extends Thread {
         clientState=ClientState.LOBBY;
         System.out.print(" //current state: "+clientState +"//");
         System.out.print(" //SessionID: "+session.getId()+"//  ");
-        return ResponseCreator.getSuccess(command,session);
+        return ResponseCreator.getSuccess(command,"Game Created");
     }
 
     public BaseCommand initialJoin(InitialJoinCommand command){
+        System.out.print("//startingstate: "+clientState+"//");
         //checkstate
         if(clientState!=ClientState.INITIAl){
             return ResponseCreator.getError(command,"Not in initialState", Codes.ERROR.WRONG_STATE);
@@ -185,15 +221,8 @@ public class ClientThread extends Thread {
         //LinkedList<Object> list=(LinkedList<Object>) command.getPayload();
         String sessionID= (String) command.getPayload();
         //Player player= (Player) list.pop();
-        //checkplayer
-        try {
-            Server.identify(player);
-        } catch (NoSuchElementException e) {
-            System.err.println("Player not connected");
-            e.printStackTrace();
-            return ResponseCreator.getError(command,"Player not connected", Codes.ERROR.PLAYER_NOT_CONNECTED);
 
-        }
+
         //join session
         try {
             session=Server.SessionHandler.joinSession(sessionID,player);
@@ -204,9 +233,16 @@ public class ClientThread extends Thread {
         }
         //set state
         clientState=ClientState.LOBBY;
-
-
-        return ResponseCreator.getSuccess(command,session);
+        LinkedList<String> namelist=new LinkedList<>();
+        for (Player player:session.players
+        ) {
+            namelist.add(player.getName());
+        }
+        namelist.add("test");
+        System.out.print( "  // players currently in lobby: "+ namelist +"//");
+        System.out.print("//currentState: "+clientState+"//");
+        session.payloadBroadcastAllPlayers("A new player has joined the Lobby. Playername: "+player.getName()); //todo: check if this causes errors appside
+        return ResponseCreator.getSuccess(command,"successfully joined");
     }
 
     public BaseCommand initialSetName(InitialSetNameCommand command){
@@ -227,7 +263,7 @@ public class ClientThread extends Thread {
         System.out.println("  //set name: "+name+"//");
 
 
-        Player player=new Player(name, ID);
+        Player player=new Player(ID, name);
         this.player=player;
 
         this.serverPlayer.setPlayer(player);
@@ -275,9 +311,8 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command, "no such player found", Codes.ERROR.NO_PLAYER_WITH_MATCHING_NAME);
         }
         System.out.print("//player found//");
-if(session.voteKick(tempplayer,player)){
-    //todo: alert kicked player1
-}
+       session.voteKick(tempplayer,player);
+
 
         return ResponseCreator.getSuccess(command, "vote issued");
     }
@@ -291,7 +326,12 @@ if(session.voteKick(tempplayer,player)){
 
 
     //-----------------------utility methods------------------------------------------------------------------
-
+    public void lock(){
+        communicating =true;
+    }
+    public void unlock(){
+        communicating =false;
+    }
 
     public void terminate() throws IOException {
 
@@ -318,6 +358,14 @@ if(session.voteKick(tempplayer,player)){
     }
     public Socket getSocket() {
         return socket;
+    }
+
+    public ClientState getClientState() {
+        return clientState;
+    }
+
+    public void setClientState(ClientState clientState) {
+        this.clientState = clientState;
     }
 
 
