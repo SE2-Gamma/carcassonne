@@ -68,3 +68,15 @@ Feature: issue-{feature-number}-server
     `git add .`
     `git commit -m "issue-x-app: my changes"`
     `git push`
+   
+## Definition of Done
+- Der Code ist fertiggestellt und im Versionierungssystem eingespielt.
+- Es gab einen Code Review bzw. der Code wurde im Pair Programming erarbeitet
+- Vereinbarte Coding Guidelines und Standards sind eingehalten.
+- Alle Akzeptanzkriterien sind erfüllt.
+- Es sind kaum Bugs offen.
+
+## Ready for Review
+- Vereinbarte Coding Guidelines und Standards sind eingehalten.
+- Alle Akzeptanzkriterien sind erfüllt.
+- Es sind keine kritischen Bugs offen.

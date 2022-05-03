@@ -1,16 +1,20 @@
 package at.aau.se2.gamma.server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.*;
 
+import at.aau.se2.gamma.core.ServerResponse;
+import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.models.impl.Player;
-import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 import at.aau.se2.gamma.server.models.ServerPlayer;
+import at.aau.se2.gamma.server.models.Session;
 
 public  class Server implements Runnable {
     static final int maxPlayers =10;
@@ -63,13 +67,18 @@ public  class Server implements Runnable {
             for (Session session:sessions
             ) {
                 if(session.getId().equals(sessionID)){
-                    System.out.println("session found");
+                    System.out.print("//session found//" +
+                            "");
                     return session;
                 }
             }
             throw new NoSuchElementException("no Session with given ID found");
         }
-
+        public static void KickPlayer(String sessionID,Player tobekicked,Player votee){
+            if(getSession(sessionID).voteKick(tobekicked,votee)){
+                identify(tobekicked).getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been kicked"));
+            }
+        }
     }
     public class ClientHandler implements Runnable{
         private boolean running=false;
@@ -205,16 +214,48 @@ public  class Server implements Runnable {
         return true;
     }
 
+    public static int sizeof(Object obj) throws IOException {
 
+        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
+
+        objectOutputStream.writeObject(obj);
+        objectOutputStream.flush();
+        objectOutputStream.close();
+
+        return byteOutputStream.toByteArray().length;
+    }
 
     public static void main(String[] args) throws IOException {
-
+        String input="null";
         Server server = new Server(GlobalVariables.getAdress(), GlobalVariables.getPort(), maxPlayers);
         Thread thread=new Thread(server);
         thread.start();
 
         System.out.println("server running");
-        scanner.nextLine();
+        while(!input.equals("stop")){
+            input= scanner.nextLine();
+            if(input.equals("broadcast")){
+                System.out.println("what do you want to broadcast?");
+                input=scanner.nextLine();
+                for (ServerPlayer a:activeServerPlayers
+                     ) {
+                    a.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage(input));
+                }
+                System.out.println("sent");
+            }
+            if(input.equals("broadcast session")){
+                System.out.println("welche session soll gebroadcasted werden?");
+                for (Session session:SessionHandler.sessions
+                     ) {
+                    System.out.println(session.getId());
+                }
+                input=scanner.nextLine();
+                SessionHandler.getSession(input).payloadBroadcastAllPlayers(scanner.nextLine());
+            }
+        }
+
+
         System.out.println("closing clienthandler");
         server.closeAll();
 
