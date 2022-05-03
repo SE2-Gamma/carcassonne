@@ -76,7 +76,7 @@ public  class Server implements Runnable {
         }
         public static void KickPlayer(String sessionID,Player tobekicked,Player votee){
             if(getSession(sessionID).voteKick(tobekicked,votee)){
-                identify(tobekicked).getClientThread().broadcastMessage(new BroadcastCommand(new KickPlayerBroadcastCommand("you have been kicked")));
+                identify(tobekicked).getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been kicked"));
             }
         }
     }
@@ -240,7 +240,7 @@ public  class Server implements Runnable {
                 input=scanner.nextLine();
                 for (ServerPlayer a:activeServerPlayers
                      ) {
-                    a.getClientThread().broadcastMessage( new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new PayloadBroadcastCommand(input))), "-1"));
+                    a.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage(input));
                 }
                 System.out.println("sent");
             }
