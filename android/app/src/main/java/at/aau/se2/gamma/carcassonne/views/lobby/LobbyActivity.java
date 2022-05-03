@@ -34,8 +34,6 @@ public class LobbyActivity extends BaseActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-
-
         //Get Player List from Server
         sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
             @Override
@@ -70,11 +68,8 @@ public class LobbyActivity extends BaseActivity {
             }
         });
 
-
-
         //Disconnect from lobby
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LobbyActivity.this, MainActivity.class));
