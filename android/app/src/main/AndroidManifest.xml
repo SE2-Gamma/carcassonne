@@ -43,10 +43,6 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".MainActivity"
-<<<<<<< HEAD
-=======
-
->>>>>>> dd92be3696cbaf66c263e3a46139916662329bd4
             android:exported="false"
             android:screenOrientation="landscape">
         </activity>
