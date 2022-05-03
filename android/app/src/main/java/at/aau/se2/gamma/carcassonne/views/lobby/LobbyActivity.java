@@ -34,40 +34,33 @@ public class LobbyActivity extends BaseActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        List<LobbyPlayerDisplay> playerList;
-        playerList = Arrays.asList(
-                new LobbyPlayerDisplay("player1"),
-                new LobbyPlayerDisplay("player2"),
-                new LobbyPlayerDisplay("player3"),
-                new LobbyPlayerDisplay("player4"),
-                new LobbyPlayerDisplay("player5")
-        );
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(playerList, LobbyActivity.this);
-        binding.rvLobby.setAdapter(adapter);
-        binding.rvLobby.setLayoutManager(new LinearLayoutManager(this));
 
         //Get Player List from Server
         sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
             @Override
             public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                 Log.d("Server Response", "LobbyActivity");
+                List<LobbyPlayerDisplay> playerList = new LinkedList<>();
+
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(playerList, LobbyActivity.this);
+                binding.rvLobby.setAdapter(adapter);
+                binding.rvLobby.setLayoutManager(new LinearLayoutManager(LobbyActivity.this));
+
                 //PayloadResponseCommand temp = (PayloadResponseCommand) payload;
                 LinkedList<String> players = (LinkedList<String>) payload;
                 for (String player:players
                      ) {
                     Log.d("LobbyActivity", player);
                 }
-
                 for(int i = 0; i < players.size(); i++) {
-                    playerList.set(i, new LobbyPlayerDisplay(players.get(i)));
-                }
-                /*for(int i = 0; i < players.size(); i++) {
                     playerList.add(new LobbyPlayerDisplay(players.get(i)));
-                    Log.d("Check Player List", String.valueOf(playerList.get(i)));
-                }*/
+                }
                 adapter.notifyDataSetChanged();
-                binding.tvPlayerCount.setText(players.size());
+                binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
+                Intent intent = getIntent();
+                String gameKey = intent.getStringExtra("GameKey");
+                binding.tvLobbyName.setText(gameKey);
             }
             @Override
             public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
@@ -96,7 +89,7 @@ public class LobbyActivity extends BaseActivity {
             }
         });
 
-        binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
+
 
 
 
