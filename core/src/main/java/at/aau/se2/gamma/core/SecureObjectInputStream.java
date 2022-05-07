@@ -2,22 +2,21 @@ package at.aau.se2.gamma.core;
 
 import java.io.*;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 import at.aau.se2.gamma.core.commands.BaseCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.DisconnectCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
-import at.aau.se2.gamma.core.commands.KickPlayerBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.KickPlayerBroadcastCommand;
 import at.aau.se2.gamma.core.commands.KickPlayerCommand;
-import at.aau.se2.gamma.core.commands.PayloadBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PayloadBroadcastCommand;
 import at.aau.se2.gamma.core.commands.PayloadResponseCommand;
 import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 import at.aau.se2.gamma.core.commands.RequestUserListCommandByID;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
-import at.aau.se2.gamma.core.commands.StringBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.commands.StringResponseCommand;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 import at.aau.se2.gamma.core.states.ClientState;

@@ -67,7 +67,7 @@ public class LobbyActivity extends BaseActivity {
                     Log.d("Check Player List", String.valueOf(playerList.get(i)));
                 }*/
                 adapter.notifyDataSetChanged();
-                binding.tvPlayerCount.setText(players.size());
+                //binding.tvPlayerCount.setText(players.size());
             }
             @Override
             public void onFailure(ServerResponse response, Object payload, BaseCommand request) {

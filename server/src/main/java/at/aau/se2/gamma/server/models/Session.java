@@ -1,9 +1,9 @@
 package at.aau.se2.gamma.server.models;
 
 import at.aau.se2.gamma.core.ServerResponse;
-import at.aau.se2.gamma.core.commands.BroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
-import at.aau.se2.gamma.core.commands.StringBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.models.impl.BaseModel;
 import at.aau.se2.gamma.core.models.impl.GameState;
 import at.aau.se2.gamma.core.models.impl.Player;
