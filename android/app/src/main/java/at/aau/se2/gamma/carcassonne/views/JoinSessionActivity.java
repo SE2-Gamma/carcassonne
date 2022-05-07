@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.util.LinkedList;
+
 import at.aau.se2.gamma.carcassonne.databinding.ActivityJoinSessionBinding;
 import at.aau.se2.gamma.carcassonne.network.SendThread;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
@@ -54,7 +56,7 @@ public class JoinSessionActivity extends BaseActivity {
 
                         @Override
                         public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                            binding.tvError.setText("Keine Antwort vom Server erhalten");
+                            binding.tvError.setText(((LinkedList<String>)payload).get(0));
                             binding.tvError.setVisibility(View.VISIBLE);
                         }
                     });
