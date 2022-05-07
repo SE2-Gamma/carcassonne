@@ -4,7 +4,9 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
+import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.BaseModel;
+import at.aau.se2.gamma.core.models.impl.GameCard;
 import at.aau.se2.gamma.core.models.impl.GameState;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.states.ClientState;
@@ -43,6 +45,9 @@ public class Session extends BaseModel implements Serializable {
 
     public GameState getGameState() {
         return gameState;
+    }
+    public void initializeDeck(){
+
     }
     public boolean voteKick(Player player,Player votee) {
         int votes = 0;
