@@ -42,7 +42,7 @@ public class CreateSessionActivity extends BaseActivity {
             public void onClick(View view) {
                 binding.progressBarJoinSessionActivity.setVisibility(View.VISIBLE);
                 String sessionName = binding.editTextSessionname.getText().toString();
-                if(sessionName.length()>0) {
+                if (sessionName.length() > 0) {
                     new SendThread(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {

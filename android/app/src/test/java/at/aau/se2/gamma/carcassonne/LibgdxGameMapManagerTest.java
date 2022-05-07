@@ -1,6 +1,5 @@
 package at.aau.se2.gamma.carcassonne;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,22 +7,21 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
-import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMap;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 
-public class LibgdxGameMapTest {
+public class LibgdxGameMapManagerTest {
     private final float MY_WORLD_HEIGHT = 144;
     private final float MY_WORLD_WIDTH = 256;
 
     private OrthographicCamera playercam;
     private Viewport gameviewport;
 
-    private GameMap myMap;
+    private GameMapManager myMap;
     private SpriteBatch sb;
 
     private GameCard gc;
@@ -51,7 +49,7 @@ public class LibgdxGameMapTest {
         gc = new GameCard(myTexture,position);
 
 
-        myMap = new GameMap(playercam, gameviewport, sb);
+        myMap = new GameMapManager(playercam, gameviewport, sb);
         Mockito.doNothing().when(sb).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
         Mockito.doNothing().when(sb).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean(), Mockito.anyBoolean());
 

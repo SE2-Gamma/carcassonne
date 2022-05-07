@@ -2,26 +2,17 @@ package at.aau.se2.gamma.carcassonne;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.graphics.Cursor;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.GLVersion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
-import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMap;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
 
 public class LibgdxHudTest {
@@ -33,7 +24,7 @@ public class LibgdxHudTest {
         private OrthographicCamera playercam;
         private Viewport gameviewport;
 
-        private GameMap myMap;
+        private GameMapManager myMap;
         private SpriteBatch sb;
 
         private GameCard gc;
@@ -63,7 +54,7 @@ public class LibgdxHudTest {
             gc = new GameCard(myTexture,position);
 
 
-            myMap = new GameMap(playercam, gameviewport, sb);
+            myMap = new GameMapManager(playercam, gameviewport, sb);
             Mockito.doNothing().when(sb).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
 
             //Viewport myViewport = Mockito.mock(ScreenViewport.class);

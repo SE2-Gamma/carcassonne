@@ -9,10 +9,14 @@ public class GameCard {
     private Vector2 position;
     private float rotation;
 
+    private at.aau.se2.gamma.core.models.impl.GameCard ServerGameCard;
+
+
     public GameCard(Texture texture, Vector2 position){
         gameCardTexture = texture;
         this.position = position;
         this.rotation = 0;
+
     }
 
     public GameCard(Texture texture, Vector2 position, float rotation){

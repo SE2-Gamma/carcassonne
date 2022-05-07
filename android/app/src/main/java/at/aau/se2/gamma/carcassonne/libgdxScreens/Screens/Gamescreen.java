@@ -1,7 +1,5 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.Screens;
 
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
@@ -13,12 +11,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
-import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMap;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Utility.InputCalculations;
 
@@ -53,7 +52,11 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     float distancefingersEnd;
 
     //Gamemap
-    GameMap myMap;
+    GameMapManager myMap;
+    Texture currentCard;
+    Texture playedCard;
+    int playedCard_x;
+    int playedCard_y;
 
 
     public Gamescreen (){
@@ -67,11 +70,11 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
 
         batch = new SpriteBatch();
-        hud = new Hud(batch);
+        hud = new Hud(batch, this);
 
         shaprenderer = new ShapeRenderer();
 
-        camPos = new Vector2(73*144+(128/2),73*144+(128/2));
+        camPos = new Vector2(49*144+(128/2),49*144+(128/2));
         playercam.position.set(camPos.x,camPos.y,1);
         playercam.update();
 
@@ -82,7 +85,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         camPanGesture = new Vector2();
 
         //setting up playable area / map
-        myMap = new GameMap(playercam, gameviewport, batch);
+        myMap = new GameMapManager(playercam, gameviewport, batch);
 
 
         //error Texture for Testing
@@ -113,12 +116,18 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         textures[20]=new Texture("Carc21.jpg");
 
         hud.setNextCardTexture(textures[(int)(Math.random()*20)]);
+        currentCard = hud.getCurrentTexture();
+        playedCard = null;
+        playedCard_x = 0;
+        playedCard_y = 0;
 
         //for showcase of functionality, placed a random starter card.
-        myMap.setGamecard(73,73, new GameCard(textures[(int)(Math.random()*20)], new Vector2(73*144,73*144)));
+        myMap.setGamecard(49,49, new GameCard(textures[(int)(Math.random()*20)], new Vector2(49*144,49*144)));
 
         InputMultiplexer im = new InputMultiplexer(hud.getStage(), gestureDetecor);
         Gdx.input.setInputProcessor(im);
+
+
     }
 
     @Override
@@ -150,6 +159,31 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         //shaprenderer.end();
 
         hud.drawStage(String.format("fps:%.2f | x pos: %f |",(float)(1/delta), playercam.position.x));
+
+        hud.getAcceptButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.setNextCardTexture(textures[(int)(Math.random()*20)]);
+                hud.setRotation(0);
+                hud.changeHudState(Hud.Hud_State.PLAYING);
+                currentCard = hud.getCurrentTexture();
+                playedCard = null;
+                hud.changeHudState(Hud.Hud_State.VIEWING);
+            }
+        });
+
+        hud.getDeclineButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.changeHudState(Hud.Hud_State.PLAYING);
+                currentCard = playedCard;
+                myMap.setGamecard(playedCard_y, playedCard_x, null);
+            }
+        });
+
+
     }
 
     @Override
@@ -186,10 +220,15 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
-        Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        if(myMap.setGamecard(mapPos, new GameCard(hud.getCurrentTexture(), new Vector2(0f,0f), hud.getRotation()))){
-            hud.setNextCardTexture(textures[(int)(Math.random()*20)]);
-            hud.setRotation(0);
+        if(currentCard != null && hud.getCurrentState().equals(Hud.Hud_State.PLAYING)){
+            Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            if(myMap.setGamecard(mapPos, new GameCard(hud.getCurrentTexture(), new Vector2(0f,0f), hud.getRotation()))){
+                playedCard_x = (int) mapPos.x / 144;
+                playedCard_y = (int) mapPos.y / 144;
+                playedCard = currentCard;
+                currentCard = null;
+                hud.changeHudState(Hud.Hud_State.ACCEPT_ACTION);
+            }
         }
         //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
         //Log.e("info", "button: "+button + " | count: "+count);
