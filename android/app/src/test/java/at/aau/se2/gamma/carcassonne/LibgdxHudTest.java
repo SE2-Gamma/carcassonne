@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.Screens.Gamescreen;
 
 public class LibgdxHudTest {
 
@@ -59,7 +60,7 @@ public class LibgdxHudTest {
 
             //Viewport myViewport = Mockito.mock(ScreenViewport.class);
             //Mockito.when(myViewport.)
-            myHud = new Hud(sb);
+            myHud = new Hud(sb, Mockito.mock(Gamescreen.class));
 
             Graphics myG = Mockito.mock(Graphics.class);
 
