@@ -13,4 +13,9 @@ public class UIElementsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uielements);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

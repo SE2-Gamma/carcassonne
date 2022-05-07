@@ -69,4 +69,9 @@ public class CreateSessionActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }
