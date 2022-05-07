@@ -87,6 +87,8 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
 
         return deck;
 }
+        //todo: implement wappen on cards
+
     public static GameCard createMonasteryGrassGrassGrassStreet() {
         return new GameCard(
                 GameCardSideFactory.createGrasSide(),
