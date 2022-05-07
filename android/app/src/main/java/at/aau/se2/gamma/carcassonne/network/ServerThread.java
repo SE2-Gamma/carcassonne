@@ -17,11 +17,11 @@ import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.core.SecureObjectInputStream;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
-import at.aau.se2.gamma.core.commands.PayloadBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PayloadBroadcastCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
-import at.aau.se2.gamma.core.commands.StringBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 
 public class ServerThread extends Thread {
