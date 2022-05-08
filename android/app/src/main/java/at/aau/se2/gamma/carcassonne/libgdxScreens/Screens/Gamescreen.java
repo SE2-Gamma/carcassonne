@@ -74,7 +74,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         shaprenderer = new ShapeRenderer();
 
-        camPos = new Vector2(49*144+(128/2),49*144+(128/2));
+        camPos = new Vector2(49f*144f+(128f/2f),49f*144f+(128f/2f));
         playercam.position.set(camPos.x,camPos.y,1);
         playercam.update();
 
@@ -122,7 +122,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         playedCard_y = 0;
 
         //for showcase of functionality, placed a random starter card.
-        myMap.setGamecard(49,49, new GameCard(textures[(int)(Math.random()*20)], new Vector2(49*144,49*144)));
+        myMap.setGamecard(49,49, new GameCard(textures[(int)(Math.random()*20)], new Vector2(49f*144f,49f*144f)));
 
         InputMultiplexer im = new InputMultiplexer(hud.getStage(), gestureDetecor);
         Gdx.input.setInputProcessor(im);
