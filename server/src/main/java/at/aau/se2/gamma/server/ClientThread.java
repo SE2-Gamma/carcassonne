@@ -54,7 +54,7 @@ public class ClientThread extends Thread {
 
                 BaseCommand response=handleCommand(command);
 
-                System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
+                System.out.println("Command with ID "+command.getRequestId() +" handeled.");
 
                 if(!(command instanceof DisconnectCommand)) {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
@@ -97,19 +97,19 @@ public class ClientThread extends Thread {
         }
     }
     public void broadcastMessage(BaseCommand command){
-        System.out.println("checking availability");
+        System.out.print("//checking availability");
 checkingAvailability();
-        System.out.println("available,locking");
+        System.out.print("//available,locking");
 lock();
         try {
-            System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(command));
+            System.out.print("//Size of responseCommand in Bytes: "+Server.sizeof(command));
             objectOutputStream.writeObject(command);
-            System.out.println("message sent");
+            System.out.print("//message sent");
         } catch (IOException e) {
             e.printStackTrace();
         }
         unlock();
-        System.out.println("unlocking");
+        System.out.print("//unlocking//");
     }
 
 //--------------------------commandhandler-----------------------------------------

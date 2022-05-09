@@ -68,4 +68,9 @@ public class JoinSessionActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

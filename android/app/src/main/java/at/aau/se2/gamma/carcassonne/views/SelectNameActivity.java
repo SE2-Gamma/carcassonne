@@ -60,6 +60,7 @@ public class SelectNameActivity extends BaseActivity {
                         @Override
                         public void onConnectionFinished() {
                             Logger.debug("HEY, RESPONSE :)");
+                            //ServerThread.instance.setBroadcastHandler(SelectNameActivity.this);
                             sendServerCommand(new InitialSetNameCommand(userInput), new ServerThread.RequestResponseHandler() {
                                 @Override
                                 public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -93,5 +94,10 @@ public class SelectNameActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
