@@ -132,6 +132,12 @@ lock();
             return kickPlayer((KickPlayerCommand) command);
         }else if(command instanceof DisconnectCommand){
             return disconnectPlayer((DisconnectCommand) command);
+        }else if(command instanceof LeaveLobbyCommand) {
+            return leaveLobby((LeaveLobbyCommand) command);
+
+        }else if(command instanceof GetClientStateCommand) {
+            return getClientState((GetClientStateCommand) command);
+
         }
         else{
             System.out.println("command not suitable for current state");
@@ -315,6 +321,27 @@ lock();
 
 
         return ResponseCreator.getSuccess(command, "vote issued");
+    }
+
+    public BaseCommand getClientState(GetClientStateCommand command){
+        System.out.print("//current State: "+clientState+"//");
+        return  ResponseCreator.getSuccess(command,clientState);
+    }
+
+    public BaseCommand leaveLobby(LeaveLobbyCommand command){
+
+        System.out.print("//current State: "+clientState+"//");
+        if(!clientState.equals(ClientState.LOBBY)){
+            return ResponseCreator.getError(command,"Cant leave lobby because you are not in a lobby", Codes.ERROR.NOT_IN_LOBBY);
+        }
+        System.out.print("//Trying to leave lobby with ID "+session.getId()+"//");
+        try {
+            session.removePlayer(player);
+        } catch (Exception e) {
+            System.err.print("Some error leaving a lobby");
+        }
+        clientState=ClientState.INITIAl;
+        return ResponseCreator.getSuccess(command,"Lobby successfully leaved");
     }
     public void sendCommand(BaseCommand command) {
         try {

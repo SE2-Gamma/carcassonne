@@ -3,21 +3,11 @@ package at.aau.se2.gamma.core;
 import java.io.*;
 import java.util.LinkedList;
 
-import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
-import at.aau.se2.gamma.core.commands.CreateGameCommand;
-import at.aau.se2.gamma.core.commands.DisconnectCommand;
-import at.aau.se2.gamma.core.commands.InitialJoinCommand;
-import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.KickPlayerBroadcastCommand;
-import at.aau.se2.gamma.core.commands.KickPlayerCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PayloadBroadcastCommand;
-import at.aau.se2.gamma.core.commands.PayloadResponseCommand;
-import at.aau.se2.gamma.core.commands.RequestUserListCommand;
-import at.aau.se2.gamma.core.commands.RequestUserListCommandByID;
-import at.aau.se2.gamma.core.commands.ServerResponseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
-import at.aau.se2.gamma.core.commands.StringResponseCommand;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 import at.aau.se2.gamma.core.states.ClientState;
 
@@ -48,6 +38,8 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(ServerResponse.class.getName());
             allowedClasses.add(ErrorCommand.class.getName());
             allowedClasses.add(ServerResponse.StatusCode.class.getName());
+            allowedClasses.add(GetClientStateCommand.class.getName());
+            allowedClasses.add(LeaveLobbyCommand.class.getName());
 
             allowedClasses.add(String.class.getName());
             allowedClasses.add(LinkedList.class.getName());
