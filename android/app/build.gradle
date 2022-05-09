@@ -50,10 +50,6 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-
-    lintOptions {
-        abortOnError false
-    }
 }
 
 configurations { natives }

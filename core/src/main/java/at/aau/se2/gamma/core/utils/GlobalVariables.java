@@ -5,7 +5,7 @@ public class GlobalVariables {
         return adress;
     }
 
-    static String adress="143.205.186.77";
+    static String adress="192.168.56.1";
 
     public static String getDefaultname() {
         return defaultname;

@@ -6,8 +6,6 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import java.util.LinkedList;
-
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
