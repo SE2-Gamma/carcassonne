@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import java.util.LinkedList;
+
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
@@ -16,13 +19,13 @@ import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
-import at.aau.se2.gamma.core.commands.CreateGameCommand;
-import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
-import at.aau.se2.gamma.core.utils.GlobalVariables;
+import at.aau.se2.gamma.core.commands.GetClientStateCommand;
+import at.aau.se2.gamma.core.states.ClientState;
 
 public class MainActivity extends BaseActivity implements ServerThread.BroadcastHandler {
 
     public ActivityMainBinding binding;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +35,21 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
         setContentView(view);
 
         binding.pbMenu.setVisibility((View.GONE));
-        binding.tvServerError.setVisibility((View.INVISIBLE));
+        binding.btnBackToLobby.setVisibility(View.GONE);
+
+        sendServerCommand(new GetClientStateCommand(null), new ServerThread.RequestResponseHandler() {
+            @Override
+            public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                if(payload.equals(ClientState.LOBBY)){
+                    binding.btnBackToLobby.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
+            }
+        });
 
         binding.btnNavigateCreateSession.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +87,13 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
                 startActivity(new Intent(MainActivity.this, LobbyActivity.class));
             }
         });
+
+        binding.btnBackToLobby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, LobbyActivity.class));
+            }
+        });
     }
 
     @Override
@@ -78,6 +102,20 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
         if (ServerThread.instance != null) {
             ServerThread.instance.setBroadcastHandler(this);
         }
+        binding.btnBackToLobby.setVisibility(View.GONE);
+        sendServerCommand(new GetClientStateCommand(null), new ServerThread.RequestResponseHandler() {
+            @Override
+            public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                if(payload.equals(ClientState.LOBBY)){
+                    binding.btnBackToLobby.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
+            }
+        });
     }
 
     @Override

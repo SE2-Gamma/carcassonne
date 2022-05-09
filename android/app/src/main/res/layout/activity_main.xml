@@ -44,11 +44,11 @@
         android:layout_height="wrap_content"
         android:text="View Lobby (Dev)" />
 
-    <TextView
-        android:id="@+id/tv_ServerError"
+    <Button
+        android:id="@+id/btn_BackToLobby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Verbindung zum Server fehlgeschlagen, bitte überprüfe deine Internetverbindung und versuche es erneut!" />
+        android:text="Back to lobby" />
 
     <ProgressBar
         android:id="@+id/pb_menu"
