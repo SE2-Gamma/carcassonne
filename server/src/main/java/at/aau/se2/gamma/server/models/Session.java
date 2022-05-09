@@ -5,10 +5,7 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
-import at.aau.se2.gamma.core.models.impl.BaseModel;
-import at.aau.se2.gamma.core.models.impl.GameCard;
-import at.aau.se2.gamma.core.models.impl.GameState;
-import at.aau.se2.gamma.core.models.impl.Player;
+import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.KickOffer;
 import at.aau.se2.gamma.server.ResponseCreator;
@@ -19,6 +16,11 @@ import java.util.*;
 import java.util.concurrent.SynchronousQueue;
 
 public class Session extends BaseModel implements Serializable {
+    public Deck getDeck() {
+        return deck;
+    }
+
+    Deck deck;
     String id=null;
     int maxPlayers=5;
     LinkedList<KickOffer>kickOffers=new LinkedList<>();
@@ -26,6 +28,7 @@ public class Session extends BaseModel implements Serializable {
     public String getId() {
         return id;
     }
+
 
     public void joinGame(Player player){
         if(players.size()>maxPlayers){
@@ -47,6 +50,13 @@ public class Session extends BaseModel implements Serializable {
         return gameState;
     }
     public void initializeDeck(){
+
+    }
+    public void setDeck(int multfaktor){
+        System.out.print("//setting deck//");
+
+        deck=new Deck(multfaktor);
+        System.out.print("//deck set and shuffled.//");
 
     }
     public boolean voteKick(Player player,Player votee) {
@@ -87,13 +97,20 @@ public class Session extends BaseModel implements Serializable {
     public void removePlayer(Player player){
         System.out.print("//removing player "+player.getName());
         ServerPlayer tempserverplayer=Server.identify(player);
-        tempserverplayer.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been kicked"));
-        System.out.print("//notifying "+player.getName()+" he has been kicked");
+        tempserverplayer.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been removed from the lobby"));
+        System.out.print("//notifying "+player.getName()+" he has been removed");
         tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
-        payloadBroadcastAllPlayers(player.getName()+" has been kicked");
-        System.out.print("//notifying all  "+player.getName()+"  has been kicked");
+        payloadBroadcastAllPlayers(player.getName()+" has been removed");
+        System.out.print("//notifying all  "+player.getName()+"  has been removed");
         players.remove(player);
         System.out.print("//has been removed from session//");
+        if(players.size()==0){
+            System.out.print("no player left in session + "+id+" //");
+           if( Server.SessionHandler.removeSession(this)){
+               System.out.print("//Session"+id+" deleted//");
+           }
+        }
+
 
     }
     public void payloadBroadcastAllPlayers(Object payload){
