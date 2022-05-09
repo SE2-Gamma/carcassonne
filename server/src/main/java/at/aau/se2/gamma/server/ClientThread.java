@@ -132,6 +132,12 @@ lock();
             return kickPlayer((KickPlayerCommand) command);
         }else if(command instanceof DisconnectCommand){
             return disconnectPlayer((DisconnectCommand) command);
+        }else if(command instanceof LeaveLobbyCommand) {
+            return leaveLobby((LeaveLobbyCommand) command);
+
+        }else if(command instanceof GetClientStateCommand) {
+            return getClientState((GetClientStateCommand) command);
+
         }
         else{
             System.out.println("command not suitable for current state");
@@ -317,12 +323,12 @@ lock();
         return ResponseCreator.getSuccess(command, "vote issued");
     }
 
-    public BaseCommand getClientState(BaseCommand command){
+    public BaseCommand getClientState(GetClientStateCommand command){
         System.out.print("//current State: "+clientState+"//");
         return  ResponseCreator.getSuccess(command,clientState);
     }
 
-    public BaseCommand leaveLobby(BaseCommand command){
+    public BaseCommand leaveLobby(LeaveLobbyCommand command){
 
         System.out.print("//current State: "+clientState+"//");
         System.out.print("//Trying to leave lobby with ID "+session.getId()+"//");
