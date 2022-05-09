@@ -39,7 +39,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(ErrorCommand.class.getName());
             allowedClasses.add(ServerResponse.StatusCode.class.getName());
             allowedClasses.add(GetClientStateCommand.class.getName());
-            allowedClasses.add(ServerResponse.StatusCode.class.getName());
+            allowedClasses.add(LeaveLobbyCommand.class.getName());
 
             allowedClasses.add(String.class.getName());
             allowedClasses.add(LinkedList.class.getName());
