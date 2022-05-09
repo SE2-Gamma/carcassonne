@@ -316,6 +316,24 @@ lock();
 
         return ResponseCreator.getSuccess(command, "vote issued");
     }
+
+    public BaseCommand getClientState(BaseCommand command){
+        System.out.print("//current State: "+clientState+"//");
+        return  ResponseCreator.getSuccess(command,clientState);
+    }
+
+    public BaseCommand leaveLobby(BaseCommand command){
+
+        System.out.print("//current State: "+clientState+"//");
+        System.out.print("//Trying to leave lobby with ID "+session.getId()+"//");
+        try {
+            session.removePlayer(player);
+        } catch (Exception e) {
+            System.err.print("Some error leaving a lobby");
+        }
+        clientState=ClientState.INITIAl;
+        return ResponseCreator.getSuccess(command,"Lobby successfully leaved");
+    }
     public void sendCommand(BaseCommand command) {
         try {
             this.objectOutputStream.writeObject(command);

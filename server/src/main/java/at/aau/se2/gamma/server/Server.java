@@ -43,6 +43,17 @@ public  class Server implements Runnable {
 
 
         }
+        public static boolean removeSession(Session session){
+            try {
+                sessions.remove(session);
+
+            } catch (NoSuchElementException e) {
+                System.err.print("//No session found with given session ID// ");
+                return false;
+            }
+            System.out.print("//Session "+session.getId()+" removed//");
+            return true;
+        }
         public static Player getPLayer(String SessionID,String playerID){
             for (Session session:sessions
             ) {

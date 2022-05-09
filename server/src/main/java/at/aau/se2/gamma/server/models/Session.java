@@ -88,13 +88,20 @@ public class Session extends BaseModel implements Serializable {
     public void removePlayer(Player player){
         System.out.print("//removing player "+player.getName());
         ServerPlayer tempserverplayer=Server.identify(player);
-        tempserverplayer.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been kicked"));
-        System.out.print("//notifying "+player.getName()+" he has been kicked");
+        tempserverplayer.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been removed from the lobby"));
+        System.out.print("//notifying "+player.getName()+" he has been removed");
         tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
-        payloadBroadcastAllPlayers(player.getName()+" has been kicked");
-        System.out.print("//notifying all  "+player.getName()+"  has been kicked");
+        payloadBroadcastAllPlayers(player.getName()+" has been removed");
+        System.out.print("//notifying all  "+player.getName()+"  has been removed");
         players.remove(player);
         System.out.print("//has been removed from session//");
+        if(players.size()==0){
+            System.out.print("no player left in session + "+id+" //");
+           if( Server.SessionHandler.removeSession(this)){
+               System.out.print("//Session"+id+" deleted//");
+           }
+        }
+
 
     }
     public void payloadBroadcastAllPlayers(Object payload){
