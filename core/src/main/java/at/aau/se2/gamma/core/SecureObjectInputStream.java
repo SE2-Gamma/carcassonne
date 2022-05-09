@@ -8,6 +8,7 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.KickPlayerBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PayloadBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
+import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 import at.aau.se2.gamma.core.states.ClientState;
 
@@ -37,6 +38,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(StringResponseCommand.class.getName());
             allowedClasses.add(ServerResponse.class.getName());
             allowedClasses.add(ErrorCommand.class.getName());
+            allowedClasses.add(Codes.class.getName());
             allowedClasses.add(ServerResponse.StatusCode.class.getName());
             allowedClasses.add(GetClientStateCommand.class.getName());
             allowedClasses.add(LeaveLobbyCommand.class.getName());
