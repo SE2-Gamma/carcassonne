@@ -17,6 +17,8 @@ android {
 
     buildFeatures {
         viewBinding true
+
+
     }
 
     defaultConfig {
@@ -47,6 +49,10 @@ android {
         main {
             jniLibs.srcDirs = ['libs']
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
