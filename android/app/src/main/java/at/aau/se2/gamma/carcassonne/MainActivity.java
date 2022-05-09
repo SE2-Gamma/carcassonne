@@ -20,7 +20,7 @@ import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ServerThread.BroadcastHandler {
 
     public ActivityMainBinding binding;
 
@@ -70,5 +70,23 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(MainActivity.this, LobbyActivity.class));
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ServerThread.instance != null) {
+            ServerThread.instance.setBroadcastHandler(this);
+        }
+    }
+
+    @Override
+    public void onBroadcastResponse(ServerResponse response, Object payload) {
+        Logger.debug("We have a broadcast message: "+payload);
+    }
+
+    @Override
+    public void onBroadcastFailure(ServerResponse response, Object payload) {
+
     }
 }

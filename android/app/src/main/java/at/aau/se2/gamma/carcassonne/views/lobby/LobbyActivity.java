@@ -101,4 +101,9 @@ public class LobbyActivity extends BaseActivity {
 
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

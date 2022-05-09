@@ -35,6 +35,11 @@ public class ServerThread extends Thread {
         void onServerFailure(Exception e);
     }
 
+    public interface BroadcastHandler {
+        void onBroadcastResponse(ServerResponse response, Object payload);
+        void onBroadcastFailure(ServerResponse response, Object payload);
+    }
+
     private ObjectOutputStream objectOutputStream;
     private SecureObjectInputStream objectInputStream;
     private int port;
@@ -42,6 +47,7 @@ public class ServerThread extends Thread {
     private Socket socket;
     public static ServerThread instance;
     ConnectionHandler connectionHandler;
+    private BroadcastHandler broadcastHandler;
     private ArrayList<ServerRequest> requests = new ArrayList<>();
 
     private ServerThread(String address, int port, ConnectionHandler connectionHandler) {
@@ -66,14 +72,14 @@ public class ServerThread extends Thread {
 
             while (true) {
                 try {
+
                     ServerResponseCommand responseCommand = (ServerResponseCommand) objectInputStream.readObject();
                     ServerResponse response = (ServerResponse) responseCommand.getPayload();
+                    Logger.debug("command server");
                     if(response.getPayload() instanceof BroadcastCommand){
                         BroadcastCommand broadcastCommand=(BroadcastCommand) response.getPayload();
-                        PayloadBroadcastCommand string=(PayloadBroadcastCommand) broadcastCommand.getPayload();
-                        Logger.error((String)string.getPayload());
-                    }
-                    if(response.getPayload() instanceof BaseCommand) {
+                        broadcastHandler.onBroadcastResponse(response, broadcastCommand.getPayload());
+                    } else if(response.getPayload() instanceof BaseCommand) {
 
                         String requestID = responseCommand.getRequestId();
 
@@ -119,5 +125,13 @@ public class ServerThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public BroadcastHandler getBroadcastHandler() {
+        return broadcastHandler;
+    }
+
+    public void setBroadcastHandler(BroadcastHandler broadcastHandler) {
+        this.broadcastHandler = broadcastHandler;
     }
 }
