@@ -5,10 +5,7 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
-import at.aau.se2.gamma.core.models.impl.BaseModel;
-import at.aau.se2.gamma.core.models.impl.GameCard;
-import at.aau.se2.gamma.core.models.impl.GameState;
-import at.aau.se2.gamma.core.models.impl.Player;
+import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.KickOffer;
 import at.aau.se2.gamma.server.ResponseCreator;
@@ -19,6 +16,11 @@ import java.util.*;
 import java.util.concurrent.SynchronousQueue;
 
 public class Session extends BaseModel implements Serializable {
+    public Deck getDeck() {
+        return deck;
+    }
+
+    Deck deck;
     String id=null;
     int maxPlayers=5;
     LinkedList<KickOffer>kickOffers=new LinkedList<>();
@@ -48,6 +50,13 @@ public class Session extends BaseModel implements Serializable {
         return gameState;
     }
     public void initializeDeck(){
+
+    }
+    public void setDeck(int multfaktor){
+        System.out.print("//setting deck//");
+
+        deck=new Deck(multfaktor);
+        System.out.print("//deck set and shuffled.//");
 
     }
     public boolean voteKick(Player player,Player votee) {
