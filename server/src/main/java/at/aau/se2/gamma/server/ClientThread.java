@@ -331,6 +331,9 @@ lock();
     public BaseCommand leaveLobby(LeaveLobbyCommand command){
 
         System.out.print("//current State: "+clientState+"//");
+        if(!clientState.equals(ClientState.LOBBY)){
+            return ResponseCreator.getError(command,"Cant leave lobby because you are not in a lobby", Codes.ERROR.NOT_IN_LOBBY);
+        }
         System.out.print("//Trying to leave lobby with ID "+session.getId()+"//");
         try {
             session.removePlayer(player);
