@@ -27,6 +27,7 @@ public class Session extends BaseModel implements Serializable {
         return id;
     }
 
+
     public void joinGame(Player player){
         if(players.size()>maxPlayers){
             throw new IllegalArgumentException("Spiel voll");
