@@ -11,6 +11,7 @@ import java.util.*;
 
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
+import at.aau.se2.gamma.core.models.impl.Deck;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 import at.aau.se2.gamma.server.models.ServerPlayer;
@@ -42,6 +43,17 @@ public  class Server implements Runnable {
             throw new IllegalArgumentException("Session already exists");
 
 
+        }
+        public static boolean removeSession(Session session){
+            try {
+                sessions.remove(session);
+
+            } catch (NoSuchElementException e) {
+                System.err.print("//No session found with given session ID// ");
+                return false;
+            }
+            System.out.print("//Session "+session.getId()+" removed//");
+            return true;
         }
         public static Player getPLayer(String SessionID,String playerID){
             for (Session session:sessions
@@ -227,12 +239,14 @@ public  class Server implements Runnable {
     }
 
     public static void main(String[] args) throws IOException {
+
         String input="null";
         Server server = new Server(GlobalVariables.getAdress(), GlobalVariables.getPort(), maxPlayers);
         Thread thread=new Thread(server);
         thread.start();
-
         System.out.println("server running");
+
+
         while(!input.equals("stop")){
             input= scanner.nextLine();
             if(input.equals("broadcast")){
