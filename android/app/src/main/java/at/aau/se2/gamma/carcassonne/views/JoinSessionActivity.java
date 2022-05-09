@@ -1,20 +1,17 @@
 package at.aau.se2.gamma.carcassonne.views;
 
-import at.aau.se2.gamma.carcassonne.base.BaseActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityJoinSessionBinding;
-import at.aau.se2.gamma.carcassonne.network.SendThread;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
-import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 
 public class JoinSessionActivity extends BaseActivity {
 

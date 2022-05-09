@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +19,6 @@ import at.aau.se2.gamma.carcassonne.databinding.ActivityLobbyBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
-import at.aau.se2.gamma.core.commands.PayloadResponseCommand;
 import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 
 public class LobbyActivity extends BaseActivity {
@@ -68,7 +66,7 @@ public class LobbyActivity extends BaseActivity {
             }
         });
 
-        //Disconnect from lobby
+        //TODO: Implement disconnect from lobby
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
