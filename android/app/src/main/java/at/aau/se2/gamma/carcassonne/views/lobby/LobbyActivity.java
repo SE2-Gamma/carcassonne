@@ -53,10 +53,12 @@ public class LobbyActivity extends BaseActivity {
                     playerList.add(new LobbyPlayerDisplay(players.get(i)));
                 }
                 adapter.notifyDataSetChanged();
+
                 binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
                 Intent intent = getIntent();
                 String gameKey = intent.getStringExtra("GameKey");
                 binding.tvLobbyName.setText(gameKey);
+
             }
             @Override
             public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
@@ -86,5 +88,10 @@ public class LobbyActivity extends BaseActivity {
 
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

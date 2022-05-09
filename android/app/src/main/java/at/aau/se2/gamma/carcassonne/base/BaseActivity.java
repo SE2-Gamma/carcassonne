@@ -9,6 +9,7 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 
 public class BaseActivity extends AppCompatActivity {
+
     protected ServerThread getServerThreadOrFail() throws NoServerInstanceException {
         if (ServerThread.instance == null) {
             throw new NoServerInstanceException();
@@ -69,6 +70,4 @@ public class BaseActivity extends AppCompatActivity {
             Logger.error(e.getMessage());
         }
     }
-
-    // TODO: add method for group server responses
 }

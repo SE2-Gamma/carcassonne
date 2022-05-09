@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
+import java.util.LinkedList;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityJoinSessionBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
@@ -51,7 +51,7 @@ public class JoinSessionActivity extends BaseActivity {
 
                         @Override
                         public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                            binding.tvError.setText("Keine Antwort vom Server erhalten");
+                            binding.tvError.setText(((LinkedList<String>)payload).get(0));
                             binding.tvError.setVisibility(View.VISIBLE);
                         }
                     });
@@ -62,5 +62,10 @@ public class JoinSessionActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

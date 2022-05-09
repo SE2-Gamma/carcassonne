@@ -3,7 +3,7 @@ package at.aau.se2.gamma.core.models.impl;
 public class GameCard {
 
     public enum SpecialType {
-        CASTLE
+        MONASTERY
     }
 
     private GameCardSide sideNorth;
@@ -12,9 +12,9 @@ public class GameCard {
     private GameCardSide sideWest;
     private SpecialType specialType;
     private GameCardSide[] neswSides; // north, east, south, west sides
-    private int cardId; // id of card type (multiple instances with same id are possible, because we have duplicate cards in the game)
+    private String cardId; // id of card type (multiple instances with same id are possible, because we have duplicate cards in the game)
 
-    public GameCard(GameCardSide sideNorth, GameCardSide sideEast, GameCardSide sideSouth, GameCardSide sideWest, SpecialType specialType, int cardId) {
+    public GameCard(GameCardSide sideNorth, GameCardSide sideEast, GameCardSide sideSouth, GameCardSide sideWest, SpecialType specialType, String cardId) {
         this.sideNorth = sideNorth;
         this.sideEast = sideEast;
         this.sideSouth = sideSouth;
@@ -54,7 +54,7 @@ public class GameCard {
         return specialType;
     }
 
-    public int getCardId() {
+    public String getCardId() {
         return cardId;
     }
 }

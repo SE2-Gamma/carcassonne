@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
+
+import java.util.LinkedList;
+
 import at.aau.se2.gamma.carcassonne.MainActivity;
 import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.UtilityKlasse;
@@ -52,6 +56,7 @@ public class SelectNameActivity extends BaseActivity {
                         @Override
                         public void onConnectionFinished() {
                             Logger.debug("HEY, RESPONSE :)");
+                            //ServerThread.instance.setBroadcastHandler(SelectNameActivity.this);
                             sendServerCommand(new InitialSetNameCommand(userInput), new ServerThread.RequestResponseHandler() {
                                 @Override
                                 public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -64,7 +69,9 @@ public class SelectNameActivity extends BaseActivity {
 
                                 @Override
                                 public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                                    binding.tvError.setText("Keine Antwort vom Server erhalten");
+                                    Log.d("Check","Response: "+payload.toString());
+                                    binding.tvError.setText(((LinkedList<String>)payload).get(0));
+                                    binding.pbSelectNameActivity.setVisibility(View.INVISIBLE);
                                     binding.tvError.setVisibility(View.VISIBLE);
                                 }
                             });
@@ -83,5 +90,10 @@ public class SelectNameActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
