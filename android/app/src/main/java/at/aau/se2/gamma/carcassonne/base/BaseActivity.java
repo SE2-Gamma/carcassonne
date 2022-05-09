@@ -1,7 +1,9 @@
 package at.aau.se2.gamma.carcassonne.base;
 
+import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import at.aau.se2.gamma.carcassonne.exceptions.NoServerInstanceException;
@@ -11,6 +13,7 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 
 public class BaseActivity extends AppCompatActivity {
+
     protected ServerThread getServerThreadOrFail() throws NoServerInstanceException {
         if (ServerThread.instance == null) {
             throw new NoServerInstanceException();
@@ -71,6 +74,4 @@ public class BaseActivity extends AppCompatActivity {
             Logger.error(e.getMessage());
         }
     }
-
-    // TODO: add method for group server responses
 }
