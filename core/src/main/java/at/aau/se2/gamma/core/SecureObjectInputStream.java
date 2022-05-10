@@ -7,6 +7,7 @@ import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
 import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
+import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.KickOffer;
 
@@ -52,11 +53,12 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(SoldierReturnedBroadcastCommand.class.getName());
             allowedClasses.add(YourTurnBroadcastCommand.class.getName());
             allowedClasses.add(KickOffer.class.getName());
-
+            allowedClasses.add(Player.class.getName());
 
             allowedClasses.add(String.class.getName());
             allowedClasses.add(LinkedList.class.getName());
             allowedClasses.add(ClientState.class.getName());
+
             instantiated=true;
 
         }
