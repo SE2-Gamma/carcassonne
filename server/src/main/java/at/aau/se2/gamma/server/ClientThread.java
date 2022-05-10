@@ -368,7 +368,9 @@ public class ClientThread extends Thread {
                 return ResponseCreator.getSuccess(command,"turn succesfull");
 
             }else{
-                return ResponseCreator.getError(command,"Invalid Move", Codes.ERROR.INVALID_MOVE);
+                return ResponseCreator.getSuccess(command,"turn succesfull");
+//TODO: REMOVE THIS HARDCODED RETURN. JUST FOR DEBUGGING PURPOSES.
+               // return ResponseCreator.getError(command,"Invalid Move", Codes.ERROR.INVALID_MOVE);
             }
 
 
