@@ -3,7 +3,11 @@ package at.aau.se2.gamma.server;
 import at.aau.se2.gamma.core.SecureObjectInputStream;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
+import at.aau.se2.gamma.core.models.impl.GameCard;
+import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
@@ -92,24 +96,29 @@ public class ClientThread extends Thread {
     private void checkingAvailability() {
         if(communicating){
             while(communicating){
-                System.out.print("//bw.waiting for broadcast to finish//");
+                System.out.print("//locked//");
             }
         }
     }
-    public void broadcastMessage(BaseCommand command){
+    public void broadcastMessage(BroadcastCommand command){
         System.out.print("//checking availability");
-checkingAvailability();
-        System.out.print("//available,locking");
-lock();
+
+        ServerResponseCommand message=ResponseCreator.getBroadcastCommand(command);
+
         try {
-            System.out.print("//Size of responseCommand in Bytes: "+Server.sizeof(command));
-            objectOutputStream.writeObject(command);
+            System.out.print("//Size of responseCommand in Bytes: "+Server.sizeof(message));
+            System.out.print("//available,locking");
+            checkingAvailability();
+            lock();
+            objectOutputStream.writeObject(message);
+            unlock();
+            System.out.print("//unlocking//");
             System.out.print("//message sent");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        unlock();
-        System.out.print("//unlocking//");
+
+
     }
 
 //--------------------------commandhandler-----------------------------------------
@@ -137,6 +146,9 @@ lock();
 
         }else if(command instanceof GetClientStateCommand) {
             return getClientState((GetClientStateCommand) command);
+
+        }else if(command instanceof GameTurnCommand) {
+            return gameTurn((GameTurnCommand) command);
 
         }
         else{
@@ -244,10 +256,10 @@ lock();
         ) {
             namelist.add(player.getName());
         }
-        namelist.add("test");
+
         System.out.print( "  // players currently in lobby: "+ namelist +"//");
         System.out.print("//currentState: "+clientState+"//");
-        session.payloadBroadcastAllPlayers("A new player has joined the Lobby. Playername: "+player.getName()); //todo: check if this causes errors appside
+        session.broadcastAllPlayers(new PlayerJoinedBroadcastCommand(player.getName())); //todo: check if this causes errors appside
         return ResponseCreator.getSuccess(command,"successfully joined");
     }
 
@@ -339,9 +351,31 @@ lock();
             session.removePlayer(player);
         } catch (Exception e) {
             System.err.print("Some error leaving a lobby");
+            return ResponseCreator.getError(command,"some error", Codes.ERROR.NOT_IN_LOBBY);
+
         }
         clientState=ClientState.INITIAl;
-        return ResponseCreator.getSuccess(command,"Lobby successfully leaved");
+        return ResponseCreator.getSuccess(command,"Lobby successfully left");
+    }
+
+    public BaseCommand gameTurn(GameTurnCommand command){
+        GameMove gameturn=(GameMove) command.getPayload();
+        boolean succesfullturn=false;
+        //do turn
+
+            if(session.gameMovesuccessfull(gameturn)){
+
+                return ResponseCreator.getSuccess(command,"turn succesfull");
+
+            }else{
+                return ResponseCreator.getSuccess(command,"turn succesfull");
+//TODO: REMOVE THIS HARDCODED RETURN. JUST FOR DEBUGGING PURPOSES.
+               // return ResponseCreator.getError(command,"Invalid Move", Codes.ERROR.INVALID_MOVE);
+            }
+
+
+
+
     }
     public void sendCommand(BaseCommand command) {
         try {

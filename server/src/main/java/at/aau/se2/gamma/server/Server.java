@@ -9,11 +9,11 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.*;
 
-import at.aau.se2.gamma.core.ServerResponse;
-import at.aau.se2.gamma.core.commands.*;
-import at.aau.se2.gamma.core.models.impl.Deck;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
+import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
+import at.aau.se2.gamma.core.utils.KickOffer;
 import at.aau.se2.gamma.server.models.ServerPlayer;
 import at.aau.se2.gamma.server.models.Session;
 
@@ -86,11 +86,7 @@ public  class Server implements Runnable {
             }
             throw new NoSuchElementException("no Session with given ID found");
         }
-        public static void KickPlayer(String sessionID,Player tobekicked,Player votee){
-            if(getSession(sessionID).voteKick(tobekicked,votee)){
-                identify(tobekicked).getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been kicked"));
-            }
-        }
+
     }
     public class ClientHandler implements Runnable{
         private boolean running=false;
@@ -249,12 +245,71 @@ public  class Server implements Runnable {
 
         while(!input.equals("stop")){
             input= scanner.nextLine();
+            if(input.equals("startgame")){
+                SessionHandler.getSession("Name").startGame();
+            }
+            if(input.equals("success")){
+                SessionHandler.getSession("Name").gameMovesuccessfull(new GameMove());
+            }
+            if(input.equals("broadcastcommand")){
+                System.out.println("which command shall be broadcasted?");
+                input=scanner.nextLine();
+                BroadcastCommand message=null;
+                if(input.equals("fieldcompleted")){
+                    message=new FieldCompletedBroadcastCommand("field completed");
+                }
+                if(input.equals("gamecompleted")){
+message=new GameCompletedBroadcastCommand("game completed");
+                }if(input.equals("gamestarted")){
+message=new GameStartedBroadcastCommand("game has started");
+                }if(input.equals("gameturn")){
+                    message=new GameTurnBroadCastCommand("hardcode gameturn");
+                }if(input.equals("kickattempt")){
+                    System.out.println("who shall be attempted to be kicked?");
+                    KickOffer offer=new KickOffer(new Player("123123",scanner.nextLine()));
+                    offer.vote(new Player("asd","asd"));
+                    message=new KickAttemptBroadcastCommand(offer);
+                }if(input.equals("payload")){
+message=new PayloadBroadcastCommand("payloadstring");
+                }if(input.equals("playerjoined")){
+            message=new PlayerJoinedBroadcastCommand("testplayer");
+                }if(input.equals("playerkicked")){
+                    System.out.println("who shall be kicked?");
+message= new PlayerKickedBroadcastCommand(scanner.nextLine());
+                }if(input.equals("playerleft")){
+                    System.out.println("who shall leave the lobby?");
+message=new PlayerLeftLobbyBroadcastCommand(scanner.nextLine());
+                }if(input.equals("playersturn")){
+                    System.out.println("whos turn shall it be?");
+message=new PlayerXsTurnBroadcastCommand(scanner.nextLine());
+                }if(input.equals("soldierreturned")){
+message=new SoldierReturnedBroadcastCommand("soldier returned");
+                }if(input.equals("yourturn")){
+                    System.out.println("whos turn shall it be?");
+                    message=new YourTurnBroadcastCommand("your turn");
+                    input=scanner.nextLine();
+                    for (ServerPlayer a:activeServerPlayers
+                    ) {
+                        if(a.getName().equals(input)){
+                            a.getClientThread().broadcastMessage(message);
+
+                        }
+                          }
+                }
+
+                for (ServerPlayer a:activeServerPlayers
+                ) {
+                    a.getClientThread().broadcastMessage(message);
+                }
+                System.out.println("sent");
+
+            }else
             if(input.equals("broadcast")){
                 System.out.println("what do you want to broadcast?");
                 input=scanner.nextLine();
                 for (ServerPlayer a:activeServerPlayers
                      ) {
-                    a.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage(input));
+                    a.getClientThread().broadcastMessage(new StringBroadcastCommand(input));
                 }
                 System.out.println("sent");
             }
@@ -265,7 +320,7 @@ public  class Server implements Runnable {
                     System.out.println(session.getId());
                 }
                 input=scanner.nextLine();
-                SessionHandler.getSession(input).payloadBroadcastAllPlayers(scanner.nextLine());
+                SessionHandler.getSession(input).broadcastAllPlayers(new StringBroadcastCommand(scanner.nextLine()));
             }
         }
 

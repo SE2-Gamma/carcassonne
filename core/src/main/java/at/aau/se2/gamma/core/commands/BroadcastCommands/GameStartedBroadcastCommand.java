@@ -2,13 +2,14 @@ package at.aau.se2.gamma.core.commands.BroadcastCommands;
 
 import at.aau.se2.gamma.core.states.ClientState;
 
-public class FieldCompletedBroadcastCommand  extends BroadcastCommand {
-    public FieldCompletedBroadcastCommand(Object payload) {
+public class GameStartedBroadcastCommand  extends BroadcastCommand {
+    //Payload=GameObject
+    public GameStartedBroadcastCommand(Object payload) {
         super(payload);
     }
     @Override
     public String getKey() {
-        return "field-completed";
+        return "game-started";
     }
 
     @Override

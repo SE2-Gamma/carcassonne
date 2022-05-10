@@ -1,14 +1,10 @@
 package at.aau.se2.gamma.core.models.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GameMapEntry {
-    enum Orientation {
-        NORTH,
-        EAST,
-        SOUTH,
-        WEST
-    }
+public class GameMapEntry implements Serializable {
+
 
     private Orientation orientation;
     private GameCard card;

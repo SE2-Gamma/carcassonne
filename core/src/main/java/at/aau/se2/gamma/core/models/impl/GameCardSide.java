@@ -1,9 +1,10 @@
 package at.aau.se2.gamma.core.models.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GameCardSide {
+public class GameCardSide implements Serializable {
     public enum Type {
         GRAS,
         CASTLE,
