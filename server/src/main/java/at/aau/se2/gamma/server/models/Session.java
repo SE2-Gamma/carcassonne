@@ -19,6 +19,7 @@ public class Session extends BaseModel implements Serializable {
     LinkedList<KickOffer>kickOffers=new LinkedList<>();
     public LinkedList<Player> players = new LinkedList<>();
     GameState gameState=null;
+    GameLoop gameLoop=null;
 
 //--------------------------Lobby-Methods---------------------
 
@@ -26,6 +27,14 @@ public class Session extends BaseModel implements Serializable {
         //todo catch potential errors
         for (Player player:players
         ) {
+            Server.identify(player).getClientThread().broadcastMessage(command);
+        }
+    }
+    public void broadcastAllPlayers(BroadcastCommand command,Player notSendPlayer){
+        //todo catch potential errors
+        for (Player player:players
+        ) {
+            if(!(player.getId().equals(notSendPlayer.getId())))
             Server.identify(player).getClientThread().broadcastMessage(command);
         }
     }
@@ -112,12 +121,26 @@ public class Session extends BaseModel implements Serializable {
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
         setDeck(1);
         deck.printDeck();
-        GameLoop gameLoop=new GameLoop(this);
+        gameLoop=new GameLoop(this);
         gameLoop.start();
 
 
     }
+
+
 //-----------------------------Game-Activity--------------------------
+    public int timeout=60000;
+    public boolean gameMovesuccessfull(GameMove gameturn) {
+        //todo implement
+        boolean successfull=true;
+        //check if gamemove was succesfull
+        if(successfull){
+            //do gamemove, updating the gameobject. once updated, the gameloop will continue and send the updated gameobject to all clients
+            gameLoop.interrupt();//interrupt waiting gameloop
+            return true; //tell the clienthread the move is succesfull
+        }
+    return false; //tell the clienthtread the move was unsuccessfull. the clientthread will then wait for another turn to be made, which will be checked again
+}
 
     public class GameLoop extends Thread{
         Session session;
@@ -133,23 +156,34 @@ public class Session extends BaseModel implements Serializable {
             turnOrder=new LinkedList<>(session.players);
             printTurnOrder(turnOrder);
             shuffle(turnOrder);
-int counter=0;
+
             while (playing){
+                Player onTurn=turnOrder.pop();
+                turnOrder.addLast(onTurn);
+                GameCard card=null;
+                try {
+                     card=deck.drawCard();
+                } catch (NoSuchElementException e) {
+                    gameEnded(); //todo: implement
+                }
+                Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card));
+                broadcastAllPlayers(new PlayerXsTurnBroadcastCommand(onTurn.getName()),onTurn);
 
-                System.out.println();
-                printTurnOrder(turnOrder);
-                turnOrder.addLast(turnOrder.pop());
+                try {
+                    Thread.sleep(timeout); //waiting for succesfull move to be made
+                } catch (InterruptedException e) {
+                    broadcastAllPlayers(new GameTurnBroadCastCommand(gameObject));
+                }
 
-            /////////////////////////////todo: remove
-            if(counter<5){
-                counter++;
-            }else{playing=false;}
-            //////////////////////////todo:remove
 
             }
 
 
         }
+
+        private void gameEnded() {
+        }
+
         static void printTurnOrder(LinkedList<Player>list){
             int counter=1;
             for (Player player:list
