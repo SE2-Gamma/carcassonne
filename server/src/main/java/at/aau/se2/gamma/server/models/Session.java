@@ -24,14 +24,8 @@ public class Session extends BaseModel implements Serializable {
 
 //--------------------------Lobby-Methods---------------------
     public void playerReady(Player player){
-        boolean checker=true;
-        for (Player in:readyPlayers
-             ) {
-            if(in.getId().equals(player.getId())){
-                checker=false;
-            }
-        }
-        if(checker){
+
+        if(!players.contains(player)){
             readyPlayers.add(player);
             broadcastAllPlayers(new PlayerReadyBroadcastCommand(player.getName()));
 
