@@ -10,6 +10,7 @@ import java.net.SocketException;
 import java.util.*;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
+import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 import at.aau.se2.gamma.core.utils.KickOffer;
@@ -246,6 +247,9 @@ public  class Server implements Runnable {
             input= scanner.nextLine();
             if(input.equals("startgame")){
                 SessionHandler.getSession("Name").startGame();
+            }
+            if(input.equals("success")){
+                SessionHandler.getSession("Name").gameMovesuccessfull(new GameMove());
             }
             if(input.equals("broadcastcommand")){
                 System.out.println("which command shall be broadcasted?");

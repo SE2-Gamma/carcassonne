@@ -6,6 +6,8 @@ import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
+import at.aau.se2.gamma.core.models.impl.GameCard;
+import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
@@ -144,6 +146,9 @@ public class ClientThread extends Thread {
 
         }else if(command instanceof GetClientStateCommand) {
             return getClientState((GetClientStateCommand) command);
+
+        }else if(command instanceof GameTurnCommand) {
+            return gameTurn((GameTurnCommand) command);
 
         }
         else{
@@ -351,6 +356,26 @@ public class ClientThread extends Thread {
         }
         clientState=ClientState.INITIAl;
         return ResponseCreator.getSuccess(command,"Lobby successfully left");
+    }
+
+    public BaseCommand gameTurn(GameTurnCommand command){
+        GameMove gameturn=(GameMove) command.getPayload();
+        boolean succesfullturn=false;
+        //do turn
+
+            if(session.gameMovesuccessfull(gameturn)){
+
+                return ResponseCreator.getSuccess(command,"turn succesfull");
+
+            }else{
+                return ResponseCreator.getSuccess(command,"turn succesfull");
+//TODO: REMOVE THIS HARDCODED RETURN. JUST FOR DEBUGGING PURPOSES.
+               // return ResponseCreator.getError(command,"Invalid Move", Codes.ERROR.INVALID_MOVE);
+            }
+
+
+
+
     }
     public void sendCommand(BaseCommand command) {
         try {

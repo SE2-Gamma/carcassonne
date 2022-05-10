@@ -9,7 +9,7 @@ public class Codes {
         NAME_ALREADY_TAKEN,
         NO_PLAYER_WITH_MATCHING_ID,
         NO_PLAYER_WITH_MATCHING_NAME,
-        NOT_IN_LOBBY
+        INVALID_MOVE, NOT_IN_LOBBY
 
 
     }
