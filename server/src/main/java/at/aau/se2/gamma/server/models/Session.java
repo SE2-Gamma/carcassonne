@@ -18,11 +18,32 @@ public class Session extends BaseModel implements Serializable {
     int maxPlayers=5;
     LinkedList<KickOffer>kickOffers=new LinkedList<>();
     public LinkedList<Player> players = new LinkedList<>();
+    public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
     GameLoop gameLoop=null;
 
 //--------------------------Lobby-Methods---------------------
+    public void playerReady(Player player){
+        boolean checker=true;
+        for (Player in:readyPlayers
+             ) {
+            if(in.getId().equals(player.getId())){
+                checker=false;
+            }
+        }
+        if(checker){
+            readyPlayers.add(player);
+            broadcastAllPlayers(new PlayerReadyBroadcastCommand(player.getName()));
 
+        }
+        if(readyPlayers.size()==players.size()){
+            startGame();
+        }
+      }
+    public void playerNotReady(Player player){
+            readyPlayers.remove(player);
+            broadcastAllPlayers(new PlayerNotReadyBroadcastCommand(player.getName()));
+    }
     public void broadcastAllPlayers(BroadcastCommand command){
         //todo catch potential errors
         for (Player player:players

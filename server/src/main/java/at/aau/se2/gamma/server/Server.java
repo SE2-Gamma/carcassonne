@@ -257,6 +257,10 @@ public  class Server implements Runnable {
                 BroadcastCommand message=null;
                 if(input.equals("fieldcompleted")){
                     message=new FieldCompletedBroadcastCommand("field completed");
+                } if(input.equals("playerready")){
+                    message=new PlayerReadyBroadcastCommand("testplayer");
+                }if(input.equals("playernotready")){
+                    message=new PlayerNotReadyBroadcastCommand("testplayer");
                 }
                 if(input.equals("gamecompleted")){
 message=new GameCompletedBroadcastCommand("game completed");
