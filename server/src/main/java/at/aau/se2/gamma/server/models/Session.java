@@ -24,18 +24,31 @@ public class Session extends BaseModel implements Serializable {
 
 //--------------------------Lobby-Methods---------------------
     public void playerReady(Player player){
-
-        if(!players.contains(player)){
+        System.out.print("//"+player.getName()+"tells he is ready//");
+        if(!readyPlayers.contains(player)){
             readyPlayers.add(player);
+            for (Player a:readyPlayers
+                 ) {
+                System.out.print("//"+a.getName()+" is ready.//");
+
+            }
+            System.out.print("//broadcasting//");
             broadcastAllPlayers(new PlayerReadyBroadcastCommand(player.getName()));
 
         }
         if(readyPlayers.size()==players.size()){
+            System.out.print("//all players are ready. starting game//");
             startGame();
         }
       }
     public void playerNotReady(Player player){
+        System.out.print("//"+player.getName()+"tells he is not ready//");
             readyPlayers.remove(player);
+        for (Player a:readyPlayers
+        ) {
+            System.out.print("//"+a.getName()+" is ready.//");
+
+        }
             broadcastAllPlayers(new PlayerNotReadyBroadcastCommand(player.getName()));
     }
     public void broadcastAllPlayers(BroadcastCommand command){
