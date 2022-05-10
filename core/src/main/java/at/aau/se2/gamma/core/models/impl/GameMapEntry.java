@@ -4,12 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class GameMapEntry implements Serializable {
-    enum Orientation {
-        NORTH,
-        EAST,
-        SOUTH,
-        WEST
-    }
+
 
     private Orientation orientation;
     private GameCard card;

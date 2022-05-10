@@ -1,7 +1,9 @@
 package at.aau.se2.gamma.core;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
@@ -21,6 +23,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
     private static boolean instantiated=false;
     static void initialise(){
         if(!instantiated){
+            allowedClasses.add(null);
             allowedClasses.add(BaseCommand.class.getName());
             allowedClasses.add(BroadcastCommand.class.getName());
             allowedClasses.add(CreateGameCommand.class.getName());
@@ -69,13 +72,20 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(SoldierPlacement.class.getName());
             allowedClasses.add(ClientState.class.getName());
             allowedClasses.add(SessionState.class.getName());
+            allowedClasses.add(Orientation.class.getName());
+
+            allowedClasses.add(ArrayList.class.getName());
+
 
             allowedClasses.add(String.class.getName());
             allowedClasses.add(LinkedList.class.getName());
             allowedClasses.add(ClientState.class.getName());
 
             instantiated=true;
-
+            for (String a:allowedClasses
+            ) {
+                System.out.println("allowed classes: "+a);
+            }
         }
 
 
@@ -91,8 +101,13 @@ public class SecureObjectInputStream extends ObjectInputStream {
                 return super.resolveClass(osc);
             }
         }
-
-       throw new ClassNotFoundException("Illegal Class sent: "+osc.getName());
+        if(osc.getName().equals(GameMapEntry.class.getName())){
+            return super.resolveClass(osc);
+        }else{
+            System.err.println("for some reason gamemapetnry istn accepted by whitelist");
+        }
+        return super.resolveClass(osc);
+       //throw new ClassNotFoundException("Illegal Class sent: "+osc.getName());
 
     }
 }

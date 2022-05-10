@@ -244,6 +244,9 @@ public  class Server implements Runnable {
 
         while(!input.equals("stop")){
             input= scanner.nextLine();
+            if(input.equals("startgame")){
+                SessionHandler.getSession("Name").startGame();
+            }
             if(input.equals("broadcastcommand")){
                 System.out.println("which command shall be broadcasted?");
                 input=scanner.nextLine();
@@ -313,7 +316,7 @@ message=new SoldierReturnedBroadcastCommand("soldier returned");
                     System.out.println(session.getId());
                 }
                 input=scanner.nextLine();
-                SessionHandler.getSession(input).BroadcastAllPlayers(new StringBroadcastCommand(scanner.nextLine()));
+                SessionHandler.getSession(input).broadcastAllPlayers(new StringBroadcastCommand(scanner.nextLine()));
             }
         }
 

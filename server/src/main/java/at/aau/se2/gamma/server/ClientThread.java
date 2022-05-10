@@ -254,7 +254,7 @@ public class ClientThread extends Thread {
 
         System.out.print( "  // players currently in lobby: "+ namelist +"//");
         System.out.print("//currentState: "+clientState+"//");
-        session.BroadcastAllPlayers(new PlayerJoinedBroadcastCommand(player.getName())); //todo: check if this causes errors appside
+        session.broadcastAllPlayers(new PlayerJoinedBroadcastCommand(player.getName())); //todo: check if this causes errors appside
         return ResponseCreator.getSuccess(command,"successfully joined");
     }
 
@@ -346,6 +346,8 @@ public class ClientThread extends Thread {
             session.removePlayer(player);
         } catch (Exception e) {
             System.err.print("Some error leaving a lobby");
+            return ResponseCreator.getError(command,"some error", Codes.ERROR.NOT_IN_LOBBY);
+
         }
         clientState=ClientState.INITIAl;
         return ResponseCreator.getSuccess(command,"Lobby successfully left");
