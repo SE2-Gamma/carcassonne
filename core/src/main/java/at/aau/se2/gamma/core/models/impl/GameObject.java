@@ -1,8 +1,9 @@
 package at.aau.se2.gamma.core.models.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GameObject {
+public class GameObject implements Serializable {
     private GameMap gameMap;
     private ArrayList<PlayerListEntry> playerListEntries = new ArrayList<>();
 

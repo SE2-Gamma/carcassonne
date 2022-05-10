@@ -3,6 +3,8 @@ package at.aau.se2.gamma.server;
 import at.aau.se2.gamma.core.SecureObjectInputStream;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.states.ClientState;
@@ -92,24 +94,29 @@ public class ClientThread extends Thread {
     private void checkingAvailability() {
         if(communicating){
             while(communicating){
-                System.out.print("//bw.waiting for broadcast to finish//");
+                System.out.print("//locked//");
             }
         }
     }
-    public void broadcastMessage(BaseCommand command){
+    public void broadcastMessage(BroadcastCommand command){
         System.out.print("//checking availability");
-checkingAvailability();
-        System.out.print("//available,locking");
-lock();
+
+        ServerResponseCommand message=ResponseCreator.getBroadcastCommand(command);
+
         try {
-            System.out.print("//Size of responseCommand in Bytes: "+Server.sizeof(command));
-            objectOutputStream.writeObject(command);
+            System.out.print("//Size of responseCommand in Bytes: "+Server.sizeof(message));
+            System.out.print("//available,locking");
+            checkingAvailability();
+            lock();
+            objectOutputStream.writeObject(message);
+            unlock();
+            System.out.print("//unlocking//");
             System.out.print("//message sent");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        unlock();
-        System.out.print("//unlocking//");
+
+
     }
 
 //--------------------------commandhandler-----------------------------------------
@@ -132,6 +139,12 @@ lock();
             return kickPlayer((KickPlayerCommand) command);
         }else if(command instanceof DisconnectCommand){
             return disconnectPlayer((DisconnectCommand) command);
+        }else if(command instanceof LeaveLobbyCommand) {
+            return leaveLobby((LeaveLobbyCommand) command);
+
+        }else if(command instanceof GetClientStateCommand) {
+            return getClientState((GetClientStateCommand) command);
+
         }
         else{
             System.out.println("command not suitable for current state");
@@ -238,10 +251,10 @@ lock();
         ) {
             namelist.add(player.getName());
         }
-        namelist.add("test");
+
         System.out.print( "  // players currently in lobby: "+ namelist +"//");
         System.out.print("//currentState: "+clientState+"//");
-        session.payloadBroadcastAllPlayers("A new player has joined the Lobby. Playername: "+player.getName()); //todo: check if this causes errors appside
+        session.broadcastAllPlayers(new PlayerJoinedBroadcastCommand(player.getName())); //todo: check if this causes errors appside
         return ResponseCreator.getSuccess(command,"successfully joined");
     }
 
@@ -315,6 +328,29 @@ lock();
 
 
         return ResponseCreator.getSuccess(command, "vote issued");
+    }
+
+    public BaseCommand getClientState(GetClientStateCommand command){
+        System.out.print("//current State: "+clientState+"//");
+        return  ResponseCreator.getSuccess(command,clientState);
+    }
+
+    public BaseCommand leaveLobby(LeaveLobbyCommand command){
+
+        System.out.print("//current State: "+clientState+"//");
+        if(!clientState.equals(ClientState.LOBBY)){
+            return ResponseCreator.getError(command,"Cant leave lobby because you are not in a lobby", Codes.ERROR.NOT_IN_LOBBY);
+        }
+        System.out.print("//Trying to leave lobby with ID "+session.getId()+"//");
+        try {
+            session.removePlayer(player);
+        } catch (Exception e) {
+            System.err.print("Some error leaving a lobby");
+            return ResponseCreator.getError(command,"some error", Codes.ERROR.NOT_IN_LOBBY);
+
+        }
+        clientState=ClientState.INITIAl;
+        return ResponseCreator.getSuccess(command,"Lobby successfully left");
     }
     public void sendCommand(BaseCommand command) {
         try {

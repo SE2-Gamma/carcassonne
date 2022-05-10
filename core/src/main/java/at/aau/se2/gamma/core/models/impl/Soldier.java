@@ -1,9 +1,11 @@
 package at.aau.se2.gamma.core.models.impl;
 
+import java.io.Serializable;
+
 /**
  * soldiers placed on the field by the player
  */
-public class Soldier {
+public class Soldier implements Serializable {
     private Player player; // reference to the player, who owns this soldier
     private SoldierPlacement soldierPlacement; // current placement
 

@@ -2,9 +2,10 @@ package at.aau.se2.gamma.core.utils;
 
 import at.aau.se2.gamma.core.models.impl.Player;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class KickOffer {
+public class KickOffer implements Serializable {
     public KickOffer(Player player) {
     }
 
@@ -15,16 +16,17 @@ public class KickOffer {
         for (Player player:votees
              ) {
             if(player.getId().equals(votee.getId())){
-                return counter;
+                return votes;
             }
         }
         votees.add(player);
-        counter++;
-     return counter;
+        votes++;
+     return votes;
     }
 
     Player player;
-    int counter=0;
+    int votes =0;
+
     LinkedList<Player>votees=new LinkedList<>();
 //todo: implement function to ensure a player can only issue one vote
 
