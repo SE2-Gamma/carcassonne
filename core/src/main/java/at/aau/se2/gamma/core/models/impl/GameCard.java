@@ -1,6 +1,8 @@
 package at.aau.se2.gamma.core.models.impl;
 
-public class GameCard {
+import java.io.Serializable;
+
+public class GameCard implements Serializable {
 
     public enum SpecialType {
         MONASTERY

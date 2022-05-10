@@ -3,6 +3,7 @@ package at.aau.se2.gamma.core.commands.BroadcastCommands;
 import at.aau.se2.gamma.core.states.ClientState;
 
 public class GameStartedBroadcastCommand  extends BroadcastCommand {
+    //Payload=GameObject
     public GameStartedBroadcastCommand(Object payload) {
         super(payload);
     }
