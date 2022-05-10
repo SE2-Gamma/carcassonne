@@ -4,7 +4,6 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PayloadBroadcastCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 
@@ -24,12 +23,10 @@ public class ResponseCreator {
     static public ServerResponseCommand getSuccess(BaseCommand command, Object payload){
         return new ServerResponseCommand(ServerResponse.success(new PayloadResponseCommand(payload)), command.getRequestId());
     }
-    static public ServerResponseCommand getBroadcastMessage(Object Payload){
-        return new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new PayloadBroadcastCommand(Payload))), "-1");
 
-    }
-    static public ServerResponseCommand getStringBroadcastMessage(String Payload){
-        return new ServerResponseCommand(ServerResponse.success(new BroadcastCommand(new StringBroadcastCommand(new PayloadBroadcastCommand(Payload)))), "-1");
+
+    static public ServerResponseCommand getBroadcastCommand(BroadcastCommand command){
+        return new ServerResponseCommand(ServerResponse.success(command), "-1");
 
     }
 

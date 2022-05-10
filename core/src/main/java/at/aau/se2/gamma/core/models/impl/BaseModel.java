@@ -1,5 +1,7 @@
 package at.aau.se2.gamma.core.models.impl;
 
-public class BaseModel {
+import java.io.Serializable;
+
+public class BaseModel implements Serializable {
 
 }

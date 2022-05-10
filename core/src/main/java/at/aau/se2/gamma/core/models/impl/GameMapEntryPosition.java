@@ -1,6 +1,8 @@
 package at.aau.se2.gamma.core.models.impl;
 
-public class GameMapEntryPosition {
+import java.io.Serializable;
+
+public class GameMapEntryPosition implements Serializable {
     private int x;
     private int y;
 

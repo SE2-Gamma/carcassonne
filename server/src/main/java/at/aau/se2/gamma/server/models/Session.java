@@ -1,34 +1,34 @@
 package at.aau.se2.gamma.server.models;
 
-import at.aau.se2.gamma.core.ServerResponse;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
-import at.aau.se2.gamma.core.commands.ServerResponseCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
-import at.aau.se2.gamma.core.factories.GameCardFactory;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
 import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.KickOffer;
-import at.aau.se2.gamma.server.ResponseCreator;
 import at.aau.se2.gamma.server.Server;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.SynchronousQueue;
 
 public class Session extends BaseModel implements Serializable {
-    public Deck getDeck() {
-        return deck;
-    }
 
+//-----------------------Variables-------------------------------
+    GameObject gameObject;
     Deck deck;
-    String id=null;
+    String id;
     int maxPlayers=5;
     LinkedList<KickOffer>kickOffers=new LinkedList<>();
     public LinkedList<Player> players = new LinkedList<>();
-    public String getId() {
-        return id;
-    }
+    GameState gameState=null;
 
+//--------------------------Lobby-Methods---------------------
+
+    public void broadcastAllPlayers(BroadcastCommand command){
+        //todo catch potential errors
+        for (Player player:players
+        ) {
+            Server.identify(player).getClientThread().broadcastMessage(command);
+        }
+    }
 
     public void joinGame(Player player){
         if(players.size()>maxPlayers){
@@ -42,15 +42,179 @@ public class Session extends BaseModel implements Serializable {
         }
         players.add(player);
     }
+    public void removePlayer(Player player){
+        System.out.print("//removing player "+player.getName());
+        ServerPlayer tempserverplayer=Server.identify(player);
+
+        System.out.print("//notifying "+player.getName()+" he has been removed");
+        tempserverplayer.getClientThread().broadcastMessage(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+        players.remove(player);
+        tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
+
+
+        System.out.print("//notifying all  "+player.getName()+"  has been removed");
+        broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+
+        if(players.size()==0){
+            System.out.println("no player left in session + "+id+" //");
+            if( Server.SessionHandler.removeSession(this)){
+                System.out.print("//Session"+id+" deleted//");
+            }
+        }
+
+
+    }
+    public boolean voteKick(Player player,Player votee) {
+        int votes = 0;
+        getPlayer(player.getId()); //to throw exception if player is not here
+        boolean checker = true;
+        KickOffer offer = null;
+        for (KickOffer kickoffer : kickOffers
+        ) {
+            if (kickoffer.getPlayer().getId().equals(player.getId())) {
+                votes = kickoffer.vote(votee);
+                checker = false;
+                offer=kickoffer;
+            }
+        }
+
+        if (checker) {
+            offer = new KickOffer(player);
+            kickOffers.add(offer);
+            votes=offer.vote(votee);
+        }
+
+        int tobeat = players.size() / 2;
+        System.out.print("//voting to kick player " + player.getName());
+        System.out.print("//"+votes + " out of " + tobeat + " to kick//");
+
+
+        if (tobeat >= votes) {
+            kickOffers.remove(offer);
+            broadcastAllPlayers(new PlayerKickedBroadcastCommand(offer));
+            removePlayer(player);
+            System.out.println("//player kicked//");
+
+            return true;
+        }
+        broadcastAllPlayers(new KickAttemptBroadcastCommand(offer));
+        System.out.println("//not enough votes to kick//");
+        return false;
+    }
+
+     public void startGame(){
+        gameObject=new GameObject(new GameMap());
+        for (Player temp:players
+             ) {
+            Server.identify(temp).getClientThread().setClientState(ClientState.GAME);
+        }
+
+        broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
+        setDeck(1);
+        deck.printDeck();
+        GameLoop gameLoop=new GameLoop(this);
+        gameLoop.start();
+
+
+    }
+//-----------------------------Game-Activity--------------------------
+
+    public class GameLoop extends Thread{
+        Session session;
+        boolean playing;
+        LinkedList<Player>turnOrder;
+        GameLoop(Session session){
+            this.session=session;
+        }
+        @Override
+        public void run() {
+            playing=true;
+            //caution: reference
+            turnOrder=new LinkedList<>(session.players);
+            printTurnOrder(turnOrder);
+            shuffle(turnOrder);
+int counter=0;
+            while (playing){
+
+                System.out.println();
+                printTurnOrder(turnOrder);
+                turnOrder.addLast(turnOrder.pop());
+
+            /////////////////////////////todo: remove
+            if(counter<5){
+                counter++;
+            }else{playing=false;}
+            //////////////////////////todo:remove
+
+            }
+
+
+        }
+        static void printTurnOrder(LinkedList<Player>list){
+            int counter=1;
+            for (Player player:list
+                 ) {
+                System.out.print("// "+counter+".: "+player.getName()+" //");
+                counter++;
+            }
+        }
+        static void shuffle(LinkedList<Player>list)
+        {
+            Player[] arr=new Player[list.size()];
+            list.toArray(arr);
+
+            Random rand = new Random();
+            for (int i = 0; i < arr.length; i++) {
+
+                // select index randomly
+                int index = rand.nextInt(i + 1);
+
+                // swapping between i th term and the index th
+                // term
+                Player g = arr[index];
+                arr[index] = arr[i];
+                arr[i] = g;
+            }
+
+            list.clear();
+            list.addAll(Arrays.asList(arr));
+
+
+        }
+    }
+
+
+
+
+
+//------------utility-------------------
+
+    public Player getPlayer(String playerID){
+    for (Player player:players
+    ) {
+        if(player.getId().equals(playerID)){
+            return player;
+        }
+    }
+    throw new NoSuchElementException("no player found with matching playerID");
+}
+    public String getId() {
+        return id;
+    }
     public void setId(String id) {
         this.id = id;
     }
-
+    public Deck getDeck() {
+        return deck;
+    }
     public GameState getGameState() {
         return gameState;
     }
-    public void initializeDeck(){
-
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+    public Session(String id) {
+        this.id = id;
     }
     public void setDeck(int multfaktor){
         System.out.print("//setting deck//");
@@ -59,84 +223,5 @@ public class Session extends BaseModel implements Serializable {
         System.out.print("//deck set and shuffled.//");
 
     }
-    public boolean voteKick(Player player,Player votee) {
-        int votes = 0;
-        getPlayer(player.getId()); //to throw exception if player is not here
-        boolean checker = true;
-        for (KickOffer kickoffer : kickOffers
-        ) {
-            if (kickoffer.getPlayer().getId().equals(player.getId())) {
-                votes = kickoffer.vote(votee);
-                checker = false;
-            }
-        }
-        KickOffer offer = null;
-        if (checker) {
-            offer = new KickOffer(player);
-            kickOffers.add(offer);
-            votes=offer.vote(votee);
-        }
-
-
-        if (votes == 0) {
-            return false;
-        }
-        int tobeat = players.size() / 2;
-        System.out.print("//voting to kick player " + player.getName());
-        System.out.print("//"+votes + " out of " + tobeat + " to kick//");
-        payloadBroadcastAllPlayers(ResponseCreator.getBroadcastMessage("Kick attempted."+votes+" out of "+tobeat+" to kick player "+player.getName()));
-        if (tobeat <= votes) {
-            kickOffers.remove(offer);
-            removePlayer(player);
-            System.out.println("//player kicked//");
-            return true;
-        }
-        System.out.println("//not enough votes to kick//");
-       return false;
-    }
-    public void removePlayer(Player player){
-        System.out.print("//removing player "+player.getName());
-        ServerPlayer tempserverplayer=Server.identify(player);
-        tempserverplayer.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been removed from the lobby"));
-        System.out.print("//notifying "+player.getName()+" he has been removed");
-        tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
-        payloadBroadcastAllPlayers(player.getName()+" has been removed");
-        System.out.print("//notifying all  "+player.getName()+"  has been removed");
-        players.remove(player);
-        System.out.print("//has been removed from session//");
-        if(players.size()==0){
-            System.out.print("no player left in session + "+id+" //");
-           if( Server.SessionHandler.removeSession(this)){
-               System.out.print("//Session"+id+" deleted//");
-           }
-        }
-
-
-    }
-    public void payloadBroadcastAllPlayers(Object payload){
-        //todo catch potential errors
-        for (Player player:players
-             ) {
-            Server.identify(player).getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage(payload));
-        }
-    }
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-    public Player getPlayer(String playerID){
-    for (Player player:players
-         ) {
-        if(player.getId().equals(playerID)){
-            return player;
-        }
-    }
-  throw new NoSuchElementException("no player found with matching playerID");
-    }
-    GameState gameState=null;
-    public Session(String id) {
-        this.id = id;
-    }
-
-
 
 }

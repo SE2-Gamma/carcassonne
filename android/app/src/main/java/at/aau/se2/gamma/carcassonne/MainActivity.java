@@ -83,6 +83,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
     @Override
     public void onBroadcastResponse(ServerResponse response, Object payload) {
         Logger.debug("We have a broadcast message: "+payload);
+        Logger.debug("type of broadcast message: "+response.getPayload().getClass().toString());
     }
 
     @Override

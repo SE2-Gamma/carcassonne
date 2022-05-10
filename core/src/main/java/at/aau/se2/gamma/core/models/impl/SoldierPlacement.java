@@ -1,6 +1,8 @@
 package at.aau.se2.gamma.core.models.impl;
 
-public class SoldierPlacement {
+import java.io.Serializable;
+
+public class SoldierPlacement implements Serializable {
     private Soldier soldier;
     private GameCardSide gameCardSide;
 

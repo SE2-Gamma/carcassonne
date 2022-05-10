@@ -19,9 +19,10 @@ public class Deck {
         }
         System.out.print("//decksize: "+deck.size()+"//");
     }
-    public GameCard drawCard(){
-        System.out.print("//card drawn. remaining cards:"+deck.size()+"//");
-            return deck.pop();
+    public GameCard drawCard() throws NullPointerException{
+        GameCard card= deck.pop();
+        System.out.print("//card "+card.getCardId()+" drawn. remaining cards:"+deck.size()+"//");
+            return card;
     }
     public Deck(int multfaktor) {
         deck= GameCardFactory.getDeck(multfaktor);
