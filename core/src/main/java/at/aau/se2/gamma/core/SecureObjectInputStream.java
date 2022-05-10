@@ -4,13 +4,11 @@ import java.io.*;
 import java.util.LinkedList;
 
 import at.aau.se2.gamma.core.commands.*;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.KickPlayerBroadcastCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.PayloadBroadcastCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
 import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 import at.aau.se2.gamma.core.states.ClientState;
+import at.aau.se2.gamma.core.utils.KickOffer;
 
 public class SecureObjectInputStream extends ObjectInputStream {
 
@@ -27,7 +25,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(DisconnectCommand.class.getName());
             allowedClasses.add(InitialJoinCommand.class.getName());
             allowedClasses.add(InitialSetNameCommand.class.getName());
-            allowedClasses.add(KickPlayerBroadcastCommand.class.getName());
+            allowedClasses.add(PlayerKickedBroadcastCommand.class.getName());
             allowedClasses.add(KickPlayerCommand.class.getName());
             allowedClasses.add(PayloadBroadcastCommand.class.getName());
             allowedClasses.add(PayloadResponseCommand.class.getName());
@@ -42,6 +40,19 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(ServerResponse.StatusCode.class.getName());
             allowedClasses.add(GetClientStateCommand.class.getName());
             allowedClasses.add(LeaveLobbyCommand.class.getName());
+            allowedClasses.add(FieldCompletedBroadcastCommand.class.getName());
+            allowedClasses.add(GameCompletedBroadcastCommand.class.getName());
+            allowedClasses.add(GameStartedBroadcastCommand.class.getName());
+            allowedClasses.add(GameTurnBroadCastCommand.class.getName());
+            allowedClasses.add(KickAttemptBroadcastCommand.class.getName());
+            allowedClasses.add(PlayerJoinedBroadcastCommand.class.getName());
+            allowedClasses.add(PlayerKickedBroadcastCommand.class.getName());
+            allowedClasses.add(PlayerLeftLobbyBroadcastCommand.class.getName());
+            allowedClasses.add(PlayerXsTurnBroadcastCommand.class.getName());
+            allowedClasses.add(SoldierReturnedBroadcastCommand.class.getName());
+            allowedClasses.add(YourTurnBroadcastCommand.class.getName());
+            allowedClasses.add(KickOffer.class.getName());
+
 
             allowedClasses.add(String.class.getName());
             allowedClasses.add(LinkedList.class.getName());

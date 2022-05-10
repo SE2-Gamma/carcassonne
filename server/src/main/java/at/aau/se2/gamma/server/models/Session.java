@@ -1,10 +1,9 @@
 package at.aau.se2.gamma.server.models;
 
-import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
-import at.aau.se2.gamma.core.commands.ServerResponseCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
-import at.aau.se2.gamma.core.factories.GameCardFactory;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.KickAttemptBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerKickedBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
 import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.KickOffer;
@@ -13,7 +12,6 @@ import at.aau.se2.gamma.server.Server;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.SynchronousQueue;
 
 public class Session extends BaseModel implements Serializable {
     public Deck getDeck() {
@@ -63,49 +61,54 @@ public class Session extends BaseModel implements Serializable {
         int votes = 0;
         getPlayer(player.getId()); //to throw exception if player is not here
         boolean checker = true;
+        KickOffer offer = null;
         for (KickOffer kickoffer : kickOffers
         ) {
             if (kickoffer.getPlayer().getId().equals(player.getId())) {
                 votes = kickoffer.vote(votee);
                 checker = false;
+                offer=kickoffer;
             }
         }
-        KickOffer offer = null;
+
         if (checker) {
             offer = new KickOffer(player);
             kickOffers.add(offer);
             votes=offer.vote(votee);
         }
 
-
-        if (votes == 0) {
-            return false;
-        }
         int tobeat = players.size() / 2;
         System.out.print("//voting to kick player " + player.getName());
         System.out.print("//"+votes + " out of " + tobeat + " to kick//");
-        payloadBroadcastAllPlayers(ResponseCreator.getBroadcastMessage("Kick attempted."+votes+" out of "+tobeat+" to kick player "+player.getName()));
-        if (tobeat <= votes) {
+
+
+        if (tobeat >= votes) {
             kickOffers.remove(offer);
+            BroadcastAllPlayers(new PlayerKickedBroadcastCommand(offer));
             removePlayer(player);
             System.out.println("//player kicked//");
+
             return true;
         }
+        BroadcastAllPlayers(new KickAttemptBroadcastCommand(offer));
         System.out.println("//not enough votes to kick//");
        return false;
     }
     public void removePlayer(Player player){
         System.out.print("//removing player "+player.getName());
         ServerPlayer tempserverplayer=Server.identify(player);
-        tempserverplayer.getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage("you have been removed from the lobby"));
+
         System.out.print("//notifying "+player.getName()+" he has been removed");
-        tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
-        payloadBroadcastAllPlayers(player.getName()+" has been removed");
-        System.out.print("//notifying all  "+player.getName()+"  has been removed");
+        tempserverplayer.getClientThread().broadcastMessage(new PlayerLeftLobbyBroadcastCommand(player.getName()));
         players.remove(player);
-        System.out.print("//has been removed from session//");
+        tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
+
+
+        System.out.print("//notifying all  "+player.getName()+"  has been removed");
+        BroadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+
         if(players.size()==0){
-            System.out.print("no player left in session + "+id+" //");
+            System.out.println("no player left in session + "+id+" //");
            if( Server.SessionHandler.removeSession(this)){
                System.out.print("//Session"+id+" deleted//");
            }
@@ -113,11 +116,11 @@ public class Session extends BaseModel implements Serializable {
 
 
     }
-    public void payloadBroadcastAllPlayers(Object payload){
+    public void BroadcastAllPlayers(BroadcastCommand command){
         //todo catch potential errors
         for (Player player:players
              ) {
-            Server.identify(player).getClientThread().broadcastMessage(ResponseCreator.getBroadcastMessage(payload));
+            Server.identify(player).getClientThread().broadcastMessage(command);
         }
     }
     public void setGameState(GameState gameState) {
