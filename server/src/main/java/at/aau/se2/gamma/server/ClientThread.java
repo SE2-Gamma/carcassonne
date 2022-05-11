@@ -374,6 +374,9 @@ public class ClientThread extends Thread {
     }
 
     public BaseCommand gameTurn(GameTurnCommand command){
+        if(!clientState.equals(ClientState.GAME)){
+            return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+        }
         GameMove gameturn=(GameMove) command.getPayload();
         boolean succesfullturn=false;
         //do turn

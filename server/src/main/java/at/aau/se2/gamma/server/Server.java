@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
 import at.aau.se2.gamma.core.models.impl.GameMove;
@@ -22,14 +23,15 @@ public  class Server implements Runnable {
     private static int uniqueID=0; //todo check concurrency problems
     private final ServerSocket socket;
     static LinkedList<ServerPlayer> activeServerPlayers =new LinkedList<>(); //todo check concurrency problems
+    //static ConcurrentLinkedDeque<ServerPlayer> activeServerPlayers=new ConcurrentLinkedDeque<>();
     ClientHandler clientHandler=null;
     public static Server server=null;
     static Scanner scanner=new Scanner(System.in);
     //---------------classes
     public static class SessionHandler{
 
-        static LinkedList<Session> sessions=new LinkedList<Session>(); //todo check concurrency problems
-
+      //  static LinkedList<Session> sessions=new LinkedList<Session>(); //todo check concurrency problems
+        static ConcurrentLinkedDeque<Session>sessions=new ConcurrentLinkedDeque<>();
         public static Session createSession(String sessionID, Player player){
 
             try {

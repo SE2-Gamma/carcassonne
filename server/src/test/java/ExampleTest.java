@@ -4,6 +4,9 @@ import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
+import at.aau.se2.gamma.core.models.impl.GameCard;
+import at.aau.se2.gamma.core.models.impl.GameMap;
+import at.aau.se2.gamma.core.models.impl.GameObject;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 import at.aau.se2.gamma.core.utils.ServerResponseDecrypter;
@@ -343,7 +346,35 @@ public class ExampleTest {
         }
 
     }
+    @Test
+    void testplayerready(){
+        sendName("playerready");
+        try {
+            objectOutputStream.writeObject(new CreateGameCommand("playerready"));
+            String creategameresponse=(String)ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            assertEquals("Game Created",creategameresponse);
 
+            objectOutputStream.writeObject(new PlayerReadyCommand(null));
+            GameObject gameobject=(GameObject) ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            assertNotNull(gameobject);
+
+            String response=(String)ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            assertEquals("Youre ready now",response);
+            GameCard gameCard=(GameCard)ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            assertNotNull(gameCard);
+
+            objectOutputStream.writeObject(new GetClientStateCommand(null));
+            ClientState state=(ClientState) ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            assertEquals(ClientState.GAME,state);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }

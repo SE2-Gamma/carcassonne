@@ -8,6 +8,7 @@ import at.aau.se2.gamma.server.Server;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Session extends BaseModel implements Serializable {
 
@@ -17,8 +18,10 @@ public class Session extends BaseModel implements Serializable {
     String id;
     int maxPlayers=5;
     LinkedList<KickOffer>kickOffers=new LinkedList<>();
-    public LinkedList<Player> players = new LinkedList<>();
-    public LinkedList<Player> readyPlayers = new LinkedList<>();
+   // public LinkedList<Player> players = new LinkedList<>();
+    public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
+    public ConcurrentLinkedDeque<Player>readyPlayers=new ConcurrentLinkedDeque<>();
+   // public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
     GameLoop gameLoop=null;
 
@@ -33,7 +36,7 @@ public class Session extends BaseModel implements Serializable {
 
             }
             System.out.print("//broadcasting//");
-            broadcastAllPlayers(new PlayerReadyBroadcastCommand(player.getName()));
+            broadcastAllPlayers(new PlayerReadyBroadcastCommand(player.getName()),player);
 
         }
         if(readyPlayers.size()==players.size()){

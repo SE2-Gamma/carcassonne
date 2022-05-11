@@ -3,6 +3,7 @@ package at.aau.se2.gamma.core;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.logging.Logger;
 
 import at.aau.se2.gamma.core.commands.*;
@@ -78,6 +79,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(PlayerReadyBroadcastCommand.class.getName());
             allowedClasses.add(PlayerNotReadyBroadcastCommand.class.getName());
             allowedClasses.add(ArrayList.class.getName());
+            allowedClasses.add(ConcurrentLinkedDeque.class.getName());
 
 
             allowedClasses.add(String.class.getName());

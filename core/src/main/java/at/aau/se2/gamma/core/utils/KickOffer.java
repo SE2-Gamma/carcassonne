@@ -4,6 +4,7 @@ import at.aau.se2.gamma.core.models.impl.Player;
 
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class KickOffer implements Serializable {
     public KickOffer(Player player) {
@@ -30,7 +31,7 @@ public class KickOffer implements Serializable {
 
     Player player;
     int votes =0;
-
+   // ConcurrentLinkedDeque<Player>votees=new ConcurrentLinkedDeque<>();
     LinkedList<Player>votees=new LinkedList<>();
 //todo: implement function to ensure a player can only issue one vote
 
