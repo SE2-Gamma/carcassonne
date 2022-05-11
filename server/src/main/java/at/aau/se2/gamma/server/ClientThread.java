@@ -21,6 +21,7 @@ import java.net.SocketException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class ClientThread extends Thread {
 
@@ -44,6 +45,14 @@ public class ClientThread extends Thread {
     }
 
     //-------------------------I/O-------------------------------------------------
+
+   public class BroadcastHandler extends Thread{
+       @Override
+       public void run() {
+           super.run();
+       }
+   }
+   LinkedBlockingDeque<BaseCommand>broadcastcommands=new LinkedBlockingDeque<>();
     @Override
     public void run() {
         running=true;
@@ -363,13 +372,16 @@ public class ClientThread extends Thread {
         }
         System.out.print("//Trying to leave lobby with ID "+session.getId()+"//");
         try {
+
             session.removePlayer(player);
+
         } catch (Exception e) {
             System.err.print("Some error leaving a lobby");
             return ResponseCreator.getError(command,"some error", Codes.ERROR.NOT_IN_LOBBY);
 
         }
         clientState=ClientState.INITIAl;
+
         return ResponseCreator.getSuccess(command,"Lobby successfully left");
     }
 

@@ -87,13 +87,14 @@ public class Session extends BaseModel implements Serializable {
         ServerPlayer tempserverplayer=Server.identify(player);
 
         System.out.print("//notifying "+player.getName()+" he has been removed");
+
         tempserverplayer.getClientThread().broadcastMessage(new PlayerLeftLobbyBroadcastCommand(player.getName()));
         players.remove(player);
         tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
 
 
         System.out.print("//notifying all  "+player.getName()+"  has been removed");
-        broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+        broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()),player);
 
         if(players.size()==0){
             System.out.println("no player left in session + "+id+" //");

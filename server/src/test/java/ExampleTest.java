@@ -294,18 +294,19 @@ public class ExampleTest {
     @Test
     void testLeavelobby(){
         sendName("leavelobby");
+        String response;
         try {
             TestSocket anothersocket=createanotherSocket("leavelobby1");
             objectOutputStream.writeObject(new CreateGameCommand("leavelobby"));
             anothersocket.objectOutputStream.writeObject(new InitialJoinCommand("leavelobby"));
             anothersocket.objectOutputStream.writeObject(new LeaveLobbyCommand(null));
-
-           String response=(String) ServerResponseDecrypter.payloadRetriever(objectInputStream);
-            assertEquals("Game Created",response);
-             response=(String) ServerResponseDecrypter.payloadRetriever(objectInputStream);
-            assertEquals("leavelobby1",response);
+            LinkedList<String>list=new LinkedList<>();
             response=(String) ServerResponseDecrypter.payloadRetriever(objectInputStream);
-            assertEquals("leavelobby1",response);
+         list.add(response);
+            response=(String) ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            list.add(response);
+            assertTrue(list.contains("leavelobby1"));
+            assertTrue(list.contains("Game Created"));
 
             objectOutputStream.writeObject(new RequestUserListCommand(null));
             LinkedList<String>namelist=(LinkedList<String>) ServerResponseDecrypter.payloadRetriever(objectInputStream);

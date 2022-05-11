@@ -5,10 +5,12 @@ import at.aau.se2.gamma.core.models.impl.Player;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class KickOffer implements Serializable {
     public KickOffer(Player player) {
         this.player=player;
+        votesatomic=new AtomicInteger(0);
     }
 
     public Player getPlayer() {
@@ -23,13 +25,13 @@ public class KickOffer implements Serializable {
         }
         votees.add(player);
         votes++;
-        System.out.println();
-        System.err.println(votes);
-        System.out.println();
-     return votes;
+        return votesatomic.incrementAndGet();
+
+   //  return votes;
     }
 
     Player player;
+    AtomicInteger votesatomic;
     int votes =0;
    // ConcurrentLinkedDeque<Player>votees=new ConcurrentLinkedDeque<>();
     LinkedList<Player>votees=new LinkedList<>();
