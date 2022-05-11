@@ -315,6 +315,35 @@ public class ExampleTest {
             e.printStackTrace();
         }
     }
+    @Test
+    void testLeavingLastLobby(){
+        sendName("leavinglastlobby");
+        try {
+            TestSocket anothertest=createanotherSocket("leavinglastlobby2");
+            objectOutputStream.writeObject(new CreateGameCommand("leavinglastlobby"));
+            ServerResponseDecrypter.payloadRetriever(objectInputStream);
+             anothertest.objectOutputStream.writeObject(new CreateGameCommand("leavinglastlobby"));
+           LinkedList<Object>errorlist=(LinkedList<Object>)ServerResponseDecrypter.payloadRetriever(anothertest.secureObjectInputStream);
+
+           assertEquals("Server bereits vorhanden", errorlist.pop());
+           objectOutputStream.writeObject(new LeaveLobbyCommand(null));
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            anothertest.objectOutputStream.writeObject(new CreateGameCommand("leavinglastlobby"));
+            String result=(String)ServerResponseDecrypter.payloadRetriever(anothertest.secureObjectInputStream);
+            assertEquals("Game Created",result);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
 }
