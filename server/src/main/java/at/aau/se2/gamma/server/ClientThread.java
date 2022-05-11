@@ -74,7 +74,7 @@ public class ClientThread extends Thread {
             System.out.println("stopped");
         } catch(SocketException socketException){
             if(!running){
-                System.out.println(serverPlayer.getName()+" closed internally");
+                System.out.println(serverPlayer.getName()+"'s socket closed.");
             }else{
                 socketException.printStackTrace();
             }
@@ -86,7 +86,10 @@ public class ClientThread extends Thread {
         try {
             objectInputStream.close();
             objectOutputStream.close();
-        } catch (IOException e) {
+        }catch (SocketException closed){
+            System.out.println(player.getName()+"'s streams closed.");
+        }
+        catch (IOException e) {
 
             e.printStackTrace();
         }
