@@ -18,7 +18,7 @@ import at.aau.se2.gamma.server.models.ServerPlayer;
 import at.aau.se2.gamma.server.models.Session;
 
 public  class Server implements Runnable {
-    static final int maxPlayers =10;
+    static final int maxPlayers =1000;
     private static int uniqueID=0; //todo check concurrency problems
     private final ServerSocket socket;
     static LinkedList<ServerPlayer> activeServerPlayers =new LinkedList<>(); //todo check concurrency problems

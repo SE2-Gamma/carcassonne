@@ -102,13 +102,25 @@ public class Session extends BaseModel implements Serializable {
 
     }
     public boolean voteKick(Player player,Player votee) {
+        System.out.print("//session issue kickvote//");
         int votes = 0;
+        System.out.print("//session finding player//");
         getPlayer(player.getId()); //to throw exception if player is not here
+        System.out.print("//session player found//");
         boolean checker = true;
         KickOffer offer = null;
+        System.out.print("//session finding preexisting kickoffer//");
+        try {
+            System.out.print("//preixisting kickoffers:"+Arrays.toString(kickOffers.toArray())+"//");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.print("//no preixisting kickoffers//");
+        }
+
         for (KickOffer kickoffer : kickOffers
         ) {
+            System.out.print("//session found a kickoffer//");
             if (kickoffer.getPlayer().getId().equals(player.getId())) {
+                System.out.print("//found a kickoffer//");
                 votes = kickoffer.vote(votee);
                 checker = false;
                 offer=kickoffer;
@@ -116,6 +128,7 @@ public class Session extends BaseModel implements Serializable {
         }
 
         if (checker) {
+            System.out.print("//session creating kickvote//");
             offer = new KickOffer(player);
             kickOffers.add(offer);
             votes=offer.vote(votee);
@@ -126,7 +139,7 @@ public class Session extends BaseModel implements Serializable {
         System.out.print("//"+votes + " out of " + tobeat + " to kick//");
 
 
-        if (tobeat >= votes) {
+        if (tobeat < votes) {
             kickOffers.remove(offer);
             broadcastAllPlayers(new PlayerKickedBroadcastCommand(offer));
             removePlayer(player);

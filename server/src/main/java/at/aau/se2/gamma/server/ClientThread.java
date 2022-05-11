@@ -102,6 +102,8 @@ public class ClientThread extends Thread {
                 System.out.print("//locked//");
             }
         }
+        System.out.println();
+        System.out.println("relieving lock");
     }
     public void broadcastMessage(BroadcastCommand command){
         System.out.print("//checking availability");
@@ -238,6 +240,7 @@ public class ClientThread extends Thread {
         clientState=ClientState.LOBBY;
         System.out.print(" //current state: "+clientState +"//");
         System.out.print(" //SessionID: "+session.getId()+"//  ");
+
         return ResponseCreator.getSuccess(command,"Game Created");
     }
 
