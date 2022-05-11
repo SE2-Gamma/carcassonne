@@ -33,6 +33,7 @@ public class ExampleTest {
     private ObjectOutputStream objectOutputStream;
     private SecureObjectInputStream objectInputStream;
     Socket socket;
+    static final int numberofruns=30;
 
 
     @BeforeAll
@@ -88,7 +89,14 @@ public class ExampleTest {
 
 
     }
-
+    @AfterEach
+    public void disconnect(){
+        try {
+            objectOutputStream.writeObject(new DisconnectCommand(null));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void sendName(String name){
         try {
@@ -101,8 +109,48 @@ public class ExampleTest {
         }
     }
 
+    @RepeatedTest(10000)
+    void stormTheMainMenue(){
+        sendName("storm");
+        ClientState state= null;
+        try {
 
-    @Test
+                   objectOutputStream.writeObject(new GetClientStateCommand(null));
+                   state=(ClientState)ServerResponseDecrypter.payloadRetriever(objectInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        assertEquals(ClientState.INITIAl,state);
+    }//works without a problem
+    @RepeatedTest(1)
+    void stormTheMainMenueWIthoutDisconnect(){
+
+        ClientState state= null;
+        for (int i = 0; i < 100; i++) {
+            try {
+                System.out.println("TEST: creating a testplayer");
+                socket= new Socket(GlobalVariables.getAdress(),GlobalVariables.getPort());
+                objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                objectInputStream = new SecureObjectInputStream(socket.getInputStream());
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }  try {
+                objectOutputStream.writeObject(new GetClientStateCommand(null));
+                state=(ClientState)ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            assertEquals(ClientState.INITIAl,state);
+        }
+
+    }//runs out of ports
+    @RepeatedTest(numberofruns)
     void TestCreateLobby() {
 
         try {
@@ -118,7 +166,7 @@ public class ExampleTest {
         }
 
     }
-    @Test
+    @RepeatedTest(numberofruns)
     void testRequestUserList() {
 
         try {
@@ -137,7 +185,7 @@ public class ExampleTest {
             LinkedList<String>userlist= (LinkedList<String>) ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertEquals("testrequestuserlist",userlist.pop());
             assertEquals("testrequestuserlist2",userlist.pop());
-
+            testSocket.disconnect();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -146,7 +194,7 @@ public class ExampleTest {
         }
 
     }
-    @Test
+    @RepeatedTest(numberofruns)
     void testInitialJoin(){
         try {
             sendName("testinitialjoin");
@@ -170,7 +218,9 @@ public class ExampleTest {
 
             anothersocket.objectOutputStream.writeObject(new GetClientStateCommand(null));
             ClientState anotherstate=(ClientState) ServerResponseDecrypter.payloadRetriever(anothersocket.secureObjectInputStream);
-            assertEquals(ClientState.LOBBY,state);
+            assertEquals(ClientState.LOBBY,anotherstate);
+
+            anothersocket.disconnect();
 
 
         } catch (IOException e) {
@@ -180,7 +230,7 @@ public class ExampleTest {
         }
 
     }
-    @Test
+    @RepeatedTest(numberofruns)
     void testkickplayer(){
         sendName("testkick1");
         TestSocket socket1=createanotherSocket("testkick2");
@@ -235,17 +285,10 @@ public class ExampleTest {
             System.out.println("starting kick attempt");
 
             objectOutputStream.writeObject(new KickPlayerCommand("testkick5"));
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+
             socket1.objectOutputStream.writeObject(new KickPlayerCommand("testkick5"));
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             socket2.objectOutputStream.writeObject(new KickPlayerCommand("testkick5"));
 
             ServerResponseDecrypter.payloadRetriever(objectInputStream);
@@ -255,7 +298,10 @@ public class ExampleTest {
 
               String kickedplayer= (String) ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertEquals("testkick5",kickedplayer);
-
+socket1.disconnect();
+socket2.disconnect();
+socket3.disconnect();
+socket4.disconnect();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -265,7 +311,7 @@ public class ExampleTest {
 
 
     }
-    @Test
+    @RepeatedTest(numberofruns)
     void testclientstate(){
         sendName("testclientstate");
         ClientState state;
@@ -291,27 +337,28 @@ public class ExampleTest {
 
 
     }
-    @Test
+    @RepeatedTest(numberofruns)
     void testLeavelobby(){
         sendName("leavelobby");
-        String response;
+
+        LinkedList<Object>responses=new LinkedList<>();
         try {
             TestSocket anothersocket=createanotherSocket("leavelobby1");
             objectOutputStream.writeObject(new CreateGameCommand("leavelobby"));
+            responses.add(ServerResponseDecrypter.payloadRetriever(objectInputStream));
             anothersocket.objectOutputStream.writeObject(new InitialJoinCommand("leavelobby"));
             anothersocket.objectOutputStream.writeObject(new LeaveLobbyCommand(null));
-            LinkedList<String>list=new LinkedList<>();
-            response=(String) ServerResponseDecrypter.payloadRetriever(objectInputStream);
-         list.add(response);
-            response=(String) ServerResponseDecrypter.payloadRetriever(objectInputStream);
-            list.add(response);
-            assertTrue(list.contains("leavelobby1"));
-            assertTrue(list.contains("Game Created"));
+
+            responses.add(ServerResponseDecrypter.payloadRetriever(objectInputStream));
+            responses.add(ServerResponseDecrypter.payloadRetriever(objectInputStream));
+            assertTrue(responses.contains("leavelobby1"));
+            assertTrue(responses.contains("Game Created"));
 
             objectOutputStream.writeObject(new RequestUserListCommand(null));
             LinkedList<String>namelist=(LinkedList<String>) ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertEquals("leavelobby",namelist.pop());
-
+            objectOutputStream.writeObject(new LeaveLobbyCommand(null));
+            anothersocket.disconnect();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -319,7 +366,7 @@ public class ExampleTest {
             e.printStackTrace();
         }
     }
-    @Test
+    @RepeatedTest(numberofruns)
     void testLeavingLastLobby(){
         sendName("leavinglastlobby");
         try {
@@ -339,6 +386,7 @@ public class ExampleTest {
             anothertest.objectOutputStream.writeObject(new CreateGameCommand("leavinglastlobby"));
             String result=(String)ServerResponseDecrypter.payloadRetriever(anothertest.secureObjectInputStream);
             assertEquals("Game Created",result);
+            anothertest.disconnect();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -347,7 +395,7 @@ public class ExampleTest {
         }
 
     }
-    @Test
+    @RepeatedTest(1)
     void testplayerready(){
         sendName("playerready");
         try {
@@ -367,6 +415,7 @@ public class ExampleTest {
             objectOutputStream.writeObject(new GetClientStateCommand(null));
             ClientState state=(ClientState) ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertEquals(ClientState.GAME,state);
+
 
 
         } catch (IOException e) {

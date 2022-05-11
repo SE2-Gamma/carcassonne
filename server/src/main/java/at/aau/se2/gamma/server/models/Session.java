@@ -17,7 +17,7 @@ public class Session extends BaseModel implements Serializable {
     Deck deck;
     String id;
     int maxPlayers=5;
-    LinkedList<KickOffer>kickOffers=new LinkedList<>();
+    final LinkedList<KickOffer>kickOffers=new LinkedList<>();
    // public LinkedList<Player> players = new LinkedList<>();
     public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
     public ConcurrentLinkedDeque<Player>readyPlayers=new ConcurrentLinkedDeque<>();
@@ -106,6 +106,7 @@ public class Session extends BaseModel implements Serializable {
 
     }
     public boolean voteKick(Player player,Player votee) {
+        synchronized (kickOffers){
         System.out.print("//session issue kickvote//");
         int votes = 0;
         System.out.print("//session finding player//");
@@ -153,7 +154,7 @@ public class Session extends BaseModel implements Serializable {
         }
         broadcastAllPlayers(new KickAttemptBroadcastCommand(offer));
         System.out.println("//not enough votes to kick//");
-        return false;
+        return false;}
     }
 
      public void startGame(){

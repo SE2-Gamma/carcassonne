@@ -14,6 +14,7 @@ import at.aau.se2.gamma.server.models.ServerPlayer;
 import at.aau.se2.gamma.server.models.Session;
 
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -67,7 +68,7 @@ public class ClientThread extends Thread {
 
                 BaseCommand response=handleCommand(command);
 
-                System.out.println("Command with ID "+command.getRequestId() +" handeled.");
+                System.out.println(command.getClass().getName()  +" handeled.");
 
                 if(!(command instanceof DisconnectCommand)) {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
@@ -85,12 +86,15 @@ public class ClientThread extends Thread {
             if(!running){
                 System.out.println(serverPlayer.getName()+"'s socket closed.");
             }else{
-                socketException.printStackTrace();
+
             }
         }
-        catch (Exception e) {
-            System.out.println("EXCEPTION");
-            e.printStackTrace();
+        catch (EOFException e) {
+            System.out.println("End of Stream");
+        }
+        catch (Exception exception){
+            System.out.println("unknown exception");
+            exception.printStackTrace();
         }
         try {
             objectInputStream.close();
@@ -335,7 +339,7 @@ public class ClientThread extends Thread {
             terminate();
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(player.getName()+"'s socket closed");
         }
         System.out.print("//player successfully removed//");
         return ResponseCreator.getSuccess(command,"Player sucessfully removed.also you shouldnt be receiving this");

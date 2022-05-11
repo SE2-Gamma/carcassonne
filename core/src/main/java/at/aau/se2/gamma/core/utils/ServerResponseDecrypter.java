@@ -6,13 +6,16 @@ import at.aau.se2.gamma.core.commands.PayloadResponseCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ServerResponseDecrypter {
     public static Object payloadRetriever(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        ServerResponseCommand command=(ServerResponseCommand) in.readObject();
+        ServerResponseCommand command = (ServerResponseCommand) in.readObject();
+
+
         ServerResponse sresponse= (ServerResponse) command.getPayload();
 
         if(sresponse.getPayload() instanceof BroadcastCommand){
