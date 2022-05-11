@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 public class KickOffer implements Serializable {
     public KickOffer(Player player) {
+        this.player=player;
     }
 
     public Player getPlayer() {
@@ -21,6 +22,9 @@ public class KickOffer implements Serializable {
         }
         votees.add(player);
         votes++;
+        System.out.println();
+        System.err.println(votes);
+        System.out.println();
      return votes;
     }
 

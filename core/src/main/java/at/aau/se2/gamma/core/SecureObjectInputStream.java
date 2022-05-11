@@ -73,7 +73,10 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(ClientState.class.getName());
             allowedClasses.add(SessionState.class.getName());
             allowedClasses.add(Orientation.class.getName());
-
+            allowedClasses.add(PlayerReadyCommand.class.getName());
+            allowedClasses.add(PlayerNotReadyCommand.class.getName());
+            allowedClasses.add(PlayerReadyBroadcastCommand.class.getName());
+            allowedClasses.add(PlayerNotReadyBroadcastCommand.class.getName());
             allowedClasses.add(ArrayList.class.getName());
 
 

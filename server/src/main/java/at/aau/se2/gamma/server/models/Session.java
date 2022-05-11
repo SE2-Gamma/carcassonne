@@ -18,11 +18,39 @@ public class Session extends BaseModel implements Serializable {
     int maxPlayers=5;
     LinkedList<KickOffer>kickOffers=new LinkedList<>();
     public LinkedList<Player> players = new LinkedList<>();
+    public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
     GameLoop gameLoop=null;
 
 //--------------------------Lobby-Methods---------------------
+    public void playerReady(Player player){
+        System.out.print("//"+player.getName()+"tells he is ready//");
+        if(!readyPlayers.contains(player)){
+            readyPlayers.add(player);
+            for (Player a:readyPlayers
+                 ) {
+                System.out.print("//"+a.getName()+" is ready.//");
 
+            }
+            System.out.print("//broadcasting//");
+            broadcastAllPlayers(new PlayerReadyBroadcastCommand(player.getName()));
+
+        }
+        if(readyPlayers.size()==players.size()){
+            System.out.print("//all players are ready. starting game//");
+            startGame();
+        }
+      }
+    public void playerNotReady(Player player){
+        System.out.print("//"+player.getName()+"tells he is not ready//");
+            readyPlayers.remove(player);
+        for (Player a:readyPlayers
+        ) {
+            System.out.print("//"+a.getName()+" is ready.//");
+
+        }
+            broadcastAllPlayers(new PlayerNotReadyBroadcastCommand(player.getName()));
+    }
     public void broadcastAllPlayers(BroadcastCommand command){
         //todo catch potential errors
         for (Player player:players
@@ -74,13 +102,25 @@ public class Session extends BaseModel implements Serializable {
 
     }
     public boolean voteKick(Player player,Player votee) {
+        System.out.print("//session issue kickvote//");
         int votes = 0;
+        System.out.print("//session finding player//");
         getPlayer(player.getId()); //to throw exception if player is not here
+        System.out.print("//session player found//");
         boolean checker = true;
         KickOffer offer = null;
+        System.out.print("//session finding preexisting kickoffer//");
+        try {
+            System.out.print("//preixisting kickoffers:"+Arrays.toString(kickOffers.toArray())+"//");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.print("//no preixisting kickoffers//");
+        }
+
         for (KickOffer kickoffer : kickOffers
         ) {
+            System.out.print("//session found a kickoffer//");
             if (kickoffer.getPlayer().getId().equals(player.getId())) {
+                System.out.print("//found a kickoffer//");
                 votes = kickoffer.vote(votee);
                 checker = false;
                 offer=kickoffer;
@@ -88,6 +128,7 @@ public class Session extends BaseModel implements Serializable {
         }
 
         if (checker) {
+            System.out.print("//session creating kickvote//");
             offer = new KickOffer(player);
             kickOffers.add(offer);
             votes=offer.vote(votee);
@@ -98,7 +139,7 @@ public class Session extends BaseModel implements Serializable {
         System.out.print("//"+votes + " out of " + tobeat + " to kick//");
 
 
-        if (tobeat >= votes) {
+        if (tobeat < votes) {
             kickOffers.remove(offer);
             broadcastAllPlayers(new PlayerKickedBroadcastCommand(offer));
             removePlayer(player);
