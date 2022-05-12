@@ -67,4 +67,9 @@ public class CreateSessionActivity extends BaseActivity {
         intent.putExtra("GameKey", sessionName);
         startActivity(intent);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }
