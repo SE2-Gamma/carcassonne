@@ -3,7 +3,6 @@ package at.aau.se2.gamma.carcassonne.views;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
