@@ -64,16 +64,10 @@ public class GameMapEntry implements Serializable {
     public GameCardSide[] getAlignedCardSides() {
         GameCardSide[] neswCardSides = card.getNeswSides();
         switch (orientation) {
-            case NORTH -> { return neswCardSides.clone();}
-            case EAST -> {
-                return new GameCardSide[]{ neswCardSides[1], neswCardSides[2], neswCardSides[3], neswCardSides[0] };
-            }
-            case SOUTH -> {
-                return new GameCardSide[]{ neswCardSides[2], neswCardSides[3], neswCardSides[0], neswCardSides[1] };
-            }
-            case WEST -> {
-                return new GameCardSide[]{ neswCardSides[3], neswCardSides[0], neswCardSides[1], neswCardSides[2] };
-            }
+            case NORTH: return neswCardSides.clone();
+            case EAST: return new GameCardSide[]{ neswCardSides[1], neswCardSides[2], neswCardSides[3], neswCardSides[0] };
+            case SOUTH: return new GameCardSide[]{ neswCardSides[2], neswCardSides[3], neswCardSides[0], neswCardSides[1] };
+            case WEST: return new GameCardSide[]{ neswCardSides[3], neswCardSides[0], neswCardSides[1], neswCardSides[2] };
         }
 
         return neswCardSides.clone();
@@ -89,9 +83,9 @@ public class GameMapEntry implements Serializable {
         // get the side of our entry
         Orientation mySideOrientation = Orientation.NORTH;
         switch (onSide) {
-            case NORTH -> mySideOrientation = Orientation.SOUTH;
-            case EAST -> mySideOrientation = Orientation.WEST;
-            case WEST -> mySideOrientation = Orientation.EAST;
+            case NORTH: mySideOrientation = Orientation.SOUTH; break;
+            case EAST: mySideOrientation = Orientation.WEST; break;
+            case WEST: mySideOrientation = Orientation.EAST; break;
         }
 
         // check if the both sides can connect and return the bool value

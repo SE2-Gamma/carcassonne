@@ -84,12 +84,13 @@ public class GameMap implements Serializable {
 
             if (neighbour != null) {
                 // get orientation side where the neighbour is located
-                Orientation side = switch (i) {
-                    case 1 -> Orientation.EAST;
-                    case 2 -> Orientation.SOUTH;
-                    case 3 -> Orientation.WEST;
-                    default -> Orientation.NORTH;
-                };
+                Orientation side;
+                switch (i) {
+                    case 1: side = Orientation.EAST; break;
+                    case 2: side = Orientation.SOUTH; break;
+                    case 3: side = Orientation.WEST; break;
+                    default: side = Orientation.NORTH;
+                }
 
                 System.out.println("side: "+i+" - "+side.toString());
 
