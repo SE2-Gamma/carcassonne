@@ -10,6 +10,7 @@ import java.net.SocketException;
 import java.util.*;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
+import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 import at.aau.se2.gamma.core.utils.KickOffer;
@@ -17,7 +18,7 @@ import at.aau.se2.gamma.server.models.ServerPlayer;
 import at.aau.se2.gamma.server.models.Session;
 
 public  class Server implements Runnable {
-    static final int maxPlayers =10;
+    static final int maxPlayers =1000;
     private static int uniqueID=0; //todo check concurrency problems
     private final ServerSocket socket;
     static LinkedList<ServerPlayer> activeServerPlayers =new LinkedList<>(); //todo check concurrency problems
@@ -247,12 +248,19 @@ public  class Server implements Runnable {
             if(input.equals("startgame")){
                 SessionHandler.getSession("Name").startGame();
             }
+            if(input.equals("success")){
+                SessionHandler.getSession("Name").gameMovesuccessfull(new GameMove());
+            }
             if(input.equals("broadcastcommand")){
                 System.out.println("which command shall be broadcasted?");
                 input=scanner.nextLine();
                 BroadcastCommand message=null;
                 if(input.equals("fieldcompleted")){
                     message=new FieldCompletedBroadcastCommand("field completed");
+                } if(input.equals("playerready")){
+                    message=new PlayerReadyBroadcastCommand("testplayer");
+                }if(input.equals("playernotready")){
+                    message=new PlayerNotReadyBroadcastCommand("testplayer");
                 }
                 if(input.equals("gamecompleted")){
                     message=new GameCompletedBroadcastCommand("game completed");

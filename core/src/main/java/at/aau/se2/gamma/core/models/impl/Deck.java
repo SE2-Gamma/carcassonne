@@ -19,7 +19,7 @@ public class Deck {
         }
         System.out.print("//decksize: "+deck.size()+"//");
     }
-    public GameCard drawCard() throws NullPointerException{
+    public GameCard drawCard() throws NoSuchElementException{
         GameCard card= deck.pop();
         System.out.print("//card "+card.getCardId()+" drawn. remaining cards:"+deck.size()+"//");
             return card;

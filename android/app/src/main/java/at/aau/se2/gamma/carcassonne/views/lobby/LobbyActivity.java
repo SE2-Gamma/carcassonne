@@ -24,6 +24,7 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCom
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerKickedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
 import at.aau.se2.gamma.core.commands.KickPlayerCommand;
+import at.aau.se2.gamma.core.commands.LeaveLobbyCommand;
 import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 import at.aau.se2.gamma.core.utils.KickOffer;
 
@@ -107,22 +108,32 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
             e.printStackTrace();
         }
 
-
-
-
-        //TODO: Implement disconnect from lobby
-        binding.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LobbyActivity.this, MainActivity.class));
-            }
-        });
-
         binding.btnStartGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(LobbyActivity.this, "Game started", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(LobbyActivity.this, Launcher.class));
+            }
+        });
+
+        binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
+
+        binding.btnLeaveLobby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                sendServerCommand(new LeaveLobbyCommand(null), new ServerThread.RequestResponseHandler() {
+                    @Override
+                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                        startActivity(new Intent(LobbyActivity.this, MainActivity.class));
+                    }
+
+                    @Override
+                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                        Toast.makeText(LobbyActivity.this, "smth went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
         });
 
