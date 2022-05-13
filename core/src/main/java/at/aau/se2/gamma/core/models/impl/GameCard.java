@@ -59,4 +59,8 @@ public class GameCard implements Serializable {
     public String getCardId() {
         return cardId;
     }
+
+    public GameCardSide[] getNeswSides() {
+        return neswSides;
+    }
 }
