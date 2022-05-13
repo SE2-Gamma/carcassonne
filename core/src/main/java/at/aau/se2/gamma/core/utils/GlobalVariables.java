@@ -10,7 +10,7 @@ public class GlobalVariables {
         GlobalVariables.adress = adress;
     }
 
-    static String adress="143.205.184.134";
+    static String adress="192.168.0.18";
 
 
     public static String getDefaultname() {
