@@ -1,6 +1,10 @@
 package at.aau.se2.gamma.server.models;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
+import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
+import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
+import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
+import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.KickOffer;
@@ -176,16 +180,13 @@ public class Session extends BaseModel implements Serializable {
 
 //-----------------------------Game-Activity--------------------------
     public int timeout=60000;
-    public boolean gameMovesuccessfull(GameMove gameturn) {
-        //todo implement
-        boolean successfull=true;
-        //check if gamemove was succesfull
-        if(successfull){
+    public void executeGameMove(GameMove gameturn) throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
+      gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
             //do gamemove, updating the gameobject. once updated, the gameloop will continue and send the updated gameobject to all clients
-            gameLoop.interrupt();//interrupt waiting gameloop
-            return true; //tell the clienthread the move is succesfull
-        }
-    return false; //tell the clienthtread the move was unsuccessfull. the clientthread will then wait for another turn to be made, which will be checked again
+        gameLoop.interrupt();//interrupt waiting gameloop
+
+
+
 }
 
     public class GameLoop extends Thread{

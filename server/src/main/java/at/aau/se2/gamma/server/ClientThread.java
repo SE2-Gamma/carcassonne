@@ -6,7 +6,10 @@ import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
-import at.aau.se2.gamma.core.models.impl.GameCard;
+import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
+import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
+import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
+import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.states.ClientState;
@@ -393,23 +396,26 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
         }
         GameMove gameturn=(GameMove) command.getPayload();
-        boolean succesfullturn=false;
-        //do turn
+        try {
+            session.executeGameMove(gameturn);
+        } catch (InvalidPositionGameMapException e) {
+            return ResponseCreator.getError(command,"Invalid Position on Gamemap",Codes.ERROR.INVALID_MOVE);
+        } catch (SurroundingConflictGameMapException e) {
+            return ResponseCreator.getError(command,"Surrounding Conflict on Gamemap",Codes.ERROR.INVALID_MOVE);
+        } catch (NoSurroundingCardGameMapException e) {
+            return ResponseCreator.getError(command,"No surrounding Card on Gamemap",Codes.ERROR.INVALID_MOVE);
+        } catch (PositionNotFreeGameMapException e) {
+            return ResponseCreator.getError(command,"Position not free on Gamemap",Codes.ERROR.INVALID_MOVE);
+        }
 
-            if(session.gameMovesuccessfull(gameturn)){
+        return ResponseCreator.getSuccess(command,"turn succesfull");
 
-                return ResponseCreator.getSuccess(command,"turn succesfull");
-
-            }else{
-                return ResponseCreator.getSuccess(command,"turn succesfull");
-//TODO: REMOVE THIS HARDCODED RETURN. JUST FOR DEBUGGING PURPOSES.
-               // return ResponseCreator.getError(command,"Invalid Move", Codes.ERROR.INVALID_MOVE);
             }
 
 
 
 
-    }
+
 
     private BaseCommand playerNotReady(PlayerNotReadyCommand command) {
         try {

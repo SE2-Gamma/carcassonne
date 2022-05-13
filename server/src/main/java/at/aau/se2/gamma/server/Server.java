@@ -11,6 +11,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
+import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
+import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
+import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
+import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
@@ -251,7 +255,17 @@ public  class Server implements Runnable {
                 SessionHandler.getSession("Name").startGame();
             }
             if(input.equals("success")){
-                SessionHandler.getSession("Name").gameMovesuccessfull(new GameMove());
+                try {
+                    SessionHandler.getSession("Name").executeGameMove(new GameMove());
+                } catch (InvalidPositionGameMapException e) {
+                    e.printStackTrace();
+                } catch (SurroundingConflictGameMapException e) {
+                    e.printStackTrace();
+                } catch (NoSurroundingCardGameMapException e) {
+                    e.printStackTrace();
+                } catch (PositionNotFreeGameMapException e) {
+                    e.printStackTrace();
+                }
             }
             if(input.equals("broadcastcommand")){
                 System.out.println("which command shall be broadcasted?");
