@@ -116,8 +116,6 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
             }
         });
 
-        binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
-
         binding.btnLeaveLobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
