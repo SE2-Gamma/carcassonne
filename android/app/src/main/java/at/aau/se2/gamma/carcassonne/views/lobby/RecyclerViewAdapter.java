@@ -18,18 +18,20 @@ import at.aau.se2.gamma.carcassonne.R;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private List<LobbyPlayerDisplay> players;
+    private RecyclerViewListener recyclerViewListener;
     private Context context;
 
-    public RecyclerViewAdapter(List<LobbyPlayerDisplay> players, Context context) {
+    public RecyclerViewAdapter(List<LobbyPlayerDisplay> players, Context context, RecyclerViewListener recyclerViewListener) {
         this.players = players;
         this.context = context;
+        this.recyclerViewListener = recyclerViewListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lobby_player_display_cardview, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(v, recyclerViewListener);
     }
 
     @Override
@@ -37,12 +39,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         LobbyPlayerDisplay item = players.get(position);
 
         holder.tv_player_name.setText(item.getPlayerName());
-        holder.btn_kick_player.setOnClickListener(new View.OnClickListener() {
+        /*holder.btn_kick_player.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(context.getApplicationContext(), item.getPlayerName() + " kicked", Toast.LENGTH_SHORT).show();
+
             }
-        });
+        });*/
     }
 
     @Override
@@ -50,15 +53,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return players.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView tv_player_name;
         public Button btn_kick_player;
+        RecyclerViewListener recyclerViewListener;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, RecyclerViewListener recyclerViewListener) {
             super(itemView);
 
             tv_player_name = itemView.findViewById(R.id.tv_player_name);
             btn_kick_player = itemView.findViewById(R.id.btn_kick_player);
+            this.recyclerViewListener = recyclerViewListener;
+            btn_kick_player.setOnClickListener(this::onClick);
         }
+
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(context.getApplicationContext(), " kicked", Toast.LENGTH_SHORT).show();
+            recyclerViewListener.onKickPlayerButtonClick(getAdapterPosition());
+        }
+    }
+
+    public interface RecyclerViewListener {
+        void onKickPlayerButtonClick(int position);
     }
 }
