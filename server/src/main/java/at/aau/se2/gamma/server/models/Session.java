@@ -200,8 +200,8 @@ public class Session extends BaseModel implements Serializable {
             playing=true;
             //caution: reference
             turnOrder=new LinkedList<>(session.players);
-            printTurnOrder(turnOrder);
             shuffle(turnOrder);
+            printTurnOrder(turnOrder);
 
             while (playing){
                 Player onTurn=turnOrder.pop();
