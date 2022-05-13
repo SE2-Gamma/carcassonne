@@ -74,7 +74,7 @@ public class ClientThread extends Thread {
             System.out.println("stopped");
         } catch(SocketException socketException){
             if(!running){
-                System.out.println(serverPlayer.getName()+" closed internally");
+                System.out.println(serverPlayer.getName()+"'s socket closed.");
             }else{
                 socketException.printStackTrace();
             }
@@ -86,7 +86,10 @@ public class ClientThread extends Thread {
         try {
             objectInputStream.close();
             objectOutputStream.close();
-        } catch (IOException e) {
+        }catch (SocketException closed){
+            System.out.println(player.getName()+"'s streams closed.");
+        }
+        catch (IOException e) {
 
             e.printStackTrace();
         }
@@ -99,6 +102,8 @@ public class ClientThread extends Thread {
                 System.out.print("//locked//");
             }
         }
+        System.out.println();
+        System.out.println("relieving lock");
     }
     public void broadcastMessage(BroadcastCommand command){
         System.out.print("//checking availability");
@@ -150,6 +155,12 @@ public class ClientThread extends Thread {
         }else if(command instanceof GameTurnCommand) {
             return gameTurn((GameTurnCommand) command);
 
+        }else if(command instanceof PlayerReadyCommand) {
+            return playerReady((PlayerReadyCommand) command);
+
+        }else if(command instanceof PlayerNotReadyCommand) {
+            return playerNotReady((PlayerNotReadyCommand) command);
+
         }
         else{
             System.out.println("command not suitable for current state");
@@ -158,6 +169,9 @@ public class ClientThread extends Thread {
 
         return new ServerResponseCommand(new ServerResponse("Invalid command", ServerResponse.StatusCode.FAILURE),command.getRequestId());
     }
+
+
+
     //--------------------------------------commands-----------------------------------------------------
     private BaseCommand requestUserListCommandByID(RequestUserListCommandByID command){
         System.out.print("  current state: "+clientState);
@@ -226,6 +240,7 @@ public class ClientThread extends Thread {
         clientState=ClientState.LOBBY;
         System.out.print(" //current state: "+clientState +"//");
         System.out.print(" //SessionID: "+session.getId()+"//  ");
+
         return ResponseCreator.getSuccess(command,"Game Created");
     }
 
@@ -377,14 +392,22 @@ public class ClientThread extends Thread {
 
 
     }
-    public void sendCommand(BaseCommand command) {
+
+    private BaseCommand playerNotReady(PlayerNotReadyCommand command) {
         try {
-            this.objectOutputStream.writeObject(command);
-        } catch (IOException e) {
-            e.printStackTrace();
+            session.playerNotReady(player);
+        } catch (NoSuchElementException e) {
+          return ResponseCreator.getError(command,"Player wasnt ready",Codes.ERROR.PLAYER_NOT_READY);
         }
+        return ResponseCreator.getSuccess(command,"Readyness resumed");
+
     }
 
+    private BaseCommand playerReady(PlayerReadyCommand command) {
+        session.playerReady(player);
+        return ResponseCreator.getSuccess(command,"Youre ready now");
+
+    }
 
     //-----------------------utility methods------------------------------------------------------------------
     public void lock(){

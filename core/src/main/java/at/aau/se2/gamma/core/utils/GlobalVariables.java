@@ -6,7 +6,11 @@ public class GlobalVariables {
     }
 
 
-    static String adress="192.168.56.1";
+    public static void setAdress(String adress) {
+        GlobalVariables.adress = adress;
+    }
+
+    static String adress="192.168.0.170";
 
 
     public static String getDefaultname() {
