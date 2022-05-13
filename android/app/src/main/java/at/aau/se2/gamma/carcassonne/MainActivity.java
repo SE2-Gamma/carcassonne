@@ -23,13 +23,14 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
 
     public ActivityMainBinding binding;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        String userName = getIntent().getStringExtra("UserName");
 
         binding.pbMenu.setVisibility((View.GONE));
         binding.btnBackToLobby.setVisibility(View.GONE);
@@ -52,6 +53,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreateSessionActivity.class);
+                intent.putExtra("UserName", userName);
                 startActivity(intent);
             }
         });
@@ -60,6 +62,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, JoinSessionActivity.class);
+                intent.putExtra("UserName", userName);
                 startActivity(intent);
             }
         });

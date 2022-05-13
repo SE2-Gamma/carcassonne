@@ -41,16 +41,16 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         View view = binding.getRoot();
         setContentView(view);
 
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        String gameKey = extras.getString("GameKey");
+        String userName = extras.getString("UserName");
         //Get Player List from Server
         sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
             @Override
             public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                 Log.d("Server Response", "LobbyActivity initial requestUserList");
                 playerList = new LinkedList<>();
-
-                adapter = new RecyclerViewAdapter(playerList, LobbyActivity.this, LobbyActivity.this);
-                binding.rvLobby.setAdapter(adapter);
-                binding.rvLobby.setLayoutManager(new LinearLayoutManager(LobbyActivity.this));
 
                 //PayloadResponseCommand temp = (PayloadResponseCommand) payload;
                 LinkedList<String> players = (LinkedList<String>) payload;
@@ -61,13 +61,12 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                 for(int i = 0; i < players.size(); i++) {
                     playerList.add(new LobbyPlayerDisplay(players.get(i)));
                 }
-                adapter.notifyDataSetChanged();
+                adapter = new RecyclerViewAdapter(playerList, LobbyActivity.this, LobbyActivity.this);
+                binding.rvLobby.setAdapter(adapter);
+                binding.rvLobby.setLayoutManager(new LinearLayoutManager(LobbyActivity.this));
 
                 binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
-                Intent intent = getIntent();
-                String gameKey = intent.getStringExtra("GameKey");
                 binding.tvLobbyName.setText(gameKey);
-
 
             }
             @Override
@@ -95,7 +94,18 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                     } else if (response.getPayload() instanceof PlayerKickedBroadcastCommand) {
                         updatePlayerList();
                     } else if(response.getPayload() instanceof PlayerLeftLobbyBroadcastCommand) {
-                        updatePlayerList();
+                        String leavingPlayer = (String) payload;
+                        Log.d("PlayerLeft", leavingPlayer);
+                        Log.d("UserName", userName);
+                        Boolean isEqual = userName.equals(leavingPlayer);
+                        Log.d("Comparison", isEqual.toString());
+                        if(!(userName.equals(leavingPlayer))) {
+                            updatePlayerList();
+                        } else {
+                            Intent intent = new Intent(LobbyActivity.this, MainActivity.class);
+                            intent.putExtra("UserName", getIntent().getStringExtra("UserName"));
+                            startActivity(intent);
+                        }
                     }
                 }
 
@@ -119,11 +129,12 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         binding.btnLeaveLobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 sendServerCommand(new LeaveLobbyCommand(null), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                        startActivity(new Intent(LobbyActivity.this, MainActivity.class));
+                        Intent intent = new Intent(LobbyActivity.this, MainActivity.class);
+                        intent.putExtra("UserName", userName);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -172,8 +183,11 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                     ) {
                         Log.d("LobbyActivity update", player);
                     }
-                    playerList.add(new LobbyPlayerDisplay(players.getLast()));
-                    adapter.notifyItemInserted(players.size()-1);
+                    playerList.clear();
+                    for(int i = 0; i < players.size(); i++) {
+                        playerList.add(new LobbyPlayerDisplay(players.get(i)));
+                    }
+                    adapter.notifyDataSetChanged();
                     binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
                 }
                 @Override
