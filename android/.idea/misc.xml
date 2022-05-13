@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_create_session.xml" value="0.22760416666666666" />
+        <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_game_result.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_game_result2.xml" value="0.22" />
         <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_join_session.xml" value="0.33" />
-        <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_lobby.xml" value="0.18541666666666667" />
-        <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_lobby.xml" value="0.25" />
+        <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_main.xml" value="0.5" />
         <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_select_name.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/rounded_corner.xml" value="0.1395" />
         <entry key="app/src/main/res/layout/activity_create_session.xml" value="0.2359375" />

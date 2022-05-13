@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.GameResultActivity"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="-56dp">
+
+    <TextView
+        android:id="@+id/tv_pointsWinner"
+        android:layout_width="100dp"
+        android:layout_height="200dp"
+        android:background="@color/primary"
+        android:text="Punkte"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.431" />
+
+    <TextView
+        android:id="@+id/tv_pointsThird"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/primary"
+        android:text="Punkte"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_pointsWinner"
+        app:layout_constraintStart_toEndOf="@+id/tv_pointsWinner"
+        app:layout_constraintTop_toTopOf="@+id/tv_pointsWinner"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tv_NameSecond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spaceDefault"
+        android:text="Zweiter Platz"
+        android:textColor="@color/primary"
+        app:layout_constraintBottom_toTopOf="@+id/tv_pointsSecond"
+        app:layout_constraintEnd_toEndOf="@+id/tv_pointsSecond"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_pointsSecond"
+        app:layout_constraintTop_toTopOf="@+id/tv_NameWinner"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tv_NameWinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spaceDefault"
+        android:text="Erster Platz"
+        android:textColor="@color/primary"
+        app:layout_constraintBottom_toTopOf="@+id/tv_pointsWinner"
+        app:layout_constraintEnd_toEndOf="@+id/tv_pointsWinner"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_pointsWinner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tv_NameThird"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spaceDefault"
+        android:text="Dritter Platz"
+        android:textColor="@color/primary"
+        app:layout_constraintBottom_toTopOf="@+id/tv_pointsThird"
+        app:layout_constraintEnd_toEndOf="@+id/tv_pointsThird"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_pointsThird"
+        app:layout_constraintTop_toTopOf="@+id/tv_NameWinner"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tv_pointsSecond"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/primary"
+        android:text="Punkte"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_pointsWinner"
+        app:layout_constraintEnd_toStartOf="@+id/tv_pointsWinner"
+        app:layout_constraintTop_toTopOf="@+id/tv_pointsWinner"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btn_mainAc"
+        android:layout_width="250dp"
+        android:layout_height="58dp"
+        android:text="Verlassen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pointsWinner"
+        app:layout_constraintVertical_bias="0.428" />
+</androidx.constraintlayout.widget.ConstraintLayout>
