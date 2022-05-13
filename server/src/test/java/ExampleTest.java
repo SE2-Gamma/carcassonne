@@ -4,9 +4,9 @@ import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
-import at.aau.se2.gamma.core.models.impl.GameCard;
-import at.aau.se2.gamma.core.models.impl.GameMap;
-import at.aau.se2.gamma.core.models.impl.GameObject;
+import at.aau.se2.gamma.core.commands.error.ErrorCommand;
+import at.aau.se2.gamma.core.factories.GameCardFactory;
+import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 import at.aau.se2.gamma.core.utils.ServerResponseDecrypter;
@@ -18,8 +18,6 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import at.aau.se2.gamma.core.models.impl.Player;
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
@@ -27,6 +25,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class ExampleTest {
     // this is for the git demo
@@ -230,6 +229,29 @@ public class ExampleTest {
         }
 
     }
+    @Test
+    void testGameMapEntryWhitelist(){
+
+        System.out.println(GameMapEntry.class.getName());
+        System.out.println(GameCard.SpecialType.class.getName());
+        sendName("GameMapEntryTest");
+        GameMapEntry entry= new GameMapEntry(GameCardFactory.A(),new Player("testid","testplayerwer0"));
+        GameMap gameMap=new GameMap();
+        gameMap.placeGameMapEntry(entry,new GameMapEntryPosition(4,7));
+        GameObject gameObject=new GameObject(gameMap);
+
+        GameObject gameObject1=new GameObject(new GameMap());
+
+        try {
+
+            objectOutputStream.writeObject(new GameTurnCommand(gameObject1));
+            System.out.println("empty gameobject finished");
+            objectOutputStream.writeObject(new GameTurnCommand(gameObject));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @RepeatedTest(numberofruns)
     void testkickplayer(){
         sendName("testkick1");
@@ -298,6 +320,17 @@ public class ExampleTest {
 
               String kickedplayer= (String) ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertEquals("testkick5",kickedplayer);
+
+            objectOutputStream.writeObject(new RequestUserListCommand(null));
+            LinkedList<String>afterlist=(LinkedList<String>) ServerResponseDecrypter.payloadRetriever(objectInputStream);
+            System.out.println(Arrays.toString(afterlist.toArray()));
+            assertEquals("testkick1",afterlist.pop());
+            assertEquals("testkick2",afterlist.pop());
+            assertEquals("testkick3",afterlist.pop());
+            assertEquals("testkick4",afterlist.pop());
+            assertThrows(NoSuchElementException.class, list::pop);
+
+
 socket1.disconnect();
 socket2.disconnect();
 socket3.disconnect();
