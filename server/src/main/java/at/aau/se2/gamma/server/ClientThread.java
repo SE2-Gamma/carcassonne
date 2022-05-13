@@ -192,7 +192,7 @@ public class ClientThread extends Thread {
         try {
             temp= Server.SessionHandler.getSession((String) command.getPayload());
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
+
             return ResponseCreator.getError(command,"no Session found", Codes.ERROR.NO_SESSION_FOUND);
         }
         System.out.print("   //Session found//");
@@ -273,7 +273,6 @@ public class ClientThread extends Thread {
         try {
             session=Server.SessionHandler.joinSession(sessionID,player);
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             System.err.println("no Such session");
             return ResponseCreator.getError(command,"no such Session", Codes.ERROR.NO_SESSION_FOUND);
         }
