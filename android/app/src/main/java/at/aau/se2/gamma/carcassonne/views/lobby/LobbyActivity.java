@@ -135,6 +135,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
 
     @Override
     public void onKickPlayerButtonClick(int position) {
+        Log.d("LobbyActivity", "onKickPlayerButton");
         String playerName = playerList.get(position).getPlayerName();
 
         ServerThread.instance.sendCommand(new KickPlayerCommand(playerName), new ServerThread.RequestResponseHandler() {

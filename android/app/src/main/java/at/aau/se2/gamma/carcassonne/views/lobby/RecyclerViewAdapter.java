@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,13 +38,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         LobbyPlayerDisplay item = players.get(position);
 
         holder.tv_player_name.setText(item.getPlayerName());
-        /*holder.btn_kick_player.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context.getApplicationContext(), item.getPlayerName() + " kicked", Toast.LENGTH_SHORT).show();
-
-            }
-        });*/
     }
 
     @Override
@@ -69,7 +61,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(context.getApplicationContext(), " kicked", Toast.LENGTH_SHORT).show();
             recyclerViewListener.onKickPlayerButtonClick(getAdapterPosition());
         }
     }
