@@ -10,6 +10,7 @@ import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
+import at.aau.se2.gamma.carcassonne.utils.ShutdownService;
 import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
@@ -24,13 +25,14 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
 
     public ActivityMainBinding binding;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        startService(new Intent(this, ShutdownService.class));
 
         binding.pbMenu.setVisibility((View.GONE));
         binding.btnBackToLobby.setVisibility(View.GONE);

@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Carcassonne">
+        <service android:name="at.aau.se2.gamma.carcassonne.utils.ShutdownService" android:stopWithTask="false" />
         <activity
             android:name=".views.GameResultActivity"
             android:exported="false" />
