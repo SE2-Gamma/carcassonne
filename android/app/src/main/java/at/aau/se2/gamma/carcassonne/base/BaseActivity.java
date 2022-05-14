@@ -1,9 +1,5 @@
 package at.aau.se2.gamma.carcassonne.base;
 
-import android.os.Bundle;
-import android.util.Log;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import at.aau.se2.gamma.carcassonne.exceptions.NoServerInstanceException;
