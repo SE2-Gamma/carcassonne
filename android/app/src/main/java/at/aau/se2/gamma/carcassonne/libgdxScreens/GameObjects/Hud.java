@@ -36,7 +36,10 @@ public class Hud {
         PLAYING,
         ACCEPT_ACTION,
         CHEATING,
-        REPORTING
+        REPORTING,
+        PLACING_SOLDIER,
+        ACCEPT_PLACING_SOLDIER,
+        SCOREBOARD
     }
 
 
@@ -111,6 +114,13 @@ public class Hud {
                 stage.clear();
                 stage.addActor(accept_decline_buttons.getButtonTable());
                 break;
+            case PLACING_SOLDIER:
+                break;
+            case ACCEPT_PLACING_SOLDIER:
+                break;
+            case SCOREBOARD:
+                break;
+
         }
 
         stage.addActor(hud_errortext.getTable());
