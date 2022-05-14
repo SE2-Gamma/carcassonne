@@ -3,7 +3,9 @@ package at.aau.se2.gamma.core.commands;
 import at.aau.se2.gamma.core.states.ClientState;
 
 public class PlayerNotReadyCommand extends BaseCommand{
-    //doesnt return apart from a serverresponsecommand with a string, but triggers a broadcastcommand to all players in the session which tells that playername is not ready anymore
+    //input: null
+    //response: string (readyness resumed)
+    //triggers: PlayerNotReadyBroadcastCommand to all players in lobby, payload: string (playername)
      public PlayerNotReadyCommand(Object payload) {
         super(payload);
     }
