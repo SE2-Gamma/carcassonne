@@ -15,6 +15,7 @@ import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Screens.Gamescreen;
+import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 
 public class LibgdxHudTest {
 
@@ -52,7 +53,7 @@ public class LibgdxHudTest {
 
             myTexture = Mockito.mock(Texture.class);
             position = new Vector2(0,0);
-            gc = new GameCard(myTexture,position);
+            gc = new GameCard(myTexture,position, Mockito.mock(GameMapEntry.class));
 
 
             myMap = new GameMapManager(playercam, gameviewport, sb);
