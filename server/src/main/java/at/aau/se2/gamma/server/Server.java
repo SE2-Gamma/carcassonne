@@ -239,6 +239,11 @@ public  class Server implements Runnable {
 
         return byteOutputStream.toByteArray().length;
     }
+    public static void kickAllAndEverything(){
+        activeServerPlayers.clear();
+        SessionHandler.sessions.clear();
+
+    }
 
     public static void main(String[] args) throws IOException {
 

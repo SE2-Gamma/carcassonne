@@ -115,7 +115,7 @@ public class ClientThread extends Thread {
     private void checkingAvailability() {
         if(communicating){
             while(communicating){
-                System.out.print("//locked//");
+                System.out.print(".");
             }
         }
         System.out.println();
@@ -136,7 +136,7 @@ public class ClientThread extends Thread {
             System.out.print("//unlocking//");
             System.out.print("//message sent");
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
 
@@ -396,17 +396,23 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
         }
         GameMove gameturn=(GameMove) command.getPayload();
+        System.out.print("//incoming gamemove//");
         try {
             session.executeGameMove(gameturn);
         } catch (InvalidPositionGameMapException e) {
+            System.out.print("//invalid move has been answered");
             return ResponseCreator.getError(command,"Invalid Position on Gamemap",Codes.ERROR.INVALID_MOVE);
         } catch (SurroundingConflictGameMapException e) {
+            System.out.print("//invalid move has been answered");
             return ResponseCreator.getError(command,"Surrounding Conflict on Gamemap",Codes.ERROR.INVALID_MOVE);
         } catch (NoSurroundingCardGameMapException e) {
+            System.out.print("//invalid move has been answered");
             return ResponseCreator.getError(command,"No surrounding Card on Gamemap",Codes.ERROR.INVALID_MOVE);
         } catch (PositionNotFreeGameMapException e) {
+            System.out.print("//invalid move has been answered");
             return ResponseCreator.getError(command,"Position not free on Gamemap",Codes.ERROR.INVALID_MOVE);
         }
+
 
         return ResponseCreator.getSuccess(command,"turn succesfull");
 
@@ -418,6 +424,7 @@ public class ClientThread extends Thread {
 
 
     private BaseCommand playerNotReady(PlayerNotReadyCommand command) {
+        System.out.print("//player "+player.getName()+" isnt ready anymore//");
         try {
             session.playerNotReady(player);
         } catch (NoSuchElementException e) {
@@ -428,7 +435,9 @@ public class ClientThread extends Thread {
     }
 
     private BaseCommand playerReady(PlayerReadyCommand command) {
+
         session.playerReady(player);
+
         return ResponseCreator.getSuccess(command,"Youre ready now");
 
     }

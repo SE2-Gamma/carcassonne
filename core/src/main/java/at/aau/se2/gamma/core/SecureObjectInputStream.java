@@ -45,6 +45,8 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(ServerResponse.class.getName());
             allowedClasses.add(ErrorCommand.class.getName());
             allowedClasses.add(Codes.class.getName());
+            allowedClasses.add(Codes.ERROR.class.getName());
+            allowedClasses.add(Codes.SUCCESS.class.getName());
             allowedClasses.add(ServerResponse.StatusCode.class.getName());
             allowedClasses.add(GetClientStateCommand.class.getName());
             allowedClasses.add(LeaveLobbyCommand.class.getName());
@@ -126,12 +128,12 @@ public class SecureObjectInputStream extends ObjectInputStream {
     protected Class<?> resolveClass(ObjectStreamClass osc) throws IOException, ClassNotFoundException {
         // Only deserialize instances of AllowedClass
        initialise();
-        System.out.println(counter.incrementAndGet()+". use of whitelist");
+        System.out.print("//"+counter.incrementAndGet()+". use of whitelist//");
 
         for (String classname:allowedClasses
              ) {
             if (osc.getName().equals(classname)) {
-                System.out.println(classname+"resolved");
+
                 return super.resolveClass(osc);
             }
         }

@@ -1,19 +1,14 @@
 import at.aau.se2.gamma.core.SecureObjectInputStream;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.CreateGameCommand;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
-import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
 import at.aau.se2.gamma.core.utils.ServerResponseDecrypter;
-import at.aau.se2.gamma.server.ClientThread;
 import at.aau.se2.gamma.server.Server;
-import at.aau.se2.gamma.server.models.ServerPlayer;
-import at.aau.se2.gamma.server.models.Session;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +22,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-public class ExampleTest {
+public class LobbyTests {
     // this is for the git demo
     private ObjectOutputStream objectOutputStream;
     private SecureObjectInputStream objectInputStream;
