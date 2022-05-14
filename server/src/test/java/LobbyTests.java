@@ -105,7 +105,7 @@ public class LobbyTests {
         }
     }
 
-    @RepeatedTest(10000)
+    @RepeatedTest(100)
     void stormTheMainMenue(){
         sendName("storm");
         ClientState state= null;
@@ -310,7 +310,7 @@ public class LobbyTests {
 
             socket2.objectOutputStream.writeObject(new KickPlayerCommand("testkick5"));
 
-            ServerResponseDecrypter.payloadRetriever(objectInputStream);
+
             ServerResponseDecrypter.payloadRetriever(objectInputStream);
             ServerResponseDecrypter.payloadRetriever(objectInputStream);
             ServerResponseDecrypter.payloadRetriever(objectInputStream);

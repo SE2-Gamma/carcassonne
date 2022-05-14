@@ -5,6 +5,7 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
 import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
@@ -93,9 +94,10 @@ public class ClientThread extends Thread {
             }
         }
         catch (EOFException e) {
-            System.out.println("End of Stream");
+            System.out.println(player.getName()+" disconnected unexpectedly.");
             if(clientState.equals(ClientState.LOBBY)){
                 session.players.remove(player);
+               session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
             }
             Server.activeServerPlayers.remove(serverPlayer);
         }
