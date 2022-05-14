@@ -20,6 +20,7 @@ import at.aau.se2.gamma.carcassonne.databinding.ActivityLobbyBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.LeaveLobbyCommand;
 import at.aau.se2.gamma.core.commands.PayloadResponseCommand;
 import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 
@@ -77,17 +78,6 @@ public class LobbyActivity extends BaseActivity {
             }
         });
 
-
-
-        //Disconnect from lobby
-        binding.btnBack.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LobbyActivity.this, MainActivity.class));
-            }
-        });
-
         binding.btnStartGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +88,24 @@ public class LobbyActivity extends BaseActivity {
 
         binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
 
+        binding.btnLeaveLobby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                sendServerCommand(new LeaveLobbyCommand(null), new ServerThread.RequestResponseHandler() {
+                    @Override
+                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                        startActivity(new Intent(LobbyActivity.this, MainActivity.class));
+                    }
+
+                    @Override
+                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                        Toast.makeText(LobbyActivity.this, "smth went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        });
 
     }
 

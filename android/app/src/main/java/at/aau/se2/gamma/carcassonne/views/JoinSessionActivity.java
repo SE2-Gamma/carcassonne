@@ -41,6 +41,7 @@ public class JoinSessionActivity extends BaseActivity {
                 String userInput = binding.ptInputKey.getText().toString();
                 Log.d("Check","User input:" + userInput);
 
+
                 if(userInput.length()>0) {
                     binding.pbJoinSessionActivity.setVisibility(View.VISIBLE);
                     binding.tvError.setVisibility(View.INVISIBLE);
