@@ -1,6 +1,11 @@
 package at.aau.se2.gamma.server.models;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
+import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
+import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
+import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
+import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
+import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.core.utils.KickOffer;
@@ -8,6 +13,7 @@ import at.aau.se2.gamma.server.Server;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Session extends BaseModel implements Serializable {
 
@@ -16,9 +22,11 @@ public class Session extends BaseModel implements Serializable {
     Deck deck;
     String id;
     int maxPlayers=5;
-    LinkedList<KickOffer>kickOffers=new LinkedList<>();
-    public LinkedList<Player> players = new LinkedList<>();
-    public LinkedList<Player> readyPlayers = new LinkedList<>();
+    final LinkedList<KickOffer>kickOffers=new LinkedList<>();
+   // public LinkedList<Player> players = new LinkedList<>();
+    public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
+    public ConcurrentLinkedDeque<Player>readyPlayers=new ConcurrentLinkedDeque<>();
+   // public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
     GameLoop gameLoop=null;
 
@@ -33,7 +41,7 @@ public class Session extends BaseModel implements Serializable {
 
             }
             System.out.print("//broadcasting//");
-            broadcastAllPlayers(new PlayerReadyBroadcastCommand(player.getName()));
+            broadcastAllPlayers(new PlayerReadyBroadcastCommand(player.getName()),player);
 
         }
         if(readyPlayers.size()==players.size()){
@@ -84,13 +92,14 @@ public class Session extends BaseModel implements Serializable {
         ServerPlayer tempserverplayer=Server.identify(player);
 
         System.out.print("//notifying "+player.getName()+" he has been removed");
+
         tempserverplayer.getClientThread().broadcastMessage(new PlayerLeftLobbyBroadcastCommand(player.getName()));
         players.remove(player);
         tempserverplayer.getClientThread().setClientState(ClientState.INITIAl);
 
 
         System.out.print("//notifying all  "+player.getName()+"  has been removed");
-        broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+        broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()),player);
 
         if(players.size()==0){
             System.out.println("no player left in session + "+id+" //");
@@ -102,6 +111,7 @@ public class Session extends BaseModel implements Serializable {
 
     }
     public boolean voteKick(Player player,Player votee) {
+        synchronized (kickOffers){
         System.out.print("//session issue kickvote//");
         int votes = 0;
         System.out.print("//session finding player//");
@@ -147,13 +157,16 @@ public class Session extends BaseModel implements Serializable {
 
             return true;
         }
-        broadcastAllPlayers(new KickAttemptBroadcastCommand(offer));
+        broadcastAllPlayers(new KickAttemptBroadcastCommand(offer),votee);
         System.out.println("//not enough votes to kick//");
-        return false;
+        return false;}
     }
 
      public void startGame(){
-        gameObject=new GameObject(new GameMap());
+        //todo: check if the first gamemapentry is supposed to be in the game
+        GameMap gameMap = new GameMap();
+         gameMap.placeGameMapEntry(new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), new Player("-1","server")), new GameMapEntryPosition(0,0));
+        gameObject=new GameObject(gameMap);
         for (Player temp:players
              ) {
             Server.identify(temp).getClientThread().setClientState(ClientState.GAME);
@@ -164,26 +177,31 @@ public class Session extends BaseModel implements Serializable {
         deck.printDeck();
         gameLoop=new GameLoop(this);
         gameLoop.start();
-
+         System.out.println();
+         System.out.println("//------------------Game "+id+" started--------------------------//");
+         System.out.println();
 
     }
 
 
 //-----------------------------Game-Activity--------------------------
     public int timeout=60000;
-    public boolean gameMovesuccessfull(GameMove gameturn) {
-        //todo implement
-        boolean successfull=true;
-        //check if gamemove was succesfull
-        if(successfull){
+    public void executeGameMove(GameMove gameturn) throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
+        System.out.print("//checking incoming turn!//");
+      gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
             //do gamemove, updating the gameobject. once updated, the gameloop will continue and send the updated gameobject to all clients
+        System.out.print("//turn has been succesfull!//");
+        while (!interruptable) {
             gameLoop.interrupt();//interrupt waiting gameloop
-            return true; //tell the clienthread the move is succesfull
-        }
-    return false; //tell the clienthtread the move was unsuccessfull. the clientthread will then wait for another turn to be made, which will be checked again
-}
 
+
+        }
+
+
+}
+public boolean interruptable=false;
     public class GameLoop extends Thread{
+
         Session session;
         boolean playing;
         LinkedList<Player>turnOrder;
@@ -192,27 +210,39 @@ public class Session extends BaseModel implements Serializable {
         }
         @Override
         public void run() {
+
             playing=true;
             //caution: reference
             turnOrder=new LinkedList<>(session.players);
-            printTurnOrder(turnOrder);
             shuffle(turnOrder);
+            printTurnOrder(turnOrder);
 
             while (playing){
+                interruptable=false;
+                System.out.print("//a new iteration has started//");
                 Player onTurn=turnOrder.pop();
                 turnOrder.addLast(onTurn);
                 GameCard card=null;
+                System.out.println("//its "+onTurn.getName()+"'s turn!//");
                 try {
                      card=deck.drawCard();
+                    System.out.print(card.getCardId()+" has been drawn//");
                 } catch (NoSuchElementException e) {
+                    System.out.println("----------------------game ended---------------------");
                     gameEnded(); //todo: implement
                 }
+
                 Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card));
+                System.out.print("//"+onTurn.getName()+" has been notified//");
                 broadcastAllPlayers(new PlayerXsTurnBroadcastCommand(onTurn.getName()),onTurn);
+                System.out.print("//notifying all players//");
 
                 try {
+                    interruptable=true;
+                    System.out.print("//waiting for move to be made//");
                     Thread.sleep(timeout); //waiting for succesfull move to be made
                 } catch (InterruptedException e) {
+                    System.out.print("//notifying all players a turn has been made//");
                     broadcastAllPlayers(new GameTurnBroadCastCommand(gameObject));
                 }
 

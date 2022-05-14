@@ -4,6 +4,7 @@ import at.aau.se2.gamma.core.states.ClientState;
 
 public class GameStartedBroadcastCommand  extends BroadcastCommand {
     //Payload=GameObject
+    //is sent when all players in lobby are ready. appside todo: start game
     public GameStartedBroadcastCommand(Object payload) {
         super(payload);
     }
