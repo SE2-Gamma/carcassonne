@@ -263,9 +263,9 @@ public  class Server implements Runnable {
                     message=new PlayerNotReadyBroadcastCommand("testplayer");
                 }
                 if(input.equals("gamecompleted")){
-message=new GameCompletedBroadcastCommand("game completed");
+                    message=new GameCompletedBroadcastCommand("game completed");
                 }if(input.equals("gamestarted")){
-message=new GameStartedBroadcastCommand("game has started");
+                    message=new GameStartedBroadcastCommand("game has started");
                 }if(input.equals("gameturn")){
                     message=new GameTurnBroadCastCommand("hardcode gameturn");
                 }if(input.equals("kickattempt")){
@@ -274,20 +274,20 @@ message=new GameStartedBroadcastCommand("game has started");
                     offer.vote(new Player("asd","asd"));
                     message=new KickAttemptBroadcastCommand(offer);
                 }if(input.equals("payload")){
-message=new PayloadBroadcastCommand("payloadstring");
+                    message=new PayloadBroadcastCommand("payloadstring");
                 }if(input.equals("playerjoined")){
-            message=new PlayerJoinedBroadcastCommand("testplayer");
+                    message=new PlayerJoinedBroadcastCommand("testplayer");
                 }if(input.equals("playerkicked")){
                     System.out.println("who shall be kicked?");
-message= new PlayerKickedBroadcastCommand(scanner.nextLine());
+                    message= new PlayerKickedBroadcastCommand(scanner.nextLine());
                 }if(input.equals("playerleft")){
                     System.out.println("who shall leave the lobby?");
-message=new PlayerLeftLobbyBroadcastCommand(scanner.nextLine());
+                    message=new PlayerLeftLobbyBroadcastCommand(scanner.nextLine());
                 }if(input.equals("playersturn")){
                     System.out.println("whos turn shall it be?");
-message=new PlayerXsTurnBroadcastCommand(scanner.nextLine());
+                    message=new PlayerXsTurnBroadcastCommand(scanner.nextLine());
                 }if(input.equals("soldierreturned")){
-message=new SoldierReturnedBroadcastCommand("soldier returned");
+                    message=new SoldierReturnedBroadcastCommand("soldier returned");
                 }if(input.equals("yourturn")){
                     System.out.println("whos turn shall it be?");
                     message=new YourTurnBroadcastCommand("your turn");

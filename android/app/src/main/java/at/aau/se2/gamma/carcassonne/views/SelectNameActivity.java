@@ -4,22 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 
 import java.util.LinkedList;
 
 import at.aau.se2.gamma.carcassonne.MainActivity;
-import at.aau.se2.gamma.carcassonne.base.BaseActivity;
-
 import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.UtilityKlasse;
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import at.aau.se2.gamma.carcassonne.databinding.ActivitySelectNameBinding;
-import at.aau.se2.gamma.carcassonne.network.SendThread;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.utils.Logger;
-import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
