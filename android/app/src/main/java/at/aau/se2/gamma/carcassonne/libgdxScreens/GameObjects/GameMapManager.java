@@ -8,10 +8,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
 import java.util.Map;
 
+import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMap;
 import at.aau.se2.gamma.core.models.impl.Orientation;
+import at.aau.se2.gamma.core.models.impl.SoldierPlacement;
 
 public class GameMapManager {
 
@@ -69,6 +72,29 @@ public class GameMapManager {
                                 Playingfield[i][j].getGameCardTexture().getHeight(),
                                 false,
                                 false);
+                        ArrayList<SoldierPlacement> cardSoldiers = Playingfield[i][j].getGameMapEntry().getSoldierPlacements();
+                        GameCardSide cardSides[] = Playingfield[i][j].getGameMapEntry().getAlignedCardSides();
+                        for(SoldierPlacement sp : cardSoldiers){
+                            for(int s = 0; s<cardSides.length; s++){
+                                if(cardSides[s].equals(sp.getGameCardSide())){
+                                    switch (s){
+                                        case 0:
+                                            batch.draw(new Texture("Soldier_Red.png"), Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y+96);
+                                            break;
+                                        case 1:
+                                            batch.draw(new Texture("Soldier_Red.png"), Playingfield[i][j].getPosition().x+96, Playingfield[i][j].getPosition().y+48);
+                                            break;
+                                        case 2:
+                                            batch.draw(new Texture("Soldier_Red.png"), Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y);
+                                            break;
+                                        case 3:
+                                            batch.draw(new Texture("Soldier_Red.png"), Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y+48);
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 }
             }
@@ -89,7 +115,9 @@ public class GameMapManager {
             boolean CardConnectable = true;
 
             if (Playingfield[x][y] == null || Playingfield[x][y].getGameCardTexture() == null) {
+                //checking upper y limit
                 if(y == lastGameArrayNumber){
+                    //left side of upper y Limit
                     if(x == 0){
                         if(Playingfield[x+1][y] != null  || Playingfield[x][y-1] != null){
 
@@ -107,6 +135,8 @@ public class GameMapManager {
 
 
                         }else return false;
+
+                     //right side of upper y limit
                     }else if (x == lastGameArrayNumber){
                         if(Playingfield[x-1][y] != null || Playingfield[x][y-1] != null){
                             if(Playingfield[x-1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x-1][y].getGameMapEntry(), Orientation.EAST) == false){
@@ -121,6 +151,7 @@ public class GameMapManager {
                                 return true;
                             }
                         }else return false;
+                        //between upper and lower x limit; y = maximum
                     }else {
                         if(Playingfield[x-1][y] != null || Playingfield[x+1][y] != null || Playingfield[x][y-1] != null){
                             if(Playingfield[x+1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x+1][y].getGameMapEntry(), Orientation.WEST) == false){
@@ -259,5 +290,6 @@ public class GameMapManager {
         //batch.dispose();
         // shaperender.dispose();
     }
+
 
 }

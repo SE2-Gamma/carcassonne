@@ -1,28 +1,16 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects;
 
-import android.graphics.fonts.Font;
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -53,6 +41,8 @@ public class Hud {
     private Hud_Item_CardPreview hudCardPreview;
     private Hud_Item_AcceptDeclineButtons accept_decline_buttons;
     private Hud_Item_ErrorText hud_errortext;
+    private Hud_Item_AcceptDeclineButtons accept_decline_buttons_soldiers;
+    private Hud_Item_ZeroSoldiersButton hud_ZeroSoldier_buttons;
 
     private Skin skin;
     private Hud_State currentState;
@@ -72,6 +62,8 @@ public class Hud {
         hudCardPreview = new Hud_Item_CardPreview();
         accept_decline_buttons = new Hud_Item_AcceptDeclineButtons();
         hud_errortext = new Hud_Item_ErrorText();
+        hud_ZeroSoldier_buttons = new Hud_Item_ZeroSoldiersButton();
+        accept_decline_buttons_soldiers = new Hud_Item_AcceptDeclineButtons();
 
         changeHudState(Hud_State.PLAYING);
 
@@ -115,10 +107,15 @@ public class Hud {
                 stage.addActor(accept_decline_buttons.getButtonTable());
                 break;
             case PLACING_SOLDIER:
+                stage.clear();
+                stage.addActor(hud_ZeroSoldier_buttons.getButtonTable());
                 break;
             case ACCEPT_PLACING_SOLDIER:
+                stage.clear();
+                stage.addActor(accept_decline_buttons_soldiers.getButtonTable());
                 break;
             case SCOREBOARD:
+                stage.clear();
                 break;
 
         }
@@ -241,6 +238,18 @@ public class Hud {
 
     public TextButton getDeclineButton() {
         return accept_decline_buttons.getDeclineButton();
+    }
+
+    public TextButton getAcceptButton_Soldiers() {
+        return accept_decline_buttons_soldiers.getAcceptButton();
+    }
+
+    public TextButton getDeclineButton_Soldiers() {
+        return accept_decline_buttons_soldiers.getDeclineButton();
+    }
+
+    public TextButton getNoSoldierButton() {
+        return hud_ZeroSoldier_buttons.getButton();
     }
 
     public Hud_State getCurrentState() {

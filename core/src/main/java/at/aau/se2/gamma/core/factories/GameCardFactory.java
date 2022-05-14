@@ -402,18 +402,14 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
                 GameCardSideFactory.createClosedGrasSide(),
                 GameCardSideFactory.createCastleSide(),
 
-
-
                 null, "G");
     }
     public static GameCard H() {
         return new GameCard(
-                GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createCastleSide(),
-
-
+                GameCardSideFactory.createGrasSide(),
 
                 null, "H");
     }

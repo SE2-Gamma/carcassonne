@@ -26,6 +26,7 @@ import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
+import at.aau.se2.gamma.core.models.impl.Soldier;
 
 public class Gamescreen extends ScreenAdapter implements GestureDetector.GestureListener {
 
@@ -70,6 +71,9 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
     //Card Deck, Just for testing stored locally
     LinkedList<at.aau.se2.gamma.core.models.impl.GameCard> CardDeck = GameCardFactory.getDeck(1);
+
+    //data to place soldier
+    Player myPlayerID;
 
 
     public Gamescreen (){
@@ -135,7 +139,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         myMap.setGamecard(49,49, new GameCard(getTextureFromCardID(starterEntry.getCard().getCardId()), new Vector2(49f*144f,49f*144f), 270f, starterEntry));
 
         //set currentCard
-        Player myPlayerID = new Player("BRUDI MUSS LOS", "LEON");
+        myPlayerID = new Player("BRUDI MUSS LOS", "LEON");
         at.aau.se2.gamma.core.models.impl.GameMapEntry newCardFromDeck = new GameMapEntry(CardDeck.get((int)(Math.random()*20)), myPlayerID, Orientation.NORTH);
         currentGameCard = new GameCard(getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0),270f,newCardFromDeck);
         hud.setNextCardTexture(currentGameCard.getGameCardTexture());
@@ -151,8 +155,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 currentGameCard = new GameCard(getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0), 270f, newCardFromDeck);
                 hud.setNextCardTexture(currentGameCard.getGameCardTexture());
                 hud.setRotation(0);
-                lastCard = null;
-                hud.changeHudState(Hud.Hud_State.VIEWING);
+                hud.changeHudState(Hud.Hud_State.PLACING_SOLDIER);
             }
         });
 
@@ -164,6 +167,41 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 currentGameCard = lastCard;
                 lastCard = null;
                 myMap.setGamecard(playedCard_x, playedCard_y, null);
+            }
+        });
+
+        hud.getAcceptButton_Soldiers().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.changeHudState(Hud.Hud_State.VIEWING);
+                lastCard = null;
+
+                //HERE send GameMove with gameMapEntry etc. later
+
+            }
+        });
+
+        hud.getDeclineButton_Soldiers().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.changeHudState(Hud.Hud_State.PLACING_SOLDIER);
+
+                //clears the SoldierPlacements Array to remove placed Soldiers
+                // Works ONLY for new Card with single Soldier
+                lastCard.getGameMapEntry().getSoldierPlacements().clear();
+            }
+        });
+
+        hud.getNoSoldierButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.changeHudState(Hud.Hud_State.VIEWING);
+                //HERE send GameMove with gameMapEntry etc. later
+                //When no Soldier has been placed
+
             }
         });
 
@@ -253,7 +291,52 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 currentGameCard = null;
                 hud.changeHudState(Hud.Hud_State.ACCEPT_ACTION);
             }
-        }else if(hud.getCurrentState().equals(Hud.Hud_State.PLACING_SOLDIER)){
+        }else if(lastCard != null &&hud.getCurrentState().equals(Hud.Hud_State.PLACING_SOLDIER)){
+            Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+            Vector2 oldPos = lastCard.getPosition();
+
+            //change lenght when churches are implemented/ no idea how my teammates planned them right now
+            float[] allDistances = new float[4];
+
+            Vector2 point_left = new Vector2(oldPos.x, oldPos.y+64);
+            Vector2 point_right = new Vector2(oldPos.x+128, oldPos.y+64);
+            Vector2 point_top = new Vector2(oldPos.x+64, oldPos.y+128);
+            Vector2 point_bottom = new Vector2(oldPos.x+64, oldPos.y);
+            //Vector2 point_middle = new Vector2(oldPos.x+64, oldPos.y+64);
+
+            allDistances[0] = distance(mapPos, point_left);
+            allDistances[1] = distance(mapPos, point_right);
+            allDistances[2] = distance(mapPos, point_top);
+            allDistances[3] = distance(mapPos, point_bottom);
+            //allDistances[4] = distance(mapPos, point_middle);
+
+            Soldier mySoldier = new Soldier(myPlayerID);
+
+            //getting smallest distance
+            int smallestIndex = 0;
+            for(int i = 0; i<allDistances.length; i++){
+                if(allDistances[i]<allDistances[smallestIndex]){
+                    smallestIndex = i;
+                }
+            }
+
+            switch (smallestIndex){
+                case 0:
+                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[3]);
+                    break;
+                case 1:
+                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[1]);
+                    break;
+                case 2:
+                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[0]);
+                    break;
+                case 3:
+                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[2]);
+                    break;
+                //case 4:
+            }
+            hud.changeHudState(Hud.Hud_State.ACCEPT_PLACING_SOLDIER);
 
         }
         //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
@@ -303,7 +386,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     }
 
     private Texture getTextureFromCardID(String CardID){
-
         switch (CardID){
             case "A":
                 return textures[0];
@@ -358,5 +440,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         }
 
 
+    }
+
+    //calulate distance between 2 points with the Pythagorean theorem
+    private float distance(Vector2 object1, Vector2 object2){
+        return (float)Math.sqrt(Math.pow((object2.x - object1.x), 2) + Math.pow((object2.y - object1.y), 2));
     }
 }
