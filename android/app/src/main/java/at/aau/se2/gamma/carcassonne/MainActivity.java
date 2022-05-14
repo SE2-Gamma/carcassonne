@@ -7,7 +7,6 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
-
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.utils.ShutdownService;
@@ -34,6 +33,9 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
 
         startService(new Intent(this, ShutdownService.class));
 
+        String userName = getIntent().getStringExtra("UserName");
+
+
         binding.pbMenu.setVisibility((View.GONE));
         binding.btnBackToLobby.setVisibility(View.GONE);
 
@@ -55,6 +57,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreateSessionActivity.class);
+                intent.putExtra("UserName", userName);
                 startActivity(intent);
             }
         });
@@ -63,6 +66,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, JoinSessionActivity.class);
+                intent.putExtra("UserName", userName);
                 startActivity(intent);
             }
         });

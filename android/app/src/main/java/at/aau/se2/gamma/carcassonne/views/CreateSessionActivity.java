@@ -7,6 +7,7 @@ import android.view.View;
 
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityCreateSessionBinding;
+import at.aau.se2.gamma.carcassonne.network.SendThread;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
@@ -25,6 +26,9 @@ public class CreateSessionActivity extends BaseActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        String sessionName = "";
+        String userName = getIntent().getStringExtra("UserName");
+      
         binding.buttonNavigateLobby.setVisibility(View.INVISIBLE);
         binding.textViewError.setVisibility(View.INVISIBLE);
         binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
@@ -36,6 +40,7 @@ public class CreateSessionActivity extends BaseActivity {
     public void createSession(View view) {
         binding.progressBarJoinSessionActivity.setVisibility(View.VISIBLE);
         sessionName = binding.editTextSessionname.getText().toString();
+      
         if(sessionName.length()>0) {
             CreateSessionActivity.this.sendServerCommand(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                 @Override
@@ -54,6 +59,7 @@ public class CreateSessionActivity extends BaseActivity {
                     binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                 }
             });
+          
         }else {
             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
             binding.textViewError.setVisibility(View.VISIBLE);
