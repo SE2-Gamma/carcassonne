@@ -157,7 +157,7 @@ public class Session extends BaseModel implements Serializable {
 
             return true;
         }
-        broadcastAllPlayers(new KickAttemptBroadcastCommand(offer));
+        broadcastAllPlayers(new KickAttemptBroadcastCommand(offer),votee);
         System.out.println("//not enough votes to kick//");
         return false;}
     }

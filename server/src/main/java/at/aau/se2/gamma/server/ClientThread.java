@@ -94,6 +94,10 @@ public class ClientThread extends Thread {
         }
         catch (EOFException e) {
             System.out.println("End of Stream");
+            if(clientState.equals(ClientState.LOBBY)){
+                session.players.remove(player);
+            }
+            Server.activeServerPlayers.remove(serverPlayer);
         }
         catch (Exception exception){
             System.out.println("unknown exception");

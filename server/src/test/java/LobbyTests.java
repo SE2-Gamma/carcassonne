@@ -27,7 +27,7 @@ public class LobbyTests {
     private ObjectOutputStream objectOutputStream;
     private SecureObjectInputStream objectInputStream;
     Socket socket;
-    static final int numberofruns=30;
+    static final int numberofruns=1;
 
 
     @BeforeAll
@@ -66,6 +66,7 @@ public class LobbyTests {
             e.printStackTrace();
         }
     }
+
     public TestSocket createanotherSocket(String name){
         try {
             Socket anothersocket= new Socket(GlobalVariables.getAdress(),GlobalVariables.getPort());
@@ -87,6 +88,7 @@ public class LobbyTests {
     public void disconnect(){
         try {
             objectOutputStream.writeObject(new DisconnectCommand(null));
+            Server.kickAllAndEverything();
         } catch (IOException e) {
             e.printStackTrace();
         }
