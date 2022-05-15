@@ -84,15 +84,28 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                     Log.d("Debug", "BroadCastResponseHandlerReached");
                     if(response.getPayload() instanceof KickAttemptBroadcastCommand) {
                         KickOffer kickOffer = (KickOffer) payload;
-                        String playerName = kickOffer.getPlayer().getName();
+                        String playerToKick = kickOffer.getPlayer().getName();
                         //open Dialog for each Player
-                        LobbyActivityDialog lobbyActivityDialog = new LobbyActivityDialog(playerName);
-                        lobbyActivityDialog.show(getSupportFragmentManager(), "LobbyActivityDialog");
+                        if(!(userName.equals(playerToKick))) {
+                            LobbyActivityDialog lobbyActivityDialog = new LobbyActivityDialog(playerToKick);
+                            lobbyActivityDialog.show(getSupportFragmentManager(), "LobbyActivityDialog");
+                        }
                     } else if(response.getPayload() instanceof PlayerJoinedBroadcastCommand) {
                         Log.d("Broadcast Response", "PlayerJoinedBroadcastCommand");
                         updatePlayerList();
                     } else if (response.getPayload() instanceof PlayerKickedBroadcastCommand) {
-                        updatePlayerList();
+                        KickOffer kickOffer = (KickOffer) payload;
+                        String kickedPlayer = kickOffer.getPlayer().getName();
+                        if(!(userName.equals(kickedPlayer))) {
+                            updatePlayerList();
+                        }else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LobbyActivity.this, "You have been kicked", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                     } else if(response.getPayload() instanceof PlayerLeftLobbyBroadcastCommand) {
                         String leavingPlayer = (String) payload;
                         Log.d("PlayerLeft", leavingPlayer);
@@ -103,7 +116,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                             updatePlayerList();
                         } else {
                             Intent intent = new Intent(LobbyActivity.this, MainActivity.class);
-                            intent.putExtra("UserName", getIntent().getStringExtra("UserName"));
+                            intent.putExtra("UserName", userName);
                             startActivity(intent);
                         }
                     }
@@ -161,7 +174,12 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         ServerThread.instance.sendCommand(new KickPlayerCommand(playerName), new ServerThread.RequestResponseHandler() {
             @Override
             public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                Toast.makeText(LobbyActivity.this, "Kick initialized", Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(LobbyActivity.this, "Kick initialized", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
