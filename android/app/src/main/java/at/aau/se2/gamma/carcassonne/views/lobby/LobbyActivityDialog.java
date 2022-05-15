@@ -22,13 +22,13 @@ import at.aau.se2.gamma.core.commands.KickPlayerCommand;
 
 public class LobbyActivityDialog extends AppCompatDialogFragment {
     public ActivityLobbyKickDialogBinding binding;
-    private String playerName;
+    private String playerToKick;
     private TextView tvKickPlayer;
     private Button btVoteYes;
     private Button btVoteNo;
 
-    public LobbyActivityDialog(String playerName) {
-        this.playerName = playerName;
+    public LobbyActivityDialog(String playerToKick) {
+        this.playerToKick = playerToKick;
     }
 
     @NonNull
@@ -44,12 +44,12 @@ public class LobbyActivityDialog extends AppCompatDialogFragment {
         btVoteNo = view.findViewById(R.id.btn_voteNo);
         btVoteYes = view.findViewById(R.id.btn_voteYes);
 
-        tvKickPlayer.setText("Kick Player " + playerName + "?");
+        tvKickPlayer.setText("Kick Player " + playerToKick + "?");
 
         btVoteYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ServerThread.instance.sendCommand(new KickPlayerCommand(playerName), new ServerThread.RequestResponseHandler() {
+                ServerThread.instance.sendCommand(new KickPlayerCommand(playerToKick), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                         dismiss();
