@@ -52,8 +52,13 @@ public class LobbyActivityDialog extends AppCompatDialogFragment {
                 ServerThread.instance.sendCommand(new KickPlayerCommand(playerToKick), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getActivity().getApplicationContext(), "Vote sent", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         dismiss();
-                        Toast.makeText(getContext(), "Vote sent", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
