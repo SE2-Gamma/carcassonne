@@ -81,13 +81,6 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             }
         });
 
-        binding.btnViewLobby.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, LobbyActivity.class));
-            }
-        });
-
         binding.btnBackToLobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
