@@ -73,7 +73,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
             public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
                 Log.d("onFailure", "LobbyActivity");
                 Toast.makeText(LobbyActivity.this, "Error requesting player list", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LobbyActivity.this, MainActivity.class));
+                startActivity(new Intent(LobbyActivity.this, MainActivity.class).putExtra("UserName", userName));
             }
         });
 
