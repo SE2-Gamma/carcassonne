@@ -99,6 +99,8 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(GameTurnCommand.class.getName());
             allowedClasses.add(GameCard.SpecialType.class.getName());
             allowedClasses.add(GameCardSide.Type.class.getName());
+            allowedClasses.add(GameCardSide.Type.class.getName());
+            allowedClasses.add(java.lang.Number.class.getName());
             allowedClasses.add(java.lang.Enum.class.getName());
             allowedClasses.add(at.aau.se2.gamma.core.models.impl.GameMapEntry.class.getName());
             allowedClasses.add(at.aau.se2.gamma.core.models.impl.GameCardSide.class.getName());

@@ -27,7 +27,7 @@ public class LobbyTests {
     private ObjectOutputStream objectOutputStream;
     private SecureObjectInputStream objectInputStream;
     Socket socket;
-    static final int numberofruns=1;
+    static final int numberofruns=10;
 
 
     @BeforeAll
@@ -332,6 +332,7 @@ socket1.disconnect();
 socket2.disconnect();
 socket3.disconnect();
 socket4.disconnect();
+
 
         } catch (IOException e) {
             e.printStackTrace();
