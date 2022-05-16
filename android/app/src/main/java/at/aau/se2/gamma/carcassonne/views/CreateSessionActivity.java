@@ -25,6 +25,9 @@ public class CreateSessionActivity extends BaseActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        String sessionName = "";
+        String userName = getIntent().getStringExtra("UserName");
+
         binding.buttonNavigateLobby.setVisibility(View.INVISIBLE);
         binding.textViewError.setVisibility(View.INVISIBLE);
         binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
@@ -54,6 +57,7 @@ public class CreateSessionActivity extends BaseActivity {
                     binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                 }
             });
+          
         }else {
             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
             binding.textViewError.setVisibility(View.VISIBLE);
@@ -63,7 +67,10 @@ public class CreateSessionActivity extends BaseActivity {
 
     public void navigateToLobby(View view) {
         Intent intent = new Intent(CreateSessionActivity.this, LobbyActivity.class);
-        intent.putExtra("GameKey", sessionName);
+        Bundle extras = new Bundle();
+        extras.putString("GameKey", sessionName);
+        extras.putString("UserName", userName);
+        intent.putExtras(extras);
         startActivity(intent);
     }
 

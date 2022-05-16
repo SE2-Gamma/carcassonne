@@ -14,10 +14,14 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import at.aau.se2.gamma.carcassonne.utils.Logger;
+import at.aau.se2.gamma.core.SecureObjectInputStream;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PayloadBroadcastCommand;
 import at.aau.se2.gamma.core.commands.ServerResponseCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 
 public class ServerThread extends Thread {
@@ -31,13 +35,19 @@ public class ServerThread extends Thread {
         void onServerFailure(Exception e);
     }
 
+    public interface BroadcastHandler {
+        void onBroadcastResponse(ServerResponse response, Object payload);
+        void onBroadcastFailure(ServerResponse response, Object payload);
+    }
+
     private ObjectOutputStream objectOutputStream;
-    private ObjectInputStream objectInputStream;
+    private SecureObjectInputStream objectInputStream;
     private int port;
     private String address;
     private Socket socket;
     public static ServerThread instance;
     ConnectionHandler connectionHandler;
+    private BroadcastHandler broadcastHandler;
     private ArrayList<ServerRequest> requests = new ArrayList<>();
 
     private ServerThread(String address, int port, ConnectionHandler connectionHandler) {
@@ -57,15 +67,20 @@ public class ServerThread extends Thread {
         try {
             socket = new Socket(this.address, this.port);
             objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            objectInputStream = new ObjectInputStream(socket.getInputStream());
+            objectInputStream = new SecureObjectInputStream(socket.getInputStream());
             connectionHandler.onConnectionFinished();
 
             while (true) {
                 try {
+
                     ServerResponseCommand responseCommand = (ServerResponseCommand) objectInputStream.readObject();
                     ServerResponse response = (ServerResponse) responseCommand.getPayload();
+                    Logger.debug("command server");
+                    if(response.getPayload() instanceof BroadcastCommand){
+                        BroadcastCommand broadcastCommand=(BroadcastCommand) response.getPayload();
+                        broadcastHandler.onBroadcastResponse(response, broadcastCommand.getPayload());
+                    } else if(response.getPayload() instanceof BaseCommand) {
 
-                    if(response.getPayload() instanceof BaseCommand) {
                         String requestID = responseCommand.getRequestId();
 
                         // check if a requestID exists, and if this requestID match one requested requestID
@@ -110,5 +125,13 @@ public class ServerThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public BroadcastHandler getBroadcastHandler() {
+        return broadcastHandler;
+    }
+
+    public void setBroadcastHandler(BroadcastHandler broadcastHandler) {
+        this.broadcastHandler = broadcastHandler;
     }
 }

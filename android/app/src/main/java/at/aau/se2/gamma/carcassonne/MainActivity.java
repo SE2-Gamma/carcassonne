@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.utils.Logger;
@@ -17,10 +17,10 @@ import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
-import at.aau.se2.gamma.core.commands.InitialSetNameCommand;
-import at.aau.se2.gamma.core.utils.GlobalVariables;
+import at.aau.se2.gamma.core.commands.GetClientStateCommand;
+import at.aau.se2.gamma.core.states.ClientState;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ServerThread.BroadcastHandler {
 
     public ActivityMainBinding binding;
 
@@ -35,50 +35,32 @@ public class MainActivity extends BaseActivity {
 
         binding.tvServerError.setVisibility((View.INVISIBLE));
 
-        ServerThread serverThread = ServerThread.init(GlobalVariables.getAdress(), GlobalVariables.getPort(), new ServerThread.ConnectionHandler() {
+        String userName = getIntent().getStringExtra("UserName");
+
+
+        binding.pbMenu.setVisibility((View.GONE));
+        binding.btnBackToLobby.setVisibility(View.GONE);
+
+        sendServerCommand(new GetClientStateCommand(null), new ServerThread.RequestResponseHandler() {
             @Override
-            public void onConnectionFinished() {
-                Logger.debug("Connection created");
-
-                MainActivity.this.sendServerCommand(new InitialSetNameCommand("mrader"), new ServerThread.RequestResponseHandler() {
-                    @Override
-                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                        Logger.debug("HEY, RESPONSE :)");
-                        binding.pbMenu.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                        Logger.debug("NOOOOOO :(");
-                        binding.pbMenu.setVisibility(View.INVISIBLE);
-
-                    }
-                });
+            public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                if(payload.equals(ClientState.LOBBY)){
+                    binding.btnBackToLobby.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
-            public void onServerFailure(Exception e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Logger.error("Error at server initial connection");
-                        binding.tvServerError.setVisibility(View.VISIBLE);
-                        e.printStackTrace();
-                    }
-                });
+            public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
             }
         });
-        serverThread.start();
-
 
         binding.btnNavigateCreateSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 Intent intent = new Intent(MainActivity.this, CreateSessionActivity.class);
+                intent.putExtra("UserName", userName);
                 startActivity(intent);
-
             }
         });
 
@@ -86,6 +68,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, JoinSessionActivity.class);
+                intent.putExtra("UserName", userName);
                 startActivity(intent);
             }
         });
@@ -104,11 +87,44 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        binding.btnViewLobby.setOnClickListener(new View.OnClickListener() {
+        binding.btnBackToLobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, LobbyActivity.class));
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ServerThread.instance != null) {
+            ServerThread.instance.setBroadcastHandler(this);
+        }
+        binding.btnBackToLobby.setVisibility(View.GONE);
+        sendServerCommand(new GetClientStateCommand(null), new ServerThread.RequestResponseHandler() {
+            @Override
+            public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                if(payload.equals(ClientState.LOBBY)){
+                    binding.btnBackToLobby.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onBroadcastResponse(ServerResponse response, Object payload) {
+        Logger.debug("We have a broadcast message: "+payload);
+        Logger.debug("type of broadcast message: "+response.getPayload().getClass().toString());
+    }
+
+    @Override
+    public void onBroadcastFailure(ServerResponse response, Object payload) {
+
     }
 }

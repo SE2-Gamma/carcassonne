@@ -37,25 +37,17 @@
         android:insetBottom="@dimen/spaceDefault"
         android:text="Join Session" />
 
-    <TextView
-        android:id="@+id/tv_ServerError"
+    <Button
+        android:id="@+id/btn_BackToLobby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Verbindung zum Server fehlgeschlagen, bitte überprüfe deine Internetverbindung und versuche es erneut!" />
+        android:text="Back to lobby" />
 
     <ProgressBar
         android:id="@+id/pb_menu"
         style="?android:attr/progressBarStyle"
         android:layout_width="131dp"
         android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btn_ui_elements"
-        style="@style/PrimaryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:insetBottom="@dimen/spaceDefault"
-        android:text="UI Elements (Dev)" />
 
     <Button
         android:id="@+id/btn_gameplay_test"
@@ -65,10 +57,12 @@
         style="@style/PrimaryButton"/>
 
     <Button
-        android:id="@+id/btn_view_lobby"
+        android:id="@+id/btn_ui_elements"
+        style="@style/PrimaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View Lobby (Dev)"
-        style="@style/PrimaryButton"/>
+        android:insetBottom="@dimen/spaceDefault"
+        android:text="UI Elements (Dev)" />
+
 
 </LinearLayout>

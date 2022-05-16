@@ -1,32 +1,44 @@
 package at.aau.se2.gamma.server;
 
+import at.aau.se2.gamma.core.SecureObjectInputStream;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.*;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
+import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
+import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
+import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
+import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
+import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
-import at.aau.se2.gamma.core.models.impl.Session;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
+import at.aau.se2.gamma.server.models.Session;
 
+
+import java.io.EOFException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class ClientThread extends Thread {
 
 
     private Socket socket;
+
     private ClientState clientState;
     private Session session;
     private Player player;
     private String ID;
     private ServerPlayer serverPlayer;
-
+    private boolean communicating =false;
 
     private SecureObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
@@ -38,6 +50,14 @@ public class ClientThread extends Thread {
     }
 
     //-------------------------I/O-------------------------------------------------
+
+   public class BroadcastHandler extends Thread{
+       @Override
+       public void run() {
+           super.run();
+       }
+   }
+   LinkedBlockingDeque<BaseCommand>broadcastcommands=new LinkedBlockingDeque<>();
     @Override
     public void run() {
         running=true;
@@ -46,34 +66,85 @@ public class ClientThread extends Thread {
             this.objectInputStream = new SecureObjectInputStream(socket.getInputStream());
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             while(running) {
-                BaseCommand command = (BaseCommand) objectInputStream.readObject();
+
+
+                BaseCommand command = (BaseCommand) objectInputStream.readObject(); //potential issue. if server sends broadcast message while busy ready here might doublelock
 
                 BaseCommand response=handleCommand(command);
 
-                System.out.println("Command "+response.getPayload()+" with ID "+command.getRequestId() +" handeled.");
+                System.out.println(command.getClass().getName()  +" handeled.");
+
                 if(!(command instanceof DisconnectCommand)) {
+                    System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
+                    checkingAvailability();
+                    lock();
                     objectOutputStream.writeObject(response);
+                    unlock();
                 }
+
+
+
             }
             System.out.println("stopped");
         } catch(SocketException socketException){
             if(!running){
-                System.out.println(serverPlayer.getName()+" closed internally");
+                System.out.println(serverPlayer.getName()+"'s socket closed.");
             }else{
-                socketException.printStackTrace();
+
             }
         }
-        catch (Exception e) {
-            System.out.println("EXCEPTION");
-            e.printStackTrace();
+        catch (EOFException e) {
+            System.out.println(player.getName()+" disconnected unexpectedly.");
+            if(clientState.equals(ClientState.LOBBY)){
+                session.players.remove(player);
+               session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+            }
+            Server.activeServerPlayers.remove(serverPlayer);
+        }
+        catch (Exception exception){
+            System.out.println("unknown exception");
+            exception.printStackTrace();
         }
         try {
             objectInputStream.close();
             objectOutputStream.close();
-        } catch (IOException e) {
+        }catch (SocketException closed){
+            System.out.println(player.getName()+"'s streams closed.");
+        }
+        catch (IOException e) {
 
             e.printStackTrace();
         }
+
+    }
+
+    private void checkingAvailability() {
+        if(communicating){
+            while(communicating){
+                System.out.print(".");
+            }
+        }
+        System.out.println();
+        System.out.println("relieving lock");
+    }
+    public void broadcastMessage(BroadcastCommand command){
+        System.out.print("//checking availability");
+
+        ServerResponseCommand message=ResponseCreator.getBroadcastCommand(command);
+
+        try {
+            System.out.print("//Size of responseCommand in Bytes: "+Server.sizeof(message));
+            System.out.print("//available,locking");
+            checkingAvailability();
+            lock();
+            objectOutputStream.writeObject(message);
+            unlock();
+            System.out.print("//unlocking//");
+            System.out.print("//message sent");
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+
 
     }
 
@@ -97,6 +168,21 @@ public class ClientThread extends Thread {
             return kickPlayer((KickPlayerCommand) command);
         }else if(command instanceof DisconnectCommand){
             return disconnectPlayer((DisconnectCommand) command);
+        }else if(command instanceof LeaveLobbyCommand) {
+            return leaveLobby((LeaveLobbyCommand) command);
+
+        }else if(command instanceof GetClientStateCommand) {
+            return getClientState((GetClientStateCommand) command);
+
+        }else if(command instanceof GameTurnCommand) {
+            return gameTurn((GameTurnCommand) command);
+
+        }else if(command instanceof PlayerReadyCommand) {
+            return playerReady((PlayerReadyCommand) command);
+
+        }else if(command instanceof PlayerNotReadyCommand) {
+            return playerNotReady((PlayerNotReadyCommand) command);
+
         }
         else{
             System.out.println("command not suitable for current state");
@@ -105,6 +191,9 @@ public class ClientThread extends Thread {
 
         return new ServerResponseCommand(new ServerResponse("Invalid command", ServerResponse.StatusCode.FAILURE),command.getRequestId());
     }
+
+
+
     //--------------------------------------commands-----------------------------------------------------
     private BaseCommand requestUserListCommandByID(RequestUserListCommandByID command){
         System.out.print("  current state: "+clientState);
@@ -112,7 +201,7 @@ public class ClientThread extends Thread {
         try {
             temp= Server.SessionHandler.getSession((String) command.getPayload());
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
+
             return ResponseCreator.getError(command,"no Session found", Codes.ERROR.NO_SESSION_FOUND);
         }
         System.out.print("   //Session found//");
@@ -173,10 +262,12 @@ public class ClientThread extends Thread {
         clientState=ClientState.LOBBY;
         System.out.print(" //current state: "+clientState +"//");
         System.out.print(" //SessionID: "+session.getId()+"//  ");
-        return ResponseCreator.getSuccess(command,session);
+
+        return ResponseCreator.getSuccess(command,"Game Created");
     }
 
     public BaseCommand initialJoin(InitialJoinCommand command){
+        System.out.print("//startingstate: "+clientState+"//");
         //checkstate
         if(clientState!=ClientState.INITIAl){
             return ResponseCreator.getError(command,"Not in initialState", Codes.ERROR.WRONG_STATE);
@@ -185,28 +276,27 @@ public class ClientThread extends Thread {
         //LinkedList<Object> list=(LinkedList<Object>) command.getPayload();
         String sessionID= (String) command.getPayload();
         //Player player= (Player) list.pop();
-        //checkplayer
-        try {
-            Server.identify(player);
-        } catch (NoSuchElementException e) {
-            System.err.println("Player not connected");
-            e.printStackTrace();
-            return ResponseCreator.getError(command,"Player not connected", Codes.ERROR.PLAYER_NOT_CONNECTED);
 
-        }
+
         //join session
         try {
             session=Server.SessionHandler.joinSession(sessionID,player);
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             System.err.println("no Such session");
             return ResponseCreator.getError(command,"no such Session", Codes.ERROR.NO_SESSION_FOUND);
         }
         //set state
         clientState=ClientState.LOBBY;
+        LinkedList<String> namelist=new LinkedList<>();
+        for (Player player:session.players
+        ) {
+            namelist.add(player.getName());
+        }
 
-
-        return ResponseCreator.getSuccess(command,session);
+        System.out.print( "  // players currently in lobby: "+ namelist +"//");
+        System.out.print("//currentState: "+clientState+"//");
+        session.broadcastAllPlayers(new PlayerJoinedBroadcastCommand(player.getName())); //todo: check if this causes errors appside
+        return ResponseCreator.getSuccess(command,"successfully joined");
     }
 
     public BaseCommand initialSetName(InitialSetNameCommand command){
@@ -227,7 +317,7 @@ public class ClientThread extends Thread {
         System.out.println("  //set name: "+name+"//");
 
 
-        Player player=new Player(name, ID);
+        Player player=new Player(ID, name);
         this.player=player;
 
         this.serverPlayer.setPlayer(player);
@@ -257,7 +347,7 @@ public class ClientThread extends Thread {
             terminate();
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(player.getName()+"'s socket closed");
         }
         System.out.print("//player successfully removed//");
         return ResponseCreator.getSuccess(command,"Player sucessfully removed.also you shouldnt be receiving this");
@@ -275,23 +365,96 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command, "no such player found", Codes.ERROR.NO_PLAYER_WITH_MATCHING_NAME);
         }
         System.out.print("//player found//");
-if(session.voteKick(tempplayer,player)){
-    //todo: alert kicked player1
-}
+       session.voteKick(tempplayer,player);
+
 
         return ResponseCreator.getSuccess(command, "vote issued");
     }
-    public void sendCommand(BaseCommand command) {
-        try {
-            this.objectOutputStream.writeObject(command);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    public BaseCommand getClientState(GetClientStateCommand command){
+        System.out.print("//current State: "+clientState+"//");
+        return  ResponseCreator.getSuccess(command,clientState);
     }
 
+    public BaseCommand leaveLobby(LeaveLobbyCommand command){
+
+        System.out.print("//current State: "+clientState+"//");
+        if(!clientState.equals(ClientState.LOBBY)){
+            return ResponseCreator.getError(command,"Cant leave lobby because you are not in a lobby", Codes.ERROR.NOT_IN_LOBBY);
+        }
+        System.out.print("//Trying to leave lobby with ID "+session.getId()+"//");
+        try {
+
+            session.removePlayer(player);
+
+        } catch (Exception e) {
+            System.err.print("Some error leaving a lobby");
+            return ResponseCreator.getError(command,"some error", Codes.ERROR.NOT_IN_LOBBY);
+
+        }
+        clientState=ClientState.INITIAl;
+
+        return ResponseCreator.getSuccess(command,"Lobby successfully left");
+    }
+
+    public BaseCommand gameTurn(GameTurnCommand command){
+        if(!clientState.equals(ClientState.GAME)){
+            return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+        }
+        GameMove gameturn=(GameMove) command.getPayload();
+        System.out.print("//incoming gamemove//");
+        try {
+            session.executeGameMove(gameturn);
+        } catch (InvalidPositionGameMapException e) {
+            System.out.print("//invalid move has been answered");
+            return ResponseCreator.getError(command,"Invalid Position on Gamemap",Codes.ERROR.INVALID_MOVE);
+        } catch (SurroundingConflictGameMapException e) {
+            System.out.print("//invalid move has been answered");
+            return ResponseCreator.getError(command,"Surrounding Conflict on Gamemap",Codes.ERROR.INVALID_MOVE);
+        } catch (NoSurroundingCardGameMapException e) {
+            System.out.print("//invalid move has been answered");
+            return ResponseCreator.getError(command,"No surrounding Card on Gamemap",Codes.ERROR.INVALID_MOVE);
+        } catch (PositionNotFreeGameMapException e) {
+            System.out.print("//invalid move has been answered");
+            return ResponseCreator.getError(command,"Position not free on Gamemap",Codes.ERROR.INVALID_MOVE);
+        }
+
+
+        return ResponseCreator.getSuccess(command,"turn succesfull");
+
+            }
+
+
+
+
+
+
+    private BaseCommand playerNotReady(PlayerNotReadyCommand command) {
+        System.out.print("//player "+player.getName()+" isnt ready anymore//");
+        try {
+            session.playerNotReady(player);
+        } catch (NoSuchElementException e) {
+          return ResponseCreator.getError(command,"Player wasnt ready",Codes.ERROR.PLAYER_NOT_READY);
+        }
+        return ResponseCreator.getSuccess(command,"Readyness resumed");
+
+    }
+
+    private BaseCommand playerReady(PlayerReadyCommand command) {
+
+        session.playerReady(player);
+
+        return ResponseCreator.getSuccess(command,"Youre ready now");
+
+    }
 
     //-----------------------utility methods------------------------------------------------------------------
-
+    public void lock(){
+        communicating =true;
+    }
+    public void unlock(){
+        communicating =false;
+    }
 
     public void terminate() throws IOException {
 
@@ -318,6 +481,14 @@ if(session.voteKick(tempplayer,player)){
     }
     public Socket getSocket() {
         return socket;
+    }
+
+    public ClientState getClientState() {
+        return clientState;
+    }
+
+    public void setClientState(ClientState clientState) {
+        this.clientState = clientState;
     }
 
 
