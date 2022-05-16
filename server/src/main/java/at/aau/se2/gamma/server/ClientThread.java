@@ -96,8 +96,9 @@ public class ClientThread extends Thread {
         catch (EOFException e) {
             System.out.println(player.getName()+" disconnected unexpectedly.");
             if(clientState.equals(ClientState.LOBBY)){
-                session.players.remove(player);
+
                session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+               session.players.remove(player);
             }
             Server.activeServerPlayers.remove(serverPlayer);
         }
@@ -338,6 +339,7 @@ public class ClientThread extends Thread {
         }
         if(clientState.equals(ClientState.LOBBY)){
             session.removePlayer(player);
+            session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
         }
         if(clientState.equals(ClientState.GAME)){
             //todo: implement
