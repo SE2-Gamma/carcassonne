@@ -10,6 +10,7 @@ import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.utils.Logger;
+import at.aau.se2.gamma.carcassonne.utils.ShutdownService;
 import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
@@ -29,6 +30,8 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        startService(new Intent(this, ShutdownService.class));
 
         String userName = getIntent().getStringExtra("UserName");
 
