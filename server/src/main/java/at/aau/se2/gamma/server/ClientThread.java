@@ -367,7 +367,12 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command, "no such player found", Codes.ERROR.NO_PLAYER_WITH_MATCHING_NAME);
         }
         System.out.print("//player found//");
-       session.voteKick(tempplayer,player);
+        try {
+            session.voteKick(tempplayer,player);
+        } catch (IllegalStateException e) {
+            System.out.print("No additional kickvote issued, hence no broadcasting.//");
+            return ResponseCreator.getSuccess(command,"Command successfully handeled, but you can't issue a vote twice.");
+        }
 
 
         return ResponseCreator.getSuccess(command, "vote issued");
