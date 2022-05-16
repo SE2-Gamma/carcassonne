@@ -33,10 +33,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
 
         startService(new Intent(this, ShutdownService.class));
 
-        binding.tvServerError.setVisibility((View.INVISIBLE));
-
         String userName = getIntent().getStringExtra("UserName");
-
 
         binding.pbMenu.setVisibility((View.GONE));
         binding.btnBackToLobby.setVisibility(View.GONE);

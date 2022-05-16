@@ -17,6 +17,7 @@ public class CreateSessionActivity extends BaseActivity {
 
     public ActivityCreateSessionBinding binding;
     String sessionName = "";
+    String userName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +26,7 @@ public class CreateSessionActivity extends BaseActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        String sessionName = "";
-        String userName = getIntent().getStringExtra("UserName");
+        userName = getIntent().getStringExtra("UserName");
 
         binding.buttonNavigateLobby.setVisibility(View.INVISIBLE);
         binding.textViewError.setVisibility(View.INVISIBLE);
