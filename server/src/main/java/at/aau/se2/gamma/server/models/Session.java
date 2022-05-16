@@ -99,6 +99,10 @@ public class Session extends BaseModel implements Serializable {
 
 
         System.out.print("//notifying all  "+player.getName()+"  has been removed");
+        for (Player a:players
+             ) {
+            System.out.print("//notified: "+a.getName());
+        }
         broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()),player);
 
         if(players.size()==0){

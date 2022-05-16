@@ -96,8 +96,9 @@ public class ClientThread extends Thread {
         catch (EOFException e) {
             System.out.println(player.getName()+" disconnected unexpectedly.");
             if(clientState.equals(ClientState.LOBBY)){
-                session.players.remove(player);
+
                session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+               session.players.remove(player);
             }
             Server.activeServerPlayers.remove(serverPlayer);
         }
@@ -338,6 +339,7 @@ public class ClientThread extends Thread {
         }
         if(clientState.equals(ClientState.LOBBY)){
             session.removePlayer(player);
+            session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
         }
         if(clientState.equals(ClientState.GAME)){
             //todo: implement
@@ -365,7 +367,12 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command, "no such player found", Codes.ERROR.NO_PLAYER_WITH_MATCHING_NAME);
         }
         System.out.print("//player found//");
-       session.voteKick(tempplayer,player);
+        try {
+            session.voteKick(tempplayer,player);
+        } catch (IllegalStateException e) {
+            System.out.print("No additional kickvote issued, hence no broadcasting.//");
+            return ResponseCreator.getSuccess(command,"Command successfully handeled, but you can't issue a vote twice.");
+        }
 
 
         return ResponseCreator.getSuccess(command, "vote issued");
