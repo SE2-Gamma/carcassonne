@@ -1,7 +1,5 @@
 package at.aau.se2.gamma.carcassonne.views;
 
-import at.aau.se2.gamma.carcassonne.base.BaseActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,14 +7,13 @@ import android.view.View;
 
 import java.util.LinkedList;
 
+import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityJoinSessionBinding;
-import at.aau.se2.gamma.carcassonne.network.SendThread;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
-import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 
 public class JoinSessionActivity extends BaseActivity {
 
@@ -28,6 +25,8 @@ public class JoinSessionActivity extends BaseActivity {
         binding = ActivityJoinSessionBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        String userName = getIntent().getStringExtra("UserName");
         binding.pbJoinSessionActivity.setVisibility(View.INVISIBLE);
         binding.tvError.setVisibility(View.INVISIBLE);
 
@@ -51,7 +50,10 @@ public class JoinSessionActivity extends BaseActivity {
 
                                 Log.d("Com", response.toString());
                                 Intent intent = new Intent(JoinSessionActivity.this, LobbyActivity.class);
-                                intent.putExtra("GameKey", userInput);
+                                Bundle extras = new Bundle();
+                                extras.putString("GameKey", userInput);
+                                extras.putString("UserName", userName);
+                                intent.putExtras(extras);
                                 startActivity(intent);
                         }
 

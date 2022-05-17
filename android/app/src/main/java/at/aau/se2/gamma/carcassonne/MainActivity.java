@@ -7,10 +7,10 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
-
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.utils.Logger;
+import at.aau.se2.gamma.carcassonne.utils.ShutdownService;
 import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
@@ -24,13 +24,16 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
 
     public ActivityMainBinding binding;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        startService(new Intent(this, ShutdownService.class));
+
+        String userName = getIntent().getStringExtra("UserName");
 
         binding.pbMenu.setVisibility((View.GONE));
         binding.btnBackToLobby.setVisibility(View.GONE);
@@ -53,6 +56,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreateSessionActivity.class);
+                intent.putExtra("UserName", userName);
                 startActivity(intent);
             }
         });
@@ -61,6 +65,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, JoinSessionActivity.class);
+                intent.putExtra("UserName", userName);
                 startActivity(intent);
             }
         });
@@ -76,13 +81,6 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, Launcher.class));
-            }
-        });
-
-        binding.btnViewLobby.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, LobbyActivity.class));
             }
         });
 

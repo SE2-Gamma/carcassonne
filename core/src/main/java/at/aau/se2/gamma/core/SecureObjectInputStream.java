@@ -1,8 +1,11 @@
 package at.aau.se2.gamma.core;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import at.aau.se2.gamma.core.commands.*;
@@ -42,6 +45,8 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(ServerResponse.class.getName());
             allowedClasses.add(ErrorCommand.class.getName());
             allowedClasses.add(Codes.class.getName());
+            allowedClasses.add(Codes.ERROR.class.getName());
+            allowedClasses.add(Codes.SUCCESS.class.getName());
             allowedClasses.add(ServerResponse.StatusCode.class.getName());
             allowedClasses.add(GetClientStateCommand.class.getName());
             allowedClasses.add(LeaveLobbyCommand.class.getName());
@@ -78,6 +83,34 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(PlayerReadyBroadcastCommand.class.getName());
             allowedClasses.add(PlayerNotReadyBroadcastCommand.class.getName());
             allowedClasses.add(ArrayList.class.getName());
+            allowedClasses.add(ConcurrentLinkedDeque.class.getName());
+            allowedClasses.add(AtomicInteger.class.getName());
+            allowedClasses.add(int.class.getName());
+            allowedClasses.add(boolean.class.getName());
+            allowedClasses.add(String.class.getName());
+            allowedClasses.add(long.class.getName());
+            allowedClasses.add(short.class.getName());
+            allowedClasses.add(char.class.getName());
+            allowedClasses.add(float.class.getName());
+            allowedClasses.add(double.class.getName());
+            allowedClasses.add(Integer.class.getName());
+            allowedClasses.add(Double.class.getName());
+            allowedClasses.add(Array.class.getName());
+            allowedClasses.add(GameTurnCommand.class.getName());
+            allowedClasses.add(GameCard.SpecialType.class.getName());
+            allowedClasses.add(GameCardSide.Type.class.getName());
+            allowedClasses.add(GameCardSide.Type.class.getName());
+            allowedClasses.add(java.lang.Number.class.getName());
+            allowedClasses.add(java.lang.Enum.class.getName());
+            allowedClasses.add(at.aau.se2.gamma.core.models.impl.GameMapEntry.class.getName());
+            allowedClasses.add(at.aau.se2.gamma.core.models.impl.GameCardSide.class.getName());
+
+            allowedClasses.add(at.aau.se2.gamma.core.models.impl.GameCardSide.Type.class.getName());
+            allowedClasses.add("[[Lat.aau.se2.gamma.core.models.impl.GameMapEntry");
+            allowedClasses.add("[[Lat.aau.se2.gamma.core.models.impl.GameMapEntry;");
+            allowedClasses.add("[Lat.aau.se2.gamma.core.models.impl.GameMapEntry;");
+            allowedClasses.add("[Lat.aau.se2.gamma.core.models.impl.GameCardSide;");
+            allowedClasses.add("[Lat.aau.se2.gamma.core.models.impl.GameCardSide$Type;");
 
 
             allowedClasses.add(String.class.getName());
@@ -85,32 +118,29 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(ClientState.class.getName());
 
             instantiated=true;
-            for (String a:allowedClasses
-            ) {
-                System.out.println("allowed classes: "+a);
-            }
+
+
         }
 
 
     }
+    static AtomicInteger counter=new AtomicInteger(0);
+
     @Override
     protected Class<?> resolveClass(ObjectStreamClass osc) throws IOException, ClassNotFoundException {
         // Only deserialize instances of AllowedClass
        initialise();
+        System.out.print("//"+counter.incrementAndGet()+". use of whitelist//");
+
         for (String classname:allowedClasses
              ) {
             if (osc.getName().equals(classname)) {
-                System.out.println(classname+"resolved");
+
                 return super.resolveClass(osc);
             }
         }
-        if(osc.getName().equals(GameMapEntry.class.getName())){
-            return super.resolveClass(osc);
-        }else{
-            System.err.println("for some reason gamemapetnry istn accepted by whitelist");
-        }
-        return super.resolveClass(osc);
-       //throw new ClassNotFoundException("Illegal Class sent: "+osc.getName());
+        System.err.println(osc.getName()+" not resolved");
+       throw new ClassNotFoundException("Illegal Class sent: "+osc.getName());
 
     }
 }

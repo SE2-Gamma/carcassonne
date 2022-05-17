@@ -8,8 +8,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
+import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
+import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
+import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
+import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.utils.GlobalVariables;
@@ -18,18 +23,19 @@ import at.aau.se2.gamma.server.models.ServerPlayer;
 import at.aau.se2.gamma.server.models.Session;
 
 public  class Server implements Runnable {
-    static final int maxPlayers =1000;
+    static final int maxPlayers =10000;
     private static int uniqueID=0; //todo check concurrency problems
     private final ServerSocket socket;
-    static LinkedList<ServerPlayer> activeServerPlayers =new LinkedList<>(); //todo check concurrency problems
+    //static LinkedList<ServerPlayer> activeServerPlayers =new LinkedList<>(); //todo check concurrency problems
+    static ConcurrentLinkedDeque<ServerPlayer> activeServerPlayers=new ConcurrentLinkedDeque<>();
     ClientHandler clientHandler=null;
     public static Server server=null;
     static Scanner scanner=new Scanner(System.in);
     //---------------classes
     public static class SessionHandler{
 
-        static LinkedList<Session> sessions=new LinkedList<Session>(); //todo check concurrency problems
-
+      //  static LinkedList<Session> sessions=new LinkedList<Session>(); //todo check concurrency problems
+        static ConcurrentLinkedDeque<Session>sessions=new ConcurrentLinkedDeque<>();
         public static Session createSession(String sessionID, Player player){
 
             try {
@@ -233,6 +239,11 @@ public  class Server implements Runnable {
 
         return byteOutputStream.toByteArray().length;
     }
+    public static void kickAllAndEverything(){
+        activeServerPlayers.clear();
+        SessionHandler.sessions.clear();
+
+    }
 
     public static void main(String[] args) throws IOException {
 
@@ -249,7 +260,17 @@ public  class Server implements Runnable {
                 SessionHandler.getSession("Name").startGame();
             }
             if(input.equals("success")){
-                SessionHandler.getSession("Name").gameMovesuccessfull(new GameMove());
+                try {
+                    SessionHandler.getSession("Name").executeGameMove(new GameMove());
+                } catch (InvalidPositionGameMapException e) {
+                    e.printStackTrace();
+                } catch (SurroundingConflictGameMapException e) {
+                    e.printStackTrace();
+                } catch (NoSurroundingCardGameMapException e) {
+                    e.printStackTrace();
+                } catch (PositionNotFreeGameMapException e) {
+                    e.printStackTrace();
+                }
             }
             if(input.equals("broadcastcommand")){
                 System.out.println("which command shall be broadcasted?");
@@ -263,9 +284,9 @@ public  class Server implements Runnable {
                     message=new PlayerNotReadyBroadcastCommand("testplayer");
                 }
                 if(input.equals("gamecompleted")){
-message=new GameCompletedBroadcastCommand("game completed");
+                    message=new GameCompletedBroadcastCommand("game completed");
                 }if(input.equals("gamestarted")){
-message=new GameStartedBroadcastCommand("game has started");
+                    message=new GameStartedBroadcastCommand("game has started");
                 }if(input.equals("gameturn")){
                     message=new GameTurnBroadCastCommand("hardcode gameturn");
                 }if(input.equals("kickattempt")){
@@ -274,20 +295,20 @@ message=new GameStartedBroadcastCommand("game has started");
                     offer.vote(new Player("asd","asd"));
                     message=new KickAttemptBroadcastCommand(offer);
                 }if(input.equals("payload")){
-message=new PayloadBroadcastCommand("payloadstring");
+                    message=new PayloadBroadcastCommand("payloadstring");
                 }if(input.equals("playerjoined")){
-            message=new PlayerJoinedBroadcastCommand("testplayer");
+                    message=new PlayerJoinedBroadcastCommand("testplayer");
                 }if(input.equals("playerkicked")){
                     System.out.println("who shall be kicked?");
-message= new PlayerKickedBroadcastCommand(scanner.nextLine());
+                    message= new PlayerKickedBroadcastCommand(scanner.nextLine());
                 }if(input.equals("playerleft")){
                     System.out.println("who shall leave the lobby?");
-message=new PlayerLeftLobbyBroadcastCommand(scanner.nextLine());
+                    message=new PlayerLeftLobbyBroadcastCommand(scanner.nextLine());
                 }if(input.equals("playersturn")){
                     System.out.println("whos turn shall it be?");
-message=new PlayerXsTurnBroadcastCommand(scanner.nextLine());
+                    message=new PlayerXsTurnBroadcastCommand(scanner.nextLine());
                 }if(input.equals("soldierreturned")){
-message=new SoldierReturnedBroadcastCommand("soldier returned");
+                    message=new SoldierReturnedBroadcastCommand("soldier returned");
                 }if(input.equals("yourturn")){
                     System.out.println("whos turn shall it be?");
                     message=new YourTurnBroadcastCommand("your turn");
