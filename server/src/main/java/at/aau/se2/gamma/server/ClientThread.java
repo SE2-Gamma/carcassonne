@@ -184,6 +184,16 @@ public class ClientThread extends Thread {
         }else if(command instanceof PlayerNotReadyCommand) {
             return playerNotReady((PlayerNotReadyCommand) command);
 
+        }else if(command instanceof RejoinGameCommand) {
+            return reJoin((RejoinGameCommand) command);
+
+        }
+        else if(command instanceof ReconnectCommand) {
+            return reConnect((RejoinGameCommand) command);
+
+        }else if(command instanceof LeaveGameCommand) {
+            return leaveGame((LeaveGameCommand) command);
+
         }
         else{
             System.out.println("command not suitable for current state");
@@ -195,7 +205,47 @@ public class ClientThread extends Thread {
 
 
 
+
     //--------------------------------------commands-----------------------------------------------------
+    private BaseCommand leaveGame(LeaveGameCommand command) {
+        System.out.print("attempting to leave game");
+        //todo:
+        //check if ingame
+        //inform other players youre leaving
+        //remove yourself from session.players
+        //remove yourself from turnorder
+        //remove yourself from gameobject?
+
+
+
+        return null;
+    }
+    private BaseCommand reConnect(RejoinGameCommand command) {
+        System.out.print("attempting to reconnect");
+        //todo:
+        //check if id was present in serverplayers
+        //if so, check if someone else has used the name
+        //if so, return with a prompt to enter a new name
+        //when no nameissues are present anymore return success
+
+        return null;
+    }
+    private BaseCommand reJoin(RejoinGameCommand command) {
+
+        System.out.print("attempting to rejoin game");
+        //todo:
+        //check if you are in the archives of the session
+        //if not, return an error
+        //if so, join game
+        //inform other players youve reconnected
+        //add yourself to session.players
+        //add yourself to turnorder
+        //connect yourself with the points youve made and the soldiers youve placed.
+
+
+        return null;
+    }
+
     private BaseCommand requestUserListCommandByID(RequestUserListCommandByID command){
         System.out.print("  current state: "+clientState);
         Session temp=null;
@@ -325,7 +375,12 @@ public class ClientThread extends Thread {
         this.serverPlayer.setName(name);
         this.serverPlayer.setId(ID);
         System.out.print("// serverplayer set//");
+       ServerPlayer archived= new ServerPlayer();
 
+       archived.setId(ID);
+       archived.setName(name);
+        Server.serverArchive.add(archived);
+        System.out.print("//player added to archive//");
         System.out.print ("// current state: "+ clientState+"// ");
         return ResponseCreator.getSuccess(command,ID);
     }

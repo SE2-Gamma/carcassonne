@@ -25,6 +25,7 @@ public class Session extends BaseModel implements Serializable {
     final LinkedList<KickOffer>kickOffers=new LinkedList<>();
    // public LinkedList<Player> players = new LinkedList<>();
     public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
+    public ConcurrentLinkedDeque<Player>playerArchive=new ConcurrentLinkedDeque<>();
     public ConcurrentLinkedDeque<Player>readyPlayers=new ConcurrentLinkedDeque<>();
    // public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
@@ -86,6 +87,7 @@ public class Session extends BaseModel implements Serializable {
             }
         }
         players.add(player);
+        playerArchive.add(new Player(player.getId(),player.getName()));
     }
     public void removePlayer(Player player){
         System.out.print("//removing player "+player.getName());

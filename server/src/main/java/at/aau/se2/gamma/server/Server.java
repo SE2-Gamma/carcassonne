@@ -28,6 +28,7 @@ public  class Server implements Runnable {
     private final ServerSocket socket;
     //static LinkedList<ServerPlayer> activeServerPlayers =new LinkedList<>(); //todo check concurrency problems
     static ConcurrentLinkedDeque<ServerPlayer> activeServerPlayers=new ConcurrentLinkedDeque<>();
+    static ConcurrentLinkedDeque<ServerPlayer> serverArchive =new ConcurrentLinkedDeque<>();
     ClientHandler clientHandler=null;
     public static Server server=null;
     static Scanner scanner=new Scanner(System.in);
