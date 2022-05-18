@@ -135,7 +135,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
         for (String classname:allowedClasses
              ) {
             if (osc.getName().equals(classname)) {
-
+                System.out.print("//"+osc.getName()+" resolved//");
                 return super.resolveClass(osc);
             }
         }

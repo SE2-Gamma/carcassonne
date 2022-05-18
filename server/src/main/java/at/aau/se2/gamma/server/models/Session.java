@@ -249,6 +249,7 @@ public boolean interruptable=false;
                     System.out.print("//notifying all players a turn has been made//");
                     broadcastAllPlayers(new GameTurnBroadCastCommand(gameObject));
                 }
+                System.out.print("//no successfull move made//");
 
 
             }

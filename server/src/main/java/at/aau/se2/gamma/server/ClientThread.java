@@ -73,7 +73,7 @@ public class ClientThread extends Thread {
                 BaseCommand response=handleCommand(command);
 
                 System.out.println(command.getClass().getName()  +" handeled.");
-
+                
                 if(!(command instanceof DisconnectCommand)) {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
                     checkingAvailability();
