@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
+import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 
 public class LibgdxGameCardTest {
 
@@ -22,7 +23,7 @@ public class LibgdxGameCardTest {
     public void before(){
         myTexture = Mockito.mock(Texture.class);
         position = new Vector2(0,0);
-        gc = new GameCard(myTexture,position);
+        gc = new GameCard(myTexture,position, Mockito.mock(GameMapEntry.class));
     }
 
     @Test
