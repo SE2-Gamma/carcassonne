@@ -77,4 +77,11 @@ public class GameCardSide implements Serializable {
     public Type[] getPossibleConnectionTypes() {
         return possibleConnectionTypes;
     }
+
+    @Override
+    public String toString() {
+        return "GameCardSide{" +
+                "type=" + type +
+                '}';
+    }
 }

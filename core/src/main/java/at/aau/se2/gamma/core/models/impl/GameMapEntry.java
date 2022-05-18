@@ -45,6 +45,10 @@ public class GameMapEntry implements Serializable {
         return orientation;
     }
 
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
+    }
+
     public GameCard getCard() {
         return card;
     }
