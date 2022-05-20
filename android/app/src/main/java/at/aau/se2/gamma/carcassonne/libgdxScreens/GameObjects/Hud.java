@@ -45,8 +45,11 @@ public class Hud {
 
     private Hud_State currentState;
 
+    private boolean debugging;
+
 
     public Hud(SpriteBatch sb, Gamescreen gs) {
+        debugging = false;
         myGamescreen = gs;
         this.currentState = Hud_State.VIEWING;
 
@@ -80,45 +83,41 @@ public class Hud {
             case PLAYING:
                 stage.clear();
 
-                stage.addActor(hudTopItem.getTable());
                 stage.addActor(hudCardPreview.getTable());
 
                 break;
             case VIEWING:
                 stage.clear();
-                stage.addActor(hudTopItem.getTable());
                 break;
             case CHEATING:
                 stage.clear();
-                stage.addActor(hudTopItem.getTable());
                 break;
             case REPORTING:
                 stage.clear();
-                stage.addActor(hudTopItem.getTable());
                 break;
             case ACCEPT_ACTION:
                 stage.clear();
                 stage.addActor(accept_decline_buttons.getButtonTable());
-                stage.addActor(hudTopItem.getTable());
                 break;
             case PLACING_SOLDIER:
                 stage.clear();
                 stage.addActor(hud_ZeroSoldier_buttons.getButtonTable());
-                stage.addActor(hudTopItem.getTable());
                 break;
             case ACCEPT_PLACING_SOLDIER:
                 stage.clear();
                 stage.addActor(accept_decline_buttons_soldiers.getButtonTable());
-                stage.addActor(hudTopItem.getTable());
                 break;
             case SCOREBOARD:
                 stage.clear();
-                stage.addActor(hudTopItem.getTable());
                 break;
 
         }
-
+        stage.addActor(hudTopItem.getTable());
         stage.addActor(hud_errortext.getTable());
+
+
+        if(debugging){
+
 
         //button ui test
         final TextButton button = new TextButton("VIEWING", UISkin.getSkin(), "default");
@@ -194,7 +193,7 @@ public class Hud {
 
             }
         });
-
+        }
 
     }
 
