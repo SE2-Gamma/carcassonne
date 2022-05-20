@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
+import at.aau.se2.gamma.carcassonne.libgdxScreens.Screens.Gamescreen;
 import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 import at.aau.se2.gamma.core.models.impl.Orientation;
@@ -22,13 +23,14 @@ public class GameCard {
         this.position = position;
         this.rotation = rotation;
         this.ServerMapEntry = ServerMapEntry;
+        this.setRotation(rotation);
     }
 
     public GameCard(Texture texture, Vector2 position, at.aau.se2.gamma.core.models.impl.GameMapEntry ServerMapEntry){
         gameCardTexture = texture;
         this.position = position;
-        this.rotation = 0;
         this.ServerMapEntry = ServerMapEntry;
+        this.setRotation(ServerMapEntry.getOrientation());
     }
 
     public Texture getGameCardTexture() {
@@ -102,7 +104,23 @@ public class GameCard {
         }
         ServerMapEntry.setOrientation(currentOriantation);
         System.out.println("Rotation: "+this.rotation+ " sides"+ ServerMapEntry.getAlignedCardSides());
-        Log.i("TAG","Rotation: "+this.rotation+ "Orientation:"+currentOriantation+ " sides"+ ServerMapEntry.getAlignedCardSides()[0]+" | " + ServerMapEntry.getAlignedCardSides()[1] +" | "+ ServerMapEntry.getAlignedCardSides()[2]+" | " + ServerMapEntry.getAlignedCardSides()[3]);
+       // Log.i("TAG","Rotation: "+this.rotation+ "Orientation:"+currentOriantation+ " sides"+ ServerMapEntry.getAlignedCardSides()[0]+" | " + ServerMapEntry.getAlignedCardSides()[1] +" | "+ ServerMapEntry.getAlignedCardSides()[2]+" | " + ServerMapEntry.getAlignedCardSides()[3]);
+    }
+
+    public void setRotation(Orientation orientation){
+        if(orientation.equals(Orientation.EAST)){
+            rotation = 0;
+            ServerMapEntry.setOrientation(orientation);
+        }else if(orientation.equals(Orientation.SOUTH)){
+            rotation = 90;
+            ServerMapEntry.setOrientation(orientation);
+        }else if(orientation.equals(Orientation.WEST)){
+            rotation = 180;
+            ServerMapEntry.setOrientation(orientation);
+        }else if(orientation.equals(Orientation.NORTH)){
+            rotation = 270;
+            ServerMapEntry.setOrientation(orientation);
+        }
     }
 
     public void addRotation(float rotation){
@@ -120,4 +138,12 @@ public class GameCard {
     public GameMapEntry getGameMapEntry(){
         return ServerMapEntry;
     }
+
+    public void setGameMapEntry(GameMapEntry newEntry){
+            ServerMapEntry = newEntry;
+            gameCardTexture = GameCardTextures.getInstance().getTextureFromCardID(newEntry.getCard().getCardId());
+            this.setRotation(newEntry.getOrientation());
+
+    }
+
 }

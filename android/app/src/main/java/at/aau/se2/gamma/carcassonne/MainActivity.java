@@ -34,6 +34,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
         startService(new Intent(this, ShutdownService.class));
 
         String userName = getIntent().getStringExtra("UserName");
+        String userID = getIntent().getStringExtra("UserID");
 
         binding.pbMenu.setVisibility((View.GONE));
         binding.btnBackToLobby.setVisibility(View.GONE);
@@ -57,6 +58,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreateSessionActivity.class);
                 intent.putExtra("UserName", userName);
+                intent.putExtra("UserID", userID);
                 startActivity(intent);
             }
         });
@@ -66,6 +68,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, JoinSessionActivity.class);
                 intent.putExtra("UserName", userName);
+                intent.putExtra("UserID", userID);
                 startActivity(intent);
             }
         });

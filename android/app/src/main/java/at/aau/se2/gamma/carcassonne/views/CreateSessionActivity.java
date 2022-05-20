@@ -18,6 +18,7 @@ public class CreateSessionActivity extends BaseActivity {
     public ActivityCreateSessionBinding binding;
     String sessionName = "";
     String userName = "";
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class CreateSessionActivity extends BaseActivity {
         setContentView(view);
 
         userName = getIntent().getStringExtra("UserName");
+        userID = getIntent().getStringExtra("UserID");
 
         binding.buttonNavigateLobby.setVisibility(View.INVISIBLE);
         binding.textViewError.setVisibility(View.INVISIBLE);
@@ -70,6 +72,7 @@ public class CreateSessionActivity extends BaseActivity {
         Bundle extras = new Bundle();
         extras.putString("GameKey", sessionName);
         extras.putString("UserName", userName);
+        extras.putString("UserID", userID);
         intent.putExtras(extras);
         startActivity(intent);
     }

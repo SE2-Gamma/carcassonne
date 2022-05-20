@@ -19,13 +19,18 @@ import at.aau.se2.gamma.carcassonne.exceptions.NoServerInstanceException;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.GameStartedBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.GameTurnBroadCastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.KickAttemptBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerKickedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand;
 import at.aau.se2.gamma.core.commands.KickPlayerCommand;
 import at.aau.se2.gamma.core.commands.LeaveLobbyCommand;
 import at.aau.se2.gamma.core.commands.RequestUserListCommand;
+import at.aau.se2.gamma.core.models.impl.GameObject;
 import at.aau.se2.gamma.core.utils.KickOffer;
 
 public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.RecyclerViewListener {
@@ -45,6 +50,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         Bundle extras = intent.getExtras();
         String gameKey = extras.getString("GameKey");
         String userName = extras.getString("UserName");
+        String userID = extras.getString("UserID");
         //Get Player List from Server
         sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
             @Override
@@ -119,6 +125,15 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                             intent.putExtra("UserName", userName);
                             startActivity(intent);
                         }
+                    } else if(response.getPayload() instanceof GameStartedBroadcastCommand){
+                        GameObject gameobject = (GameObject) payload;
+                        startActivity(new Intent(LobbyActivity.this, Launcher.class).putExtra("GameKey", gameKey).putExtra("UserName", userName).putExtra("GameObject", gameobject).putExtra("UserID", userID));
+                    }else if(response.getPayload() instanceof PlayerXsTurnBroadcastCommand){
+                        //wenn jemand anderes am zug ist
+                        Log.i("LauncherGame", "jemand anderes ist nun an der Reihe, aber noch in lobby Empfangen");
+                    } else if(response.getPayload() instanceof YourTurnBroadcastCommand){
+                        Log.i("LauncherGame", "Spieler ist nun an der Reihe, aber noch in lobby Empfangen");
+
                     }
                 }
 
@@ -135,7 +150,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
             @Override
             public void onClick(View view) {
                 Toast.makeText(LobbyActivity.this, "Game started", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LobbyActivity.this, Launcher.class));
+                startActivity(new Intent(LobbyActivity.this, Launcher.class).putExtra("GameKey", gameKey).putExtra("UserName", userName));
             }
         });
 

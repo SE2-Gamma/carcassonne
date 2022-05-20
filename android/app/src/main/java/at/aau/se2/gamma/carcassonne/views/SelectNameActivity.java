@@ -65,6 +65,7 @@ public class SelectNameActivity extends BaseActivity {
                                     binding.pbSelectNameActivity.setVisibility(View.INVISIBLE);
                                     Intent intent = new Intent(SelectNameActivity.this, MainActivity.class);
                                     intent.putExtra("UserName", userInput);
+                                    intent.putExtra("UserID", (String)payload);
                                     startActivity(intent);
                                 }
 
