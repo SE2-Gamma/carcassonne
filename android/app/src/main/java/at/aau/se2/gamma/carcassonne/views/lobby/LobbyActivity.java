@@ -125,19 +125,39 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                             startActivity(intent);
                         }
                     }else if(response.getPayload() instanceof PlayerReadyBroadcastCommand){
+
                         String readyPlayer = (String) payload;
+
                         for (LobbyPlayerDisplay player:playerList) {
                             if(player.playerName.equals(readyPlayer)){
+
                                 Log.d("Broadcast","Player "+player.playerName+" signals he is ready");
                                 player.setPlayerState(true);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyItemChanged(playerList.indexOf(player));
+                                    }
+                                });
                             }
                         }
                     }else if(response.getPayload() instanceof PlayerNotReadyBroadcastCommand){
+
                         String notReadyPlayer = (String) payload;
+
                         for (LobbyPlayerDisplay player:playerList) {
                             if(player.playerName.equals(notReadyPlayer)){
+
                                 Log.d("Broadcast","Player "+player.playerName+" signals he is not ready");
                                 player.setPlayerState(false);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyItemChanged(playerList.indexOf(player));
+                                    }
+                                });
                             }
                         }
                     }
@@ -166,15 +186,21 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                         sendServerCommand(new PlayerReadyCommand(null), new ServerThread.RequestResponseHandler() {
                             @Override
                             public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                                Log.d("PState","Player set ready");
+                                Log.d("PInput","Player set ready");
                                 player.setPlayerState(true);
                                 startIfPlayersReady();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyItemChanged(playerList.indexOf(player));
+                                    }
+                                });
 
                             }
 
                             @Override
                             public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                                Log.d("PState","Couldnt set ready");
+                                Log.d("PInput","Couldnt set ready");
                             }
 
                         });
@@ -183,13 +209,20 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                         sendServerCommand(new PlayerNotReadyCommand(null), new ServerThread.RequestResponseHandler() {
                             @Override
                             public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                                Log.d("PState","Player set not ready");
+                                Log.d("PInput","Player set not ready");
                                 player.setPlayerState(false);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyItemChanged(playerList.indexOf(player));
+                                    }
+                                });
+
                             }
 
                             @Override
                             public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                                Log.d("PState","Couldnt set not ready");
+                                Log.d("PInput","Couldnt set not ready");
                             }
                         });
                         break;
@@ -197,9 +230,6 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
 
                 }
 
-
-                //Toast.makeText(LobbyActivity.this, "Game started", Toast.LENGTH_SHORT).show();
-                //startActivity(new Intent(LobbyActivity.this, Launcher.class));
             }
         });
 
@@ -290,15 +320,16 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         boolean playersReady = true;
 
         for (LobbyPlayerDisplay player:playerList) {
+
             Log.d("PState",player.playerName);
             Log.d("PState",player.playerState.toString());
+
             if(!player.playerState){
                 playersReady=false;
             }
 
         }
         Log.d("Players Debug",(playersReady)?"Players are ready":"Players are not ready");
-        Log.d("Players Debug", String.valueOf(playersReady));
 
         if(playersReady){
             startActivity(new Intent(LobbyActivity.this, Launcher.class));

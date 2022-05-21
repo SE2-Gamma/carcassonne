@@ -1,6 +1,8 @@
 package at.aau.se2.gamma.carcassonne.views.lobby;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         LobbyPlayerDisplay item = players.get(position);
 
         holder.tv_player_name.setText(item.getPlayerName());
+        if(item.getPlayerState()){
+            holder.itemView.setBackgroundResource(R.color.tertiary);
+        }else{
+            holder.itemView.setBackgroundResource(R.color.white);
+        }
+
     }
 
     @Override
@@ -57,6 +65,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             btn_kick_player = itemView.findViewById(R.id.btn_kick_player);
             this.recyclerViewListener = recyclerViewListener;
             btn_kick_player.setOnClickListener(this::onClick);
+
         }
 
         @Override
