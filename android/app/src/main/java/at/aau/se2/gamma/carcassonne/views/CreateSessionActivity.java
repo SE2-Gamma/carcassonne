@@ -41,9 +41,11 @@ public class CreateSessionActivity extends BaseActivity {
             CreateSessionActivity.this.sendServerCommand(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                 @Override
                 public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                    /*
                     binding.textViewError.setVisibility(View.VISIBLE);
                     binding.textViewError.setText("Session created!");
                     binding.textViewError.setTextColor(Color.BLACK);
+                    */
                     binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                     binding.buttonCreateSession.setVisibility(View.INVISIBLE);
 
