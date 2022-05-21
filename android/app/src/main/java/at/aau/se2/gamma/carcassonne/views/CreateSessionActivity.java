@@ -28,12 +28,10 @@ public class CreateSessionActivity extends BaseActivity {
 
         userName = getIntent().getStringExtra("UserName");
 
-        binding.buttonNavigateLobby.setVisibility(View.INVISIBLE);
         binding.textViewError.setVisibility(View.INVISIBLE);
         binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
 
         binding.buttonCreateSession.setOnClickListener(this::createSession);
-        binding.buttonNavigateLobby.setOnClickListener(this::navigateToLobby);
     }
 
     public void createSession(View view) {
@@ -43,17 +41,20 @@ public class CreateSessionActivity extends BaseActivity {
             CreateSessionActivity.this.sendServerCommand(new CreateGameCommand(sessionName), new ServerThread.RequestResponseHandler() {
                 @Override
                 public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                    /*
                     binding.textViewError.setVisibility(View.VISIBLE);
                     binding.textViewError.setText("Session created!");
                     binding.textViewError.setTextColor(Color.BLACK);
-                    binding.buttonNavigateLobby.setVisibility(View.VISIBLE);
+                    */
                     binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                     binding.buttonCreateSession.setVisibility(View.INVISIBLE);
+
+                    navigateToLobby(view);
                 }
                 @Override
                 public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
                     binding.textViewError.setVisibility(View.VISIBLE);
-                    binding.textViewError.setText("Error");
+                    binding.textViewError.setText("Servererror");
                     binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
                 }
             });
