@@ -61,8 +61,8 @@ public class GameMapManager {
 
     public void draw() {
 
-        for (int i = 0; i < Playingfield.length; i++) {
-            for (int j = 0; j < Playingfield[i].length; j++) {
+        for (int j = 0; j < Playingfield.length; j++) {
+            for (int i = 0; i < Playingfield[j].length; i++) {
                 if (Playingfield[i][j] != null && Playingfield[i][j].getGameCardTexture() != null) {
                     if (Playingfield[i][j].isVisible((OrthographicCamera) playercam)) {
                         batch.draw(Playingfield[i][j].getGameCardTexture(),
@@ -114,31 +114,31 @@ public class GameMapManager {
     public boolean setGamecard(Vector2 position, GameCard card) {
         int lastGameArrayNumber = MapSize-1;
         if ((position.x > 0 && position.y > 0)) {
-            int x = (int) position.x / 144;
-            int y = (int) position.y / 144;
+            int col = (int) position.x / 144;
+            int row = (int) position.y / 144;
 
-            if(x > lastGameArrayNumber || y > lastGameArrayNumber){
+            if(row > lastGameArrayNumber || col > lastGameArrayNumber){
                 return false;
             }
 
             boolean CardConnectable = true;
 
-            if (Playingfield[x][y] == null || Playingfield[x][y].getGameCardTexture() == null) {
+            if (Playingfield[row][col] == null || Playingfield[row][col].getGameCardTexture() == null) {
                 //checking upper y limit
-                if(y == lastGameArrayNumber){
+                if(row == lastGameArrayNumber){
                     //left side of upper y Limit
-                    if(x == 0){
-                        if(Playingfield[x+1][y] != null  || Playingfield[x][y-1] != null){
+                    if(col == 0){
+                        if(Playingfield[row-1][col] != null  || Playingfield[row][col+1] != null){
 
-                            if(Playingfield[x+1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x+1][y].getGameMapEntry(), Orientation.WEST) == false){
+                            if(Playingfield[row][col+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col+1].getGameMapEntry(), Orientation.WEST) == false){
                                 CardConnectable = false;
                             }
-                            if(Playingfield[x][y-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y-1].getGameMapEntry(), Orientation.NORTH) == false){
+                            if(Playingfield[row-1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row-1][col].getGameMapEntry(), Orientation.NORTH) == false){
                                 CardConnectable = false;
                             }
                             if(CardConnectable){
-                                card.setPosition(new Vector2(x * 144f, y * 144f));
-                                Playingfield[x][y] = card;
+                                card.setPosition(new Vector2(col * 144f, row * 144f));
+                                Playingfield[row][col] = card;
                                 return true;
                             }
 
@@ -146,137 +146,137 @@ public class GameMapManager {
                         }else return false;
 
                      //right side of upper y limit
-                    }else if (x == lastGameArrayNumber){
-                        if(Playingfield[x-1][y] != null || Playingfield[x][y-1] != null){
-                            if(Playingfield[x-1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x-1][y].getGameMapEntry(), Orientation.EAST) == false){
+                    }else if (col == lastGameArrayNumber){
+                        if(Playingfield[row][col-1] != null || Playingfield[row-1][col] != null){
+                            if(Playingfield[row][col-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col-1].getGameMapEntry(), Orientation.EAST) == false){
                                 CardConnectable = false;
                             }
-                            if(Playingfield[x][y-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y-1].getGameMapEntry(), Orientation.NORTH) == false){
+                            if(Playingfield[row-1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row-1][col].getGameMapEntry(), Orientation.NORTH) == false){
                                 CardConnectable = false;
                             }
                             if(CardConnectable){
-                                card.setPosition(new Vector2(x * 144f, y * 144f));
-                                Playingfield[x][y] = card;
+                                card.setPosition(new Vector2(col * 144f, row * 144f));
+                                Playingfield[row][col] = card;
                                 return true;
                             }
                         }else return false;
                         //between upper and lower x limit; y = maximum
                     }else {
-                        if(Playingfield[x-1][y] != null || Playingfield[x+1][y] != null || Playingfield[x][y-1] != null){
-                            if(Playingfield[x+1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x+1][y].getGameMapEntry(), Orientation.WEST) == false){
+                        if(Playingfield[row][col-1] != null || Playingfield[row][col+1] != null || Playingfield[row-1][col] != null){
+                            if(Playingfield[row][col+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col+1].getGameMapEntry(), Orientation.WEST) == false){
                                 CardConnectable = false;
                             }
-                            if(Playingfield[x-1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x-1][y].getGameMapEntry(), Orientation.EAST) == false){
+                            if(Playingfield[row][col-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col-1].getGameMapEntry(), Orientation.EAST) == false){
                                 CardConnectable = false;
                             }
-                            if(Playingfield[x][y-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y-1].getGameMapEntry(), Orientation.NORTH) == false){
+                            if(Playingfield[row-1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row-1][col].getGameMapEntry(), Orientation.NORTH) == false){
                                 CardConnectable = false;
                             }
                             if(CardConnectable){
-                                card.setPosition(new Vector2(x * 144f, y * 144f));
-                                Playingfield[x][y] = card;
+                                card.setPosition(new Vector2(col * 144f, row * 144f));
+                                Playingfield[row][col] = card;
                                 return true;
                             }
                         }else return false;
                     }
-                }else if(y == 0){
-                    if(x == 0){
-                        if(Playingfield[x+1][y] != null || Playingfield[x][y+1] != null){
-                            if(Playingfield[x+1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x+1][y].getGameMapEntry(), Orientation.WEST) == false){
+                }else if(row == 0){
+                    if(col == 0){
+                        if(Playingfield[row][col+1] != null || Playingfield[row+1][col] != null){
+                            if(Playingfield[row][col+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col+1].getGameMapEntry(), Orientation.WEST) == false){
                                 CardConnectable = false;
                             }
-                            if(Playingfield[x][y+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y+1].getGameMapEntry(), Orientation.SOUTH) == false){
+                            if(Playingfield[row+1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row+1][col].getGameMapEntry(), Orientation.SOUTH) == false){
                                 CardConnectable = false;
                             }
                             if(CardConnectable){
-                                card.setPosition(new Vector2(x * 144f, y * 144f));
-                                Playingfield[x][y] = card;
+                                card.setPosition(new Vector2(col * 144f, row * 144f));
+                                Playingfield[row][col] = card;
                                 return true;
                             }
                         }else return false;
-                    }else if (x == lastGameArrayNumber){
-                        if(Playingfield[x-1][y] != null || Playingfield[x][y+1] != null){
-                            if(Playingfield[x-1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x-1][y].getGameMapEntry(), Orientation.EAST) == false){
+                    }else if (col == lastGameArrayNumber){
+                        if(Playingfield[row][col-1] != null || Playingfield[row+1][col] != null){
+                            if(Playingfield[row][col-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col-1].getGameMapEntry(), Orientation.EAST) == false){
                                 CardConnectable = false;
                             }
-                            if(Playingfield[x][y+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y+1].getGameMapEntry(), Orientation.SOUTH) == false){
+                            if(Playingfield[row+1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row+1][col].getGameMapEntry(), Orientation.SOUTH) == false){
                                 CardConnectable = false;
                             }
                             if(CardConnectable){
-                                card.setPosition(new Vector2(x * 144f, y * 144f));
-                                Playingfield[x][y] = card;
+                                card.setPosition(new Vector2(col * 144f, row * 144f));
+                                Playingfield[row][col] = card;
                                 return true;
                             }
                         }else return false;
                     }else {
-                        if(Playingfield[x+1][y] != null || Playingfield[x-1][y] != null || Playingfield[x][y+1] != null){
-                            if(Playingfield[x+1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x+1][y].getGameMapEntry(), Orientation.WEST) == false){
+                        if(Playingfield[row][col+1] != null || Playingfield[row][col-1] != null || Playingfield[row+1][col] != null){
+                            if(Playingfield[row][col+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col+1].getGameMapEntry(), Orientation.WEST) == false){
                                 CardConnectable = false;
                             }
-                            if(Playingfield[x-1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x-1][y].getGameMapEntry(), Orientation.EAST) == false){
+                            if(Playingfield[row][col-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col-1].getGameMapEntry(), Orientation.EAST) == false){
                                 CardConnectable = false;
                             }
-                            if(Playingfield[x][y+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y+1].getGameMapEntry(), Orientation.SOUTH) == false){
+                            if(Playingfield[row+1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row+1][col].getGameMapEntry(), Orientation.SOUTH) == false){
                                 CardConnectable = false;
                             }
                             if(CardConnectable){
-                                card.setPosition(new Vector2(x * 144f, y * 144f));
-                                Playingfield[x][y] = card;
+                                card.setPosition(new Vector2(col * 144f, row * 144f));
+                                Playingfield[row][col] = card;
                                 return true;
                             }
                         }else return false;
                     }
-                }else if(x == 0){
-                    if(Playingfield[x+1][y] != null || Playingfield[x][y-1] != null || Playingfield[x][y+1] != null){
-                        if(Playingfield[x+1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x+1][y].getGameMapEntry(), Orientation.WEST) == false){
+                }else if(col == 0){
+                    if(Playingfield[row][col+1] != null || Playingfield[row-1][col] != null || Playingfield[row+1][col] != null){
+                        if(Playingfield[row][col+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col+1].getGameMapEntry(), Orientation.WEST) == false){
                             CardConnectable = false;
                         }
-                        if(Playingfield[x][y+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y+1].getGameMapEntry(), Orientation.SOUTH) == false){
+                        if(Playingfield[row+1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row+1][col].getGameMapEntry(), Orientation.SOUTH) == false){
                             CardConnectable = false;
                         }
-                        if(Playingfield[x][y-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y-1].getGameMapEntry(), Orientation.NORTH) == false){
+                        if(Playingfield[row-1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row-1][col].getGameMapEntry(), Orientation.NORTH) == false){
                             CardConnectable = false;
                         }
                         if(CardConnectable){
-                            card.setPosition(new Vector2(x * 144f, y * 144f));
-                            Playingfield[x][y] = card;
+                            card.setPosition(new Vector2(col * 144f, row * 144f));
+                            Playingfield[row][col] = card;
                             return true;
                         }
                     }else return false;
-                }else if(x == lastGameArrayNumber){
-                    if(Playingfield[x-1][y] != null || Playingfield[x][y-1] != null || Playingfield[x][y+1] != null){
-                        if(Playingfield[x-1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x-1][y].getGameMapEntry(), Orientation.EAST) == false){
+                }else if(col == lastGameArrayNumber){
+                    if(Playingfield[row][col-1] != null || Playingfield[row-1][col] != null || Playingfield[row+1][col] != null){
+                        if(Playingfield[row][col-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col-1].getGameMapEntry(), Orientation.EAST) == false){
                             CardConnectable = false;
                         }
-                        if(Playingfield[x][y+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y+1].getGameMapEntry(), Orientation.SOUTH) == false){
+                        if(Playingfield[row+1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row+1][col].getGameMapEntry(), Orientation.SOUTH) == false){
                             CardConnectable = false;
                         }
-                        if(Playingfield[x][y-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y-1].getGameMapEntry(), Orientation.NORTH) == false){
+                        if(Playingfield[row-1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row-1][col].getGameMapEntry(), Orientation.NORTH) == false){
                             CardConnectable = false;
                         }
                         if(CardConnectable){
-                            card.setPosition(new Vector2(x * 144f, y * 144f));
-                            Playingfield[x][y] = card;
+                            card.setPosition(new Vector2(col * 144f, row * 144f));
+                            Playingfield[row][col] = card;
                             return true;
                         }
                     }else return false;
                 }else {
-                    if(Playingfield[x+1][y] != null || Playingfield[x-1][y] != null || Playingfield[x][y-1] != null || Playingfield[x][y+1] != null){
-                        if(Playingfield[x+1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x+1][y].getGameMapEntry(), Orientation.WEST) == false){
+                    if(Playingfield[row][col+1] != null || Playingfield[row][col-1] != null || Playingfield[row-1][col] != null || Playingfield[row+1][col] != null){
+                        if(Playingfield[row][col+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col+1].getGameMapEntry(), Orientation.WEST) == false){
                             CardConnectable = false;
                         }
-                        if(Playingfield[x-1][y] != null && card.getGameMapEntry().canConnectTo(Playingfield[x-1][y].getGameMapEntry(), Orientation.EAST) == false){
+                        if(Playingfield[row][col-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col-1].getGameMapEntry(), Orientation.EAST) == false){
                             CardConnectable = false;
                         }
-                        if(Playingfield[x][y+1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y+1].getGameMapEntry(), Orientation.SOUTH) == false){
+                        if(Playingfield[row+1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row+1][col].getGameMapEntry(), Orientation.SOUTH) == false){
                             CardConnectable = false;
                         }
-                        if(Playingfield[x][y-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[x][y-1].getGameMapEntry(), Orientation.NORTH) == false){
+                        if(Playingfield[row-1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row-1][col].getGameMapEntry(), Orientation.NORTH) == false){
                             CardConnectable = false;
                         }
                         if(CardConnectable){
-                            card.setPosition(new Vector2(x * 144f, y * 144f));
-                            Playingfield[x][y] = card;
+                            card.setPosition(new Vector2(col * 144f, row * 144f));
+                            Playingfield[row][col] = card;
                             return true;
                         }
                     }else return false;
@@ -303,12 +303,13 @@ public class GameMapManager {
         for(int i = 0; i<100; i++){
             for(int j = 0; j<100; j++){
                 if(newGameMap.getMapArray()[i][j] != null){
-                    Playingfield[i][j] = new GameCard(CardTextures.getTextureFromCardID(newGameMap.getMapArray()[i][j].getCard().getCardId()), new Vector2(144f*i, 144f*j), newGameMap.getMapArray()[i][j]);
+                    Playingfield[i][j] = new GameCard(CardTextures.getTextureFromCardID(newGameMap.getMapArray()[i][j].getCard().getCardId()), new Vector2(144f*j, 144f*i), newGameMap.getMapArray()[i][j]);
                 }else {
                     Playingfield[i][j] = null;
                 }
 
             }
+
         }
     }
 

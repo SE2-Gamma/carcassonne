@@ -352,9 +352,9 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
 
         }
         Log.d("Players Debug",(playersReady)?"Players are ready":"Players are not ready");
-        //wrong. the game is started with the gamestarted broadcastcommand
-        /*if(playersReady){
-            startActivity(new Intent(LobbyActivity.this, Launcher.class));
-        }*/
+
+        //if(playersReady){
+            //startActivity(new Intent(LobbyActivity.this, Launcher.class));
+        //}
     }
 }
