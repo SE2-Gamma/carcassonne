@@ -35,6 +35,10 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCom
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand;
 import at.aau.se2.gamma.core.commands.GameTurnCommand;
+import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
+import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
+import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
+import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 import at.aau.se2.gamma.core.models.impl.GameMapEntryPosition;
@@ -446,7 +450,13 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             }else
             if(response.getPayload() instanceof GameTurnBroadCastCommand){
                 //nach einen zug
-                currentGameObject = (GameObject) payload;
+                //currentGameObject = (GameObject) payload;
+                GameMove gm = (GameMove) payload;
+                try {
+                    currentGameObject.getGameMap().executeGameMove(gm);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 myMap.setGameMap(currentGameObject.getGameMap());
                 Log.i("LauncherGame", "Updated Map");
             }else if(response.getPayload() instanceof PlayerXsTurnBroadcastCommand){
