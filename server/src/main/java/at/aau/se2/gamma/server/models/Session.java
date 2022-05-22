@@ -180,9 +180,14 @@ public class Session extends BaseModel implements Serializable {
         }
 
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
-        setDeck(1);
+         try {
+             Thread.sleep(1000);
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+         setDeck(1);
         deck.printDeck();
-        gameLoop=new GameLoop(this);
+        gameLoop=new GameLoop(this,gameObject);
         gameLoop.start();
          System.out.println();
          System.out.println("//------------------Game "+id+" started--------------------------//");
@@ -192,28 +197,31 @@ public class Session extends BaseModel implements Serializable {
 
 
 //-----------------------------Game-Activity--------------------------
-    public int timeout=20000;
+    public int timeout=60000;
     public void executeGameMove(GameMove gameturn) throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
         System.out.print("//checking incoming turn!//");
-      gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
+        gameLoop.gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
             //do gamemove, updating the gameobject. once updated, the gameloop will continue and send the updated gameobject to all clients
         System.out.print("//turn has been succesfull!//");
         while (!interruptable) { //if the gameloop is in another state than waiting for a turn we busywait for it to finish (only relevant if you enter a turn 1 ms after your turnstart)
             System.out.print(".");
         }
-        gameLoop.interrupt();//interrupt waiting gameloop
+        broadcastAllPlayers(new GameTurnBroadCastCommand(gameturn));
+         gameLoop.interrupt();//interrupt waiting gameloop
+
 
 
 
     }
 public boolean interruptable=false;
     public class GameLoop extends Thread{
-
+        GameObject gameObject;
         Session session;
         boolean playing;
         LinkedList<Player>turnOrder;
-        GameLoop(Session session){
+        GameLoop(Session session, GameObject gameObject){
             this.session=session;
+            this.gameObject=gameObject;
         }
         @Override
         public void run() {
@@ -248,11 +256,13 @@ public boolean interruptable=false;
                     interruptable=true;
                     System.out.print("//waiting for move to be made//");
                     Thread.sleep(timeout); //waiting for succesfull move to be made
+
                 } catch (InterruptedException e) {
                     System.out.print("//notifying all players a turn has been made//");
-                    broadcastAllPlayers(new GameTurnBroadCastCommand(gameObject));
+                // broadcastAllPlayers(new GameTurnBroadCastCommand(this.gameObject));
+
                 }
-                System.out.print("//no successfull move made//");
+
 
 
             }

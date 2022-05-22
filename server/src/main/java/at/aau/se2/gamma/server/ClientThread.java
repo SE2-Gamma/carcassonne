@@ -138,6 +138,7 @@ public class ClientThread extends Thread {
             System.out.print("//available,locking");
             checkingAvailability();
             lock();
+
             objectOutputStream.writeObject(message);
             unlock();
             System.out.print("//unlocking//");
