@@ -43,6 +43,9 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
     public ActivityLobbyBinding binding;
     private LinkedList<LobbyPlayerDisplay> playerList;
     private RecyclerViewAdapter adapter;
+    private String userName;
+    private String userID;
+    private GameObject gameobject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +58,8 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         String gameKey = extras.getString("GameKey");
-        String userName = extras.getString("UserName");
-        String userID = extras.getString("UserID");
+        userName = extras.getString("UserName");
+        userID = extras.getString("UserID");
         //Get Player List from Server
         sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
             @Override
@@ -133,7 +136,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                         }
 
                     } else if(response.getPayload() instanceof GameStartedBroadcastCommand){
-                        GameObject gameobject = (GameObject) payload;
+                        gameobject = (GameObject) payload;
                         startActivity(new Intent(LobbyActivity.this, Launcher.class).putExtra("GameKey", gameKey).putExtra("UserName", userName).putExtra("GameObject", gameobject).putExtra("UserID", userID));
                     }else if(response.getPayload() instanceof PlayerXsTurnBroadcastCommand){
                         //wenn jemand anderes am zug ist
@@ -354,6 +357,14 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         Log.d("Players Debug",(playersReady)?"Players are ready":"Players are not ready");
 
         if(playersReady){
+            Intent intent = new Intent();
+            Bundle extras=new Bundle();
+            extras.putString("PLAYERNAME",userName);
+            extras.putString("PLAYERID",userID);
+            extras.putSerializable("GAMEOBJECT",gameobject);
+            extras.putSerializable("PLAYERLIST",playerList);
+
+            intent.putExtra("GAMEBUNDLE",extras);
             startActivity(new Intent(LobbyActivity.this, Launcher.class));
         }
     }
