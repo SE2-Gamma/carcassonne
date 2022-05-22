@@ -85,8 +85,14 @@ public class Hud_Item_CardPreview {
     }
 
     public void setCardPreviewTexutre(Texture preview){
-        this.currentTexture = preview;
-        currentImg.setDrawable(new TextureRegionDrawable(currentTexture));
+        if(preview == null){
+            this.currentTexture = errorTexture;
+            currentImg.setDrawable(new TextureRegionDrawable(errorTexture));
+        }else {
+            this.currentTexture = preview;
+            currentImg.setDrawable(new TextureRegionDrawable(currentTexture));
+        }
+
     }
 
     public Texture getCardPreviewTexture(){

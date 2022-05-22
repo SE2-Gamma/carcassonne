@@ -24,15 +24,24 @@ public class GameMapManager {
     private ShapeRenderer shaperender;
     private GameCard[][] Playingfield;
     private int MapSize;
+    private GameMap currentGameMap;
+    private SoldierTextures solTextures;
 
 
-    public GameMapManager(OrthographicCamera playercam, Viewport gameviewport, SpriteBatch batch) {
+    public GameMapManager(OrthographicCamera playercam, Viewport gameviewport, SpriteBatch batch, GameMap initialGameMap) {
         //Texture errorTexture = new Texture("testTexture.jpg");
         this.playercam = playercam;
         this.gameviewport = gameviewport;
         this.batch = batch;
         Playingfield = new GameCard[100][100];
         MapSize = 100;
+
+        currentGameMap = initialGameMap;
+        solTextures = new SoldierTextures();
+
+        setGameMap(currentGameMap);
+
+
 
         //shaperender= new ShapeRenderer();
 
@@ -79,16 +88,16 @@ public class GameMapManager {
                                 if(cardSides[s].equals(sp.getGameCardSide())){
                                     switch (s){
                                         case 0:
-                                            batch.draw(new Texture("Soldier_Red.png"), Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y+96);
+                                            batch.draw(solTextures.searchSoldierTexture(Playingfield[i][j].getGameMapEntry().getPlacedByPlayer().getId()), Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y+96);
                                             break;
                                         case 1:
-                                            batch.draw(new Texture("Soldier_Red.png"), Playingfield[i][j].getPosition().x+96, Playingfield[i][j].getPosition().y+48);
+                                            batch.draw(solTextures.searchSoldierTexture(Playingfield[i][j].getGameMapEntry().getPlacedByPlayer().getId()), Playingfield[i][j].getPosition().x+96, Playingfield[i][j].getPosition().y+48);
                                             break;
                                         case 2:
-                                            batch.draw(new Texture("Soldier_Red.png"), Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y);
+                                            batch.draw(solTextures.searchSoldierTexture(Playingfield[i][j].getGameMapEntry().getPlacedByPlayer().getId()), Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y);
                                             break;
                                         case 3:
-                                            batch.draw(new Texture("Soldier_Red.png"), Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y+48);
+                                            batch.draw(solTextures.searchSoldierTexture(Playingfield[i][j].getGameMapEntry().getPlacedByPlayer().getId()), Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y+48);
                                             break;
                                     }
                                 }
@@ -286,9 +295,27 @@ public class GameMapManager {
         Playingfield[x][y] = card;
     }
 
+    public void setGameMap(GameMap newGameMap){
+        solTextures.resetSolierTextureOrder();
+        currentGameMap = newGameMap;
+        GameCardTextures test = GameCardTextures.getInstance();
+        GameCardTextures CardTextures = GameCardTextures.getInstance();
+        for(int i = 0; i<100; i++){
+            for(int j = 0; j<100; j++){
+                if(newGameMap.getMapArray()[i][j] != null){
+                    Playingfield[i][j] = new GameCard(CardTextures.getTextureFromCardID(newGameMap.getMapArray()[i][j].getCard().getCardId()), new Vector2(144f*i, 144f*j), newGameMap.getMapArray()[i][j]);
+                }else {
+                    Playingfield[i][j] = null;
+                }
+
+            }
+        }
+    }
+
     public void dispose() {
         //batch.dispose();
         // shaperender.dispose();
+         solTextures.disposeTexutres();
     }
 
 

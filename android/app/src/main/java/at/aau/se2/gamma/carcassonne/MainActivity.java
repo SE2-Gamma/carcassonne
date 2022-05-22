@@ -10,7 +10,6 @@ import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import at.aau.se2.gamma.carcassonne.databinding.ActivityMainBinding;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.utils.Logger;
-import at.aau.se2.gamma.carcassonne.utils.ShutdownService;
 import at.aau.se2.gamma.carcassonne.views.CreateSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.JoinSessionActivity;
 import at.aau.se2.gamma.carcassonne.views.UIElementsActivity;
@@ -34,6 +33,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
         startService(new Intent(this, ShutdownService.class));
 
         String userName = getIntent().getStringExtra("UserName");
+        String userID = getIntent().getStringExtra("UserID");
 
         binding.pbMenu.setVisibility((View.GONE));
         binding.btnBackToLobby.setVisibility(View.GONE);
@@ -57,6 +57,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreateSessionActivity.class);
                 intent.putExtra("UserName", userName);
+                intent.putExtra("UserID", userID);
                 startActivity(intent);
             }
         });
@@ -66,6 +67,7 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, JoinSessionActivity.class);
                 intent.putExtra("UserName", userName);
+                intent.putExtra("UserID", userID);
                 startActivity(intent);
             }
         });

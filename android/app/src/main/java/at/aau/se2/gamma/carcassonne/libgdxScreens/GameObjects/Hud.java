@@ -34,7 +34,6 @@ public class Hud {
     private Gamescreen myGamescreen;
     private Stage stage;
     private Viewport viewport;
-    private String olddegubText = "";
     private SpriteBatch sb;
 
     private Hud_Item_TopText hudTopItem;
@@ -44,11 +43,13 @@ public class Hud {
     private Hud_Item_AcceptDeclineButtons accept_decline_buttons_soldiers;
     private Hud_Item_ZeroSoldiersButton hud_ZeroSoldier_buttons;
 
-    private Skin skin;
     private Hud_State currentState;
+
+    private boolean debugging;
 
 
     public Hud(SpriteBatch sb, Gamescreen gs) {
+        debugging = false;
         myGamescreen = gs;
         this.currentState = Hud_State.VIEWING;
 
@@ -67,19 +68,10 @@ public class Hud {
 
         changeHudState(Hud_State.PLAYING);
 
+
     }
 
-    public void drawStage(String debugText) {
-
-        if (!debugText.equals(olddegubText)) {
-            //stage.clear();
-            //table.clear();
-            olddegubText = debugText;
-            hudTopItem.setStatusTextFirstRow(olddegubText);
-
-        }
-        hudTopItem.setStatusTextSecondRow("" + hudCardPreview.getCounter() + " | rotation " + hudCardPreview.getRotation());
-
+    public void drawStage() {
         stage.act();
         stage.draw();
     }
@@ -91,7 +83,6 @@ public class Hud {
             case PLAYING:
                 stage.clear();
 
-                stage.addActor(hudTopItem.getTable());
                 stage.addActor(hudCardPreview.getTable());
 
                 break;
@@ -99,8 +90,10 @@ public class Hud {
                 stage.clear();
                 break;
             case CHEATING:
+                stage.clear();
                 break;
             case REPORTING:
+                stage.clear();
                 break;
             case ACCEPT_ACTION:
                 stage.clear();
@@ -119,16 +112,18 @@ public class Hud {
                 break;
 
         }
-
+        stage.addActor(hudTopItem.getTable());
         stage.addActor(hud_errortext.getTable());
 
-        //button ui test
 
-        skin = new Skin(Gdx.files.internal("data/uiskin.json"));
-        final TextButton button = new TextButton("VIEWING", skin, "default");
-        final TextButton button2 = new TextButton("PLAYING", skin, "default");
-        final TextButton button3 = new TextButton("Acc./Dec.", skin, "default");
-        final TextButton button4 = new TextButton("ErrorTest", skin, "default");
+        if(debugging){
+
+
+        //button ui test
+        final TextButton button = new TextButton("VIEWING", UISkin.getSkin(), "default");
+        final TextButton button2 = new TextButton("PLAYING", UISkin.getSkin(), "default");
+        final TextButton button3 = new TextButton("Acc./Dec.", UISkin.getSkin(), "default");
+        final TextButton button4 = new TextButton("ErrorTest", UISkin.getSkin(), "default");
 
 
         //button.setWidth(1000f);
@@ -198,7 +193,7 @@ public class Hud {
 
             }
         });
-
+        }
 
     }
 
@@ -256,7 +251,24 @@ public class Hud {
         return currentState;
     }
 
-    public void showErrorText() {
+    public void showErrorText(String text) {
+        hud_errortext.setErrorText(text);
+        hud_errortext.getTable().addAction(Actions.sequence(Actions.delay(3f), Actions.fadeOut(0.5f),Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                hud_errortext.setErrorText("");
+            }
+        }), Actions.alpha(1)));
+    }
+
+    public void showInfoText(String text){
+            hudTopItem.setStatusTextFirstRow(text);
+            hudTopItem.getTable().addAction(Actions.sequence(Actions.delay(3f), Actions.fadeOut(0.5f),Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                hudTopItem.setStatusTextFirstRow("");
+            }
+        }), Actions.alpha(1)));
 
     }
 }
