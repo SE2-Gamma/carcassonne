@@ -37,4 +37,8 @@ public class GameCardSideFactory {
     public static GameCardSide createClosedStreetSide() {
         return new GameCardSide(GameCardSide.Type.STREET, new GameCardSide.Type[]{GameCardSide.Type.STREET}, true, POINTS_DEFAULT);
     }
+
+    public static GameCardSide createMonasteryMidSide() {
+        return new GameCardSide(GameCardSide.Type.MONASTERY, new GameCardSide.Type[]{GameCardSide.Type.GRAS}, false, POINTS_DEFAULT);
+    }
 }
