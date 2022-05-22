@@ -171,8 +171,9 @@ public class Session extends BaseModel implements Serializable {
      public void startGame(){
         //todo: check if the first gamemapentry is supposed to be in the game
         GameMap gameMap = new GameMap();
-         gameMap.placeGameMapEntry(new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), new Player("-1","server")), new GameMapEntryPosition(0,0));
+         gameMap.placeGameMapEntry(new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), new Player("-1","server")), new GameMapEntryPosition(49,49));
         gameObject=new GameObject(gameMap);
+
         for (Player temp:players
              ) {
             Server.identify(temp).getClientThread().setClientState(ClientState.GAME);
@@ -197,14 +198,14 @@ public class Session extends BaseModel implements Serializable {
       gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
             //do gamemove, updating the gameobject. once updated, the gameloop will continue and send the updated gameobject to all clients
         System.out.print("//turn has been succesfull!//");
-        while (!interruptable) {
-            gameLoop.interrupt();//interrupt waiting gameloop
-
-
+        while (!interruptable) { //if the gameloop is in another state than waiting for a turn we busywait for it to finish (only relevant if you enter a turn 1 ms after your turnstart)
+            System.out.print(".");
         }
+        gameLoop.interrupt();//interrupt waiting gameloop
 
 
-}
+
+    }
 public boolean interruptable=false;
     public class GameLoop extends Thread{
 
@@ -238,7 +239,7 @@ public boolean interruptable=false;
                     gameEnded(); //todo: implement
                 }
 
-                Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card));
+                Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card)); //throws socket exception end of stream if player disconnected
                 System.out.print("//"+onTurn.getName()+" has been notified//");
                 broadcastAllPlayers(new PlayerXsTurnBroadcastCommand(onTurn.getName()),onTurn);
                 System.out.print("//notifying all players//");

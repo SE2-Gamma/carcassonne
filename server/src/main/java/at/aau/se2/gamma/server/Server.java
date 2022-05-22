@@ -263,13 +263,7 @@ public  class Server implements Runnable {
             if(input.equals("success")){
                 try {
                     SessionHandler.getSession("Name").executeGameMove(new GameMove());
-                } catch (InvalidPositionGameMapException e) {
-                    e.printStackTrace();
-                } catch (SurroundingConflictGameMapException e) {
-                    e.printStackTrace();
-                } catch (NoSurroundingCardGameMapException e) {
-                    e.printStackTrace();
-                } catch (PositionNotFreeGameMapException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
