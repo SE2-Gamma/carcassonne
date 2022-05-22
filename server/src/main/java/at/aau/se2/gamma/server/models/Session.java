@@ -189,7 +189,7 @@ public class Session extends BaseModel implements Serializable {
 
 
 //-----------------------------Game-Activity--------------------------
-    public int timeout=60000;
+    public int timeout=20000;
     public void executeGameMove(GameMove gameturn) throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
         System.out.print("//checking incoming turn!//");
       gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
