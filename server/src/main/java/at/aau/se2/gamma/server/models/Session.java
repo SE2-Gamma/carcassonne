@@ -1,6 +1,7 @@
 package at.aau.se2.gamma.server.models;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
+import at.aau.se2.gamma.core.commands.GameTurnCommand;
 import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
 import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
 import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
@@ -177,7 +178,12 @@ public class Session extends BaseModel implements Serializable {
         }
 
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
-        setDeck(1);
+         try {
+             Thread.sleep(3000);
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+         setDeck(1);
         deck.printDeck();
         gameLoop=new GameLoop(this);
         gameLoop.start();
@@ -196,10 +202,10 @@ public class Session extends BaseModel implements Serializable {
             //do gamemove, updating the gameobject. once updated, the gameloop will continue and send the updated gameobject to all clients
         System.out.print("//turn has been succesfull!//");
         while (!interruptable) {
-            gameLoop.interrupt();//interrupt waiting gameloop
-
 
         }
+        broadcastAllPlayers(new GameTurnBroadCastCommand(gameturn));
+        gameLoop.interrupt();//interrupt waiting gameloop
 
 
 }
@@ -247,7 +253,7 @@ public boolean interruptable=false;
                     Thread.sleep(timeout); //waiting for succesfull move to be made
                 } catch (InterruptedException e) {
                     System.out.print("//notifying all players a turn has been made//");
-                    broadcastAllPlayers(new GameTurnBroadCastCommand(gameObject));
+                    //broadcastAllPlayers(new GameTurnBroadCastCommand(gameObject));
                 }
 
 
