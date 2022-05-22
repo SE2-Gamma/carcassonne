@@ -38,34 +38,18 @@
         app:layout_constraintTop_toBottomOf="@+id/textView_instruction_sessionname" />
 
     <Button
-        android:id="@+id/button_navigate_lobby"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:text="@string/activity_create_session_button_navigate_lobby_text"
-        android:textColor="@color/white"
-        style="@style/PrimaryButton"
-        app:iconTint="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.721"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_sessionname"
-        app:layout_constraintVertical_bias="0.382" />
-
-    <Button
         android:id="@+id/button_create_session"
+        style="@style/PrimaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create Session"
         android:textColor="@color/white"
-        style="@style/PrimaryButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.207"
+        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_sessionname"
-        app:layout_constraintVertical_bias="0.382" />
+        app:layout_constraintVertical_bias="0.437" />
 
     <TextView
         android:id="@+id/textView_error"
