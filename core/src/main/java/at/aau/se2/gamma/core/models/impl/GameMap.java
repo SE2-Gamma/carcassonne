@@ -149,6 +149,7 @@ public class GameMap implements Serializable {
         }
 
         // add the points for this side
+        detectionData.addGameCardSide(currentCardSide);
         detectionData.addPoints(currentCardSide.getPoints() * currentCardSide.getMultiplier());
 
         // calculate opposite cardside
@@ -162,6 +163,7 @@ public class GameMap implements Serializable {
         GameCardSide oppositeGameCardSide = neighbourAlignedSides[oppositeOrientation];
 
         // add the points for the opposite side
+        detectionData.addGameCardSide(oppositeGameCardSide);
         detectionData.addPoints(oppositeGameCardSide.getPoints() * oppositeGameCardSide.getMultiplier());
 
         // check if it's closed
