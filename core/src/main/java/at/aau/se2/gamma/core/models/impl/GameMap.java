@@ -18,6 +18,7 @@ public class GameMap implements Serializable {
     public GameMap() {
         this(DEFAULT_HEIGHT, DEFAULT_WIDTH);
     }
+    public GameMapHandler gameMapHandler = null;
 
     public GameMap(int height, int width) {
         mapArray = new GameMapEntry[height][width];
@@ -103,6 +104,83 @@ public class GameMap implements Serializable {
 
         // place the movement
         this.mapArray[position.getY()][position.getX()] = entryCandidate;
+
+        // check current state, and notify observer if needed
+        GameCardSide[] alignedSides = entryCandidate.getAlignedCardSides();
+        for(int i = 0; i < alignedSides.length; i++) {
+            GameCardSide cardSide = alignedSides[i];
+            if (cardSide.isClosingSide) {
+
+                // check all connected sides to check if we have a full closed thing here
+                ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
+                checkClosedState(i, position, detectionData, cardSide);
+
+                if(detectionData.isClosed()) {
+                    if (gameMapHandler != null) {
+                        gameMapHandler.onClosedField(detectionData);
+                    }
+                }
+            }
+        }
+    }
+
+    private void checkClosedState(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide) {
+        // calculate position of neighbour card side
+        GameMapEntryPosition nextPosition = null;
+        switch(orientation) {
+            case 0: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()-1); break;
+            case 1: nextPosition = new GameMapEntryPosition(position.getX()+1, position.getY()); break;
+            case 2: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()+1); break;
+            case 3: nextPosition = new GameMapEntryPosition(position.getX()-1, position.getY()); break;
+        }
+
+        // check if position is valid
+        if (nextPosition == null || nextPosition.getX() < 0 || nextPosition.getX() >= mapArray.length
+        || nextPosition.getY() < 0 || nextPosition.getY() >= mapArray.length) {
+            detectionData.setClosed(false);
+            return;
+        }
+
+        // check if we have a card on this position
+        GameMapEntry nextMapEntry = mapArray[nextPosition.getY()][nextPosition.getX()];
+        if (nextMapEntry == null) {
+            detectionData.setClosed(false);
+            return;
+        }
+
+        // add the points for this side
+        detectionData.addGameCardSide(currentCardSide);
+        detectionData.addPoints(currentCardSide.getPoints() * currentCardSide.getMultiplier());
+
+        // calculate opposite cardside
+        GameCardSide[] neighbourAlignedSides = nextMapEntry.getAlignedCardSides();
+        int oppositeOrientation = 2;
+        switch(orientation) {
+            case 1: oppositeOrientation = 3; break;
+            case 2: oppositeOrientation = 0; break;
+            case 3: oppositeOrientation = 1; break;
+        }
+        GameCardSide oppositeGameCardSide = neighbourAlignedSides[oppositeOrientation];
+
+        // add the points for the opposite side
+        detectionData.addGameCardSide(oppositeGameCardSide);
+        detectionData.addPoints(oppositeGameCardSide.getPoints() * oppositeGameCardSide.getMultiplier());
+
+        // check if it's closed
+        if (oppositeGameCardSide.isClosingSide) {
+            return;
+        }
+
+        // if the side isn't closed, check the other open sides of this type, and the neighbours
+        for(int i = 0; i < neighbourAlignedSides.length; i++) {
+            if (i != oppositeOrientation) {
+                GameCardSide cardSide = neighbourAlignedSides[i];
+                // check if the other side isn't closed (so it's connected to our side here), and if the types are the same
+                if (!cardSide.isClosingSide && cardSide.getType() == currentCardSide.getType()) {
+                    checkClosedState(i, nextPosition, detectionData, cardSide);
+                }
+            }
+        }
     }
 
     /**
@@ -145,5 +223,13 @@ public class GameMap implements Serializable {
             }
         }
         return surroundingFields;
+    }
+
+    public GameMapHandler getGameMapHandler() {
+        return gameMapHandler;
+    }
+
+    public void setGameMapHandler(GameMapHandler gameMapHandler) {
+        this.gameMapHandler = gameMapHandler;
     }
 }
