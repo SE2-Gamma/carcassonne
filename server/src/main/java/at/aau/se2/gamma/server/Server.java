@@ -260,6 +260,10 @@ public  class Server implements Runnable {
             if(input.equals("startgame")){
                 SessionHandler.getSession("Name").startGame();
             }
+            if(input.equals("removefromgame")){
+
+                SessionHandler.getSession("Name").leaveGame(getPlayerbyName("eins5"));
+            }
             if(input.equals("success")){
                 try {
                     SessionHandler.getSession("Name").executeGameMove(new GameMove());
