@@ -210,6 +210,15 @@ public class ClientThread extends Thread {
     //--------------------------------------commands-----------------------------------------------------
     private BaseCommand leaveGame(LeaveGameCommand command) {
         System.out.print("attempting to leave game");
+        if(!clientState.equals(ClientState.GAME)){
+            return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+        }
+        try {
+            session.leaveGame(player);
+        } catch (NoSuchElementException e) {
+            return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+        }
+        return ResponseCreator.getSuccess(command,"Game Successfully left.");
         //todo:
         //check if ingame
         //inform other players youre leaving
@@ -219,7 +228,7 @@ public class ClientThread extends Thread {
 
 
 
-        return null;
+
     }
     private BaseCommand reConnect(RejoinGameCommand command) {
         System.out.print("attempting to reconnect");
@@ -387,15 +396,24 @@ public class ClientThread extends Thread {
     }
 
     public BaseCommand disconnectPlayer(DisconnectCommand command){ //todo: implement errors
-        System.out.print("//todo: disconnect player "+player.getName()+"//");
+        try {
+            System.out.print("//todo: disconnect player "+player.getName()+"//");
+        } catch (NullPointerException e) {
+            System.out.print("//player not yet instantiated//");
+        }
         try {
             objectOutputStream.writeObject(ResponseCreator.getSuccess(command,"Disconnect initiated"));
         } catch (IOException e) {
             e.printStackTrace();
         }
         if(clientState.equals(ClientState.LOBBY)){
-            session.removePlayer(player);
-            session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+
+            try {
+                session.removePlayer(player);
+                session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()),player);
+            } catch (NoSuchElementException e) {
+                System.out.print("//Last Player probably left//");
+            }
         }
         if(clientState.equals(ClientState.GAME)){
             //todo: implement

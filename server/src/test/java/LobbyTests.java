@@ -27,7 +27,7 @@ public class LobbyTests {
     private ObjectOutputStream objectOutputStream;
     private SecureObjectInputStream objectInputStream;
     Socket socket;
-    static final int numberofruns=10;
+    static final int numberofruns=1;
 
 
     @BeforeAll
@@ -105,7 +105,7 @@ public class LobbyTests {
         }
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(1)
     void stormTheMainMenue(){
         sendName("storm");
         ClientState state= null;
@@ -124,7 +124,7 @@ public class LobbyTests {
     void stormTheMainMenueWIthoutDisconnect(){
 
         ClientState state= null;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             try {
                 System.out.println("TEST: creating a testplayer");
                 socket= new Socket(GlobalVariables.getAdress(),GlobalVariables.getPort());

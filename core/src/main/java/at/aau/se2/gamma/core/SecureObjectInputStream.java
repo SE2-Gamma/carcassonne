@@ -82,6 +82,8 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(PlayerNotReadyCommand.class.getName());
             allowedClasses.add(PlayerReadyBroadcastCommand.class.getName());
             allowedClasses.add(PlayerNotReadyBroadcastCommand.class.getName());
+            allowedClasses.add(PlayerLeftGameBroadcastCommand.class.getName());
+            allowedClasses.add(LeaveGameCommand.class.getName());
             allowedClasses.add(ArrayList.class.getName());
             allowedClasses.add(ConcurrentLinkedDeque.class.getName());
             allowedClasses.add(AtomicInteger.class.getName());

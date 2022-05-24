@@ -209,15 +209,25 @@ public class Session extends BaseModel implements Serializable {
         broadcastAllPlayers(new GameTurnBroadCastCommand(gameturn));
          gameLoop.interrupt();//interrupt waiting gameloop
 
+    }
+    public void leaveGame(Player player){
+        gameLoop.turnOrder.remove(player);
+        players.remove(player);
+        if(gameLoop.turnOrder.size()==0){
+            gameLoop.gameEnded();
+        }
+        if(gameLoop.onTurn.getId().equals(player.getId())){
+            gameLoop.interrupt();
+        }
 
-
-
+        broadcastAllPlayers(new PlayerLeftGameBroadcastCommand(player.getName()));
     }
 public boolean interruptable=false;
     public class GameLoop extends Thread{
         GameObject gameObject;
         Session session;
         boolean playing;
+        Player onTurn;
         LinkedList<Player>turnOrder;
         GameLoop(Session session, GameObject gameObject){
             this.session=session;
@@ -235,7 +245,7 @@ public boolean interruptable=false;
             while (playing){
                 interruptable=false;
                 System.out.print("//a new iteration has started//");
-                Player onTurn=turnOrder.pop();
+                onTurn=turnOrder.pop();
                 turnOrder.addLast(onTurn);
                 GameCard card=null;
                 System.out.println("//its "+onTurn.getName()+"'s turn!//");
@@ -271,6 +281,11 @@ public boolean interruptable=false;
         }
 
         private void gameEnded() {
+            System.out.print("//stopping game//");
+            gameLoop.playing=false;
+            gameLoop.interrupt();
+            broadcastAllPlayers(new GameCompletedBroadcastCommand("game ended"));
+            System.out.print("//all players have been notified. //");
         }
 
         static void printTurnOrder(LinkedList<Player>list){
