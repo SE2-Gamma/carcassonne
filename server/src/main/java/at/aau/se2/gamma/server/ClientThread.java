@@ -38,7 +38,7 @@ public class ClientThread extends Thread {
     private String ID;
     private ServerPlayer serverPlayer;
     private boolean communicating =false;
-    private int numberOfCheats=0;
+    private int numberOfCheats=1;
 
     private SecureObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
