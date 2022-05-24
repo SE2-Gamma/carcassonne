@@ -39,12 +39,18 @@ public class TestSocket {
             e.printStackTrace();
         }
     }
+    String id;
     boolean withConsumer=false;
     ResponseConsumer responseConsumer;
     Socket socket;
     SecureObjectInputStream secureObjectInputStream;
     ObjectOutputStream objectOutputStream;
     public LinkedList<Object> returncommands=new LinkedList<>();
+
+    public void setID(String id) {
+        this.id=id;
+    }
+
     public class ResponseConsumer extends Thread{
 
         boolean running=true;

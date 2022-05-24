@@ -7,12 +7,11 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
-import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
-import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
-import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
-import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
+import at.aau.se2.gamma.core.exceptions.*;
+import at.aau.se2.gamma.core.models.impl.CheatMove;
 import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
+import at.aau.se2.gamma.core.models.impl.Soldier;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
 import at.aau.se2.gamma.server.models.Session;
@@ -39,6 +38,7 @@ public class ClientThread extends Thread {
     private String ID;
     private ServerPlayer serverPlayer;
     private boolean communicating =false;
+    private int numberOfCheats=0;
 
     private SecureObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
@@ -195,6 +195,12 @@ public class ClientThread extends Thread {
         }else if(command instanceof LeaveGameCommand) {
             return leaveGame((LeaveGameCommand) command);
 
+        }else if(command instanceof CheatCommand) {
+            return cheat((CheatCommand) command);
+
+        }else if(command instanceof DetectCheatCommand) {
+            return detectCheat((DetectCheatCommand) command);
+
         }
         else{
             System.out.println("command not suitable for current state");
@@ -208,6 +214,38 @@ public class ClientThread extends Thread {
 
 
     //--------------------------------------commands-----------------------------------------------------
+    private BaseCommand detectCheat(DetectCheatCommand command) {
+        if(!clientState.equals(ClientState.GAME)){
+            return ResponseCreator.getError(command,"youre not ingame", Codes.ERROR.NOT_IN_GAME);
+        }
+        try {
+            session.detectCheat((Soldier) command.getPayload());
+        } catch (NoSuchCheatActiveException e) {
+            return ResponseCreator.getSuccess(command,"No such Cheat active.");
+        }
+        return ResponseCreator.getSuccess(command,"Cheat detection successfull.");
+
+    }
+
+    private BaseCommand cheat(CheatCommand command) {
+        System.out.print("//incoming cheatmove//");
+        if(!clientState.equals(ClientState.GAME)){
+            return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+        }
+        if(session.gameLoop.onTurn.getId().equals(player.getId())){
+            return ResponseCreator.getError(command,"its your turn, you cant cheat now.",Codes.ERROR.NO_CHEAT_ON_TURN);
+        }
+
+        CheatMove cheatMove=(CheatMove) command.getPayload();
+        cheatMove.setPointsLostIfDetected((int) Math.pow(2,numberOfCheats));
+        try {
+            session.executeCheat(cheatMove);
+        } catch (CheatMoveImpossibleException e) {
+           return ResponseCreator.getError(command,"Cheatmove not possible",Codes.ERROR.INVALID_CHEATMOVE);
+        }
+        numberOfCheats++;
+        return ResponseCreator.getSuccess(command,"cheat successfull.");
+    }
     private BaseCommand leaveGame(LeaveGameCommand command) {
         System.out.print("attempting to leave game");
         if(!clientState.equals(ClientState.GAME)){

@@ -1,10 +1,7 @@
 package at.aau.se2.gamma.server.models;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
-import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
-import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
-import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
-import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
+import at.aau.se2.gamma.core.exceptions.*;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
@@ -29,7 +26,7 @@ public class Session extends BaseModel implements Serializable {
     public ConcurrentLinkedDeque<Player>readyPlayers=new ConcurrentLinkedDeque<>();
    // public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
-    GameLoop gameLoop=null;
+   public  GameLoop gameLoop=null;
 
 //--------------------------Lobby-Methods---------------------
     public void playerReady(Player player){
@@ -210,6 +207,15 @@ public class Session extends BaseModel implements Serializable {
          gameLoop.interrupt();//interrupt waiting gameloop
 
     }
+    public void executeCheat(CheatMove cheatMove) throws CheatMoveImpossibleException {
+        System.out.print("//checking cheatmove//");
+        gameLoop.gameObject.getGameMap().executeCheatMove(cheatMove);
+        broadcastAllPlayers(new CheatMoveBroadcastCommand(cheatMove));
+        System.out.print("// cheatmove broadcasted//");
+    }
+    public void detectCheat(Soldier soldier) throws NoSuchCheatActiveException {
+        broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(gameLoop.gameObject.getGameMap().detectCheatMove(soldier))  );
+    }
     public void leaveGame(Player player){
         gameLoop.turnOrder.remove(player);
         players.remove(player);
@@ -219,7 +225,7 @@ public class Session extends BaseModel implements Serializable {
         if(gameLoop.onTurn.getId().equals(player.getId())){
             gameLoop.interrupt();
         }
-
+        //remove player from gameobject?
         broadcastAllPlayers(new PlayerLeftGameBroadcastCommand(player.getName()));
     }
 public boolean interruptable=false;
@@ -227,7 +233,7 @@ public boolean interruptable=false;
         GameObject gameObject;
         Session session;
         boolean playing;
-        Player onTurn;
+        public Player onTurn;
         LinkedList<Player>turnOrder;
         GameLoop(Session session, GameObject gameObject){
             this.session=session;

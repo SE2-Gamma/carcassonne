@@ -1,12 +1,11 @@
 package at.aau.se2.gamma.core.models.impl;
 
-import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
-import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
-import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
-import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
+import at.aau.se2.gamma.core.exceptions.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class GameMap implements Serializable {
     // default values for the map
@@ -14,6 +13,29 @@ public class GameMap implements Serializable {
     public final static int DEFAULT_WIDTH = 100;
 
     private GameMapEntry[][] mapArray;
+    private LinkedList<CheatMove>cheatMoves=new LinkedList<>();
+    public void executeCheatMove(CheatMove cheatMove)throws CheatMoveImpossibleException{
+        //todo: implement
+
+        cheatMoves.add(cheatMove);
+
+    }
+    public CheatMove detectCheatMove(Soldier soldier) throws  NoSuchCheatActiveException {
+        //todo: check if correct soldier has been selected. at the moment im just checking for playername.
+        for (CheatMove cheat:cheatMoves
+             ) {
+            if((cheat.soldier.getPlayer().getName().equals(soldier.getPlayer().getName())&&cheat.active)){
+                //todo; check if soldier.getSoldierplacement()==cheat.newPosition;
+                undoCheatMove(cheat);
+                cheatMoves.remove(cheat);
+                return cheat;
+            }
+        }
+        throw new NoSuchCheatActiveException();
+    }
+    public void undoCheatMove(CheatMove cheatMove){
+        //todo: implement
+    }
 
     public GameMap() {
         this(DEFAULT_HEIGHT, DEFAULT_WIDTH);
