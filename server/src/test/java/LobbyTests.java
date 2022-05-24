@@ -28,7 +28,8 @@ public class LobbyTests {
     private SecureObjectInputStream objectInputStream;
     Socket socket;
     static final int numberofruns=1;
-
+    public  LinkedList<Object>returncommands=new LinkedList<>();
+    ResponseConsumer responseConsumer=null;
 
     @BeforeAll
     public static void setup()  {
@@ -47,6 +48,30 @@ public class LobbyTests {
         Server.startServer();
 
     }
+    public class ResponseConsumer extends Thread{
+        SecureObjectInputStream in;
+
+        boolean running=true;
+        @Override
+        public void run() {
+            while(running){
+                try {
+                    synchronized (returncommands) {
+                        Object object = ServerResponseDecrypter.payloadRetriever(objectInputStream);
+                        returncommands.add(object);
+                        System.err.println("//-----------------------------------------" + object + " added to responses--------------------------------------------/");
+
+                    }
+
+                } catch (IOException | ClassNotFoundException  | NullPointerException ignored){
+
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     @AfterAll
     public static void stopserver(){
         Server.closeServer();
@@ -60,13 +85,42 @@ public class LobbyTests {
             socket= new Socket(GlobalVariables.getAdress(),GlobalVariables.getPort());
             objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectInputStream = new SecureObjectInputStream(socket.getInputStream());
+            responseConsumer= new ResponseConsumer();
 
+            waitForResponse(200);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
+    public void waitForResponse(){
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    public void waitForResponse(int time){
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    public void sendCommand(BaseCommand command,ObjectOutputStream out){
+        try {
+            out.writeObject(command);waitForResponse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void sendCommand(BaseCommand command){
+        try {
+            objectOutputStream.writeObject(command);waitForResponse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public TestSocket createanotherSocket(String name){
         try {
             Socket anothersocket= new Socket(GlobalVariables.getAdress(),GlobalVariables.getPort());
@@ -84,10 +138,31 @@ public class LobbyTests {
 
 
     }
+    public TestSocket createanotherSocket(String name,boolean withConsumer){
+        try {
+            Socket anothersocket= new Socket(GlobalVariables.getAdress(),GlobalVariables.getPort());
+            ObjectOutputStream anotheroutput = new ObjectOutputStream(anothersocket.getOutputStream());
+            SecureObjectInputStream anotherinput = new SecureObjectInputStream(anothersocket.getInputStream());
+            anotheroutput.writeObject(new InitialSetNameCommand(name));
+            ServerResponseDecrypter.payloadRetriever(anotherinput);
+            return new TestSocket(anothersocket,anotherinput,anotheroutput,withConsumer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+
+    }
     @AfterEach
     public void disconnect(){
         try {
             objectOutputStream.writeObject(new DisconnectCommand(null));
+            responseConsumer.running=false;
+            responseConsumer.interrupt();
+            System.out.println(returncommands);
+            returncommands.clear();
             Server.kickAllAndEverything();
         } catch (IOException e) {
             e.printStackTrace();
@@ -454,6 +529,25 @@ socket4.disconnect();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+    }
+    @Test
+    void unexcpectedlyDisconnectFromLobby(){
+        sendName("unexpectedlydisconnectfromlobby");
+        responseConsumer.start();
+        TestSocket anothersocket=createanotherSocket("unexdisc");
+        sendCommand(new CreateGameCommand("disconnectunexpectedly"));
+        sendCommand(new InitialJoinCommand("disconnectunexpectedly"),anothersocket.objectOutputStream);
+        try {
+            anothersocket.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        waitForResponse();
+        sendCommand(new RequestUserListCommand(null));
+        LinkedList<String>list2=(LinkedList<String>) returncommands.getLast();
+        assertTrue(list2.contains("unexpectedlydisconnectfromlobby"));
+        assertFalse(list2.contains("unexdisc"));
 
     }
 

@@ -188,4 +188,73 @@ public class GameTests {
         }
 
     }
+    @Test
+    public void RequestUserListIngame(){
+        sendName("requestuserlistingame");
+        TestSocket playertwo=createanotherSocket("requestuserlistingame2");
+        try {
+            objectOutputStream.writeObject(new CreateGameCommand("requestuserlistingame"));waitForResponse();
+            playertwo.objectOutputStream.writeObject(new InitialJoinCommand("requestuserlistingame"));waitForResponse();
+            objectOutputStream.writeObject(new PlayerReadyCommand(null));waitForResponse();
+            sendCommand(new PlayerReadyCommand(null),playertwo.objectOutputStream);
+            waitForResponse(2000);
+            sendCommand(new RequestUserListCommand(null),objectOutputStream);
+            LinkedList<String>list=(LinkedList<String>) returncommands.getLast();
+            assertTrue(list.contains("requestuserlistingame"));
+            assertTrue(list.contains("requestuserlistingame2"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void RequestUserListIngameLeave(){
+        sendName("requestuserlistingamel");
+        TestSocket playertwo=createanotherSocket("requestuserlistingamel2");
+        try {
+            objectOutputStream.writeObject(new CreateGameCommand("requestuserlistingamel"));waitForResponse();
+            playertwo.objectOutputStream.writeObject(new InitialJoinCommand("requestuserlistingamel"));waitForResponse();
+            objectOutputStream.writeObject(new PlayerReadyCommand(null));waitForResponse();
+            sendCommand(new PlayerReadyCommand(null),playertwo.objectOutputStream);
+            waitForResponse(2000);
+            sendCommand(new RequestUserListCommand(null),objectOutputStream);
+            LinkedList<String>list=(LinkedList<String>) returncommands.getLast();
+            assertTrue(list.contains("requestuserlistingamel"));
+            assertTrue(list.contains("requestuserlistingamel2"));
+            sendCommand(new LeaveGameCommand(null),playertwo.objectOutputStream);
+            waitForResponse(1000);//in case it was playertwos turn
+            sendCommand(new RequestUserListCommand(null),objectOutputStream);
+            LinkedList<String>list2=(LinkedList<String>) returncommands.getLast();
+            assertTrue(list2.contains("requestuserlistingamel"));
+            assertFalse(list2.contains("requestuserlistingamel2"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void sendCommand(BaseCommand command,ObjectOutputStream out){
+        try {
+            out.writeObject(command);waitForResponse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void sendCommand(BaseCommand command){
+        try {
+            objectOutputStream.writeObject(command);waitForResponse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void DisconnectFromGame(){
+        sendName("disconnectfromgame");
+        sendCommand(new CreateGameCommand("testdisconnectfromgame"));
+        sendCommand(new PlayerReadyCommand(null));
+        waitForResponse(3000);
+        sendCommand(new DisconnectCommand(null));
+        assertTrue(returncommands.contains("Disconnect initiated"));
+
+    }
+
 }

@@ -160,13 +160,14 @@ e.printStackTrace();
 
         GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.NORTH);
 
-        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(-1,0));
+        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(48,49));
         try {
+            waitForResponse(2000);
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
             waitForResponse();
             LinkedList<Object>error= (LinkedList<Object>) returncommands.getLast();
             String response= (String) error.pop();
-            assertEquals("Invalid Position on Gamemap",response);
+            assertEquals("Surrounding Conflict on Gamemap",response);
 
 
         } catch (IOException e) {

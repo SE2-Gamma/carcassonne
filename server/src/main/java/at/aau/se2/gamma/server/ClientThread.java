@@ -412,11 +412,16 @@ public class ClientThread extends Thread {
                 session.removePlayer(player);
                 session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()),player);
             } catch (NoSuchElementException e) {
-                System.out.print("//Last Player probably left//");
+                System.out.print("//Player already disconnected//");
             }
         }
         if(clientState.equals(ClientState.GAME)){
-            //todo: implement
+            try {
+                session.leaveGame(player);
+            } catch (NoSuchElementException e) {
+                return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+            }
+            return ResponseCreator.getSuccess(command,"Game Successfully left.");
         }
         Server.activeServerPlayers.remove(serverPlayer);
         try {
