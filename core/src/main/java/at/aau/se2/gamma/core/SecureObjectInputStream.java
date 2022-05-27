@@ -82,6 +82,8 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(PlayerNotReadyCommand.class.getName());
             allowedClasses.add(PlayerReadyBroadcastCommand.class.getName());
             allowedClasses.add(PlayerNotReadyBroadcastCommand.class.getName());
+            allowedClasses.add(PlayerLeftGameBroadcastCommand.class.getName());
+            allowedClasses.add(LeaveGameCommand.class.getName());
             allowedClasses.add(ArrayList.class.getName());
             allowedClasses.add(ConcurrentLinkedDeque.class.getName());
             allowedClasses.add(AtomicInteger.class.getName());
@@ -104,13 +106,29 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(java.lang.Enum.class.getName());
             allowedClasses.add(at.aau.se2.gamma.core.models.impl.GameMapEntry.class.getName());
             allowedClasses.add(at.aau.se2.gamma.core.models.impl.GameCardSide.class.getName());
+            allowedClasses.add(CheatMove.class.getName());
+            allowedClasses.add(CheatCommand.class.getName());
+            allowedClasses.add(CheatMoveBroadcastCommand.class.getName());
+            allowedClasses.add(CheatMoveDetectedBroadcastCommand.class.getName());
+            allowedClasses.add(DetectCheatCommand.class.getName());
+
+            allowedClasses.add(java.lang.StackTraceElement.class.getName());
+
+            allowedClasses.add(java.lang.Throwable.class.getName());
+            allowedClasses.add(java.io.IOException.class.getName());
+            allowedClasses.add(java.lang.Exception.class.getName());
+            allowedClasses.add(java.io.ObjectStreamException.class.getName());
+            allowedClasses.add(java.io.NotSerializableException.class.getName());
 
             allowedClasses.add(at.aau.se2.gamma.core.models.impl.GameCardSide.Type.class.getName());
             allowedClasses.add("[[Lat.aau.se2.gamma.core.models.impl.GameMapEntry");
+
             allowedClasses.add("[[Lat.aau.se2.gamma.core.models.impl.GameMapEntry;");
             allowedClasses.add("[Lat.aau.se2.gamma.core.models.impl.GameMapEntry;");
             allowedClasses.add("[Lat.aau.se2.gamma.core.models.impl.GameCardSide;");
             allowedClasses.add("[Lat.aau.se2.gamma.core.models.impl.GameCardSide$Type;");
+            allowedClasses.add("[Ljava.lang.StackTraceElement;");
+            allowedClasses.add("java.util.Collections$EmptyList");
 
 
             allowedClasses.add(String.class.getName());
@@ -124,6 +142,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
 
 
     }
+
     static AtomicInteger counter=new AtomicInteger(0);
 
     @Override
@@ -135,7 +154,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
         for (String classname:allowedClasses
              ) {
             if (osc.getName().equals(classname)) {
-
+                System.out.print("//"+osc.getName()+" resolved//");
                 return super.resolveClass(osc);
             }
         }

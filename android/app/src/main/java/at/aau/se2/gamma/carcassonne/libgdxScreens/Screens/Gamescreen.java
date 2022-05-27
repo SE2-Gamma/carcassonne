@@ -117,7 +117,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         shaprenderer = new ShapeRenderer();
 
         //0 mit 49 später ersätzen
-        camPos = new Vector2(0f*144f+(128f/2f),0f*144f+(128f/2f));
+        camPos = new Vector2(49f*144f+(128f/2f),49f*144f+(128f/2f));
         playercam.position.set(camPos.x,camPos.y,1);
         playercam.update();
 

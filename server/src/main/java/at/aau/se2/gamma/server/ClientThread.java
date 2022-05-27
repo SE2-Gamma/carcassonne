@@ -7,12 +7,11 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
-import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
-import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
-import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
-import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
+import at.aau.se2.gamma.core.exceptions.*;
+import at.aau.se2.gamma.core.models.impl.CheatMove;
 import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.Player;
+import at.aau.se2.gamma.core.models.impl.Soldier;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
 import at.aau.se2.gamma.server.models.Session;
@@ -39,6 +38,7 @@ public class ClientThread extends Thread {
     private String ID;
     private ServerPlayer serverPlayer;
     private boolean communicating =false;
+    private int numberOfCheats=1;
 
     private SecureObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
@@ -73,7 +73,7 @@ public class ClientThread extends Thread {
                 BaseCommand response=handleCommand(command);
 
                 System.out.println(command.getClass().getName()  +" handeled.");
-
+                
                 if(!(command instanceof DisconnectCommand)) {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
                     checkingAvailability();
@@ -138,6 +138,7 @@ public class ClientThread extends Thread {
             System.out.print("//available,locking");
             checkingAvailability();
             lock();
+
             objectOutputStream.writeObject(message);
             unlock();
             System.out.print("//unlocking//");
@@ -184,6 +185,22 @@ public class ClientThread extends Thread {
         }else if(command instanceof PlayerNotReadyCommand) {
             return playerNotReady((PlayerNotReadyCommand) command);
 
+        }else if(command instanceof RejoinGameCommand) {
+            return reJoin((RejoinGameCommand) command);
+
+        }
+        else if(command instanceof ReconnectCommand) {
+            return reConnect((RejoinGameCommand) command);
+
+        }else if(command instanceof LeaveGameCommand) {
+            return leaveGame((LeaveGameCommand) command);
+
+        }else if(command instanceof CheatCommand) {
+            return cheat((CheatCommand) command);
+
+        }else if(command instanceof DetectCheatCommand) {
+            return detectCheat((DetectCheatCommand) command);
+
         }
         else{
             System.out.println("command not suitable for current state");
@@ -195,7 +212,88 @@ public class ClientThread extends Thread {
 
 
 
+
     //--------------------------------------commands-----------------------------------------------------
+    private BaseCommand detectCheat(DetectCheatCommand command) {
+        if(!clientState.equals(ClientState.GAME)){
+            return ResponseCreator.getError(command,"youre not ingame", Codes.ERROR.NOT_IN_GAME);
+        }
+        try {
+            session.detectCheat((Soldier) command.getPayload());
+        } catch (NoSuchCheatActiveException e) {
+            return ResponseCreator.getSuccess(command,"No such Cheat active.");
+        }
+        return ResponseCreator.getSuccess(command,"Cheat detection successfull.");
+
+    }
+
+    private BaseCommand cheat(CheatCommand command) {
+        System.out.print("//incoming cheatmove//");
+        if(!clientState.equals(ClientState.GAME)){
+            return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+        }
+        if(session.gameLoop.onTurn.getId().equals(player.getId())){
+            return ResponseCreator.getError(command,"its your turn, you cant cheat now.",Codes.ERROR.NO_CHEAT_ON_TURN);
+        }
+
+        CheatMove cheatMove=(CheatMove) command.getPayload();
+        cheatMove.setPointsLostIfDetected((int) Math.pow(2,numberOfCheats));
+        try {
+            session.executeCheat(cheatMove);
+        } catch (CheatMoveImpossibleException e) {
+           return ResponseCreator.getError(command,"Cheatmove not possible",Codes.ERROR.INVALID_CHEATMOVE);
+        }
+        numberOfCheats++;
+        return ResponseCreator.getSuccess(command,"cheat successfull.");
+    }
+    private BaseCommand leaveGame(LeaveGameCommand command) {
+        System.out.print("attempting to leave game");
+        if(!clientState.equals(ClientState.GAME)){
+            return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+        }
+        try {
+            session.leaveGame(player);
+        } catch (NoSuchElementException e) {
+            return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+        }
+        return ResponseCreator.getSuccess(command,"Game Successfully left.");
+        //todo:
+        //check if ingame
+        //inform other players youre leaving
+        //remove yourself from session.players
+        //remove yourself from turnorder
+        //remove yourself from gameobject?
+
+
+
+
+    }
+    private BaseCommand reConnect(RejoinGameCommand command) {
+        System.out.print("attempting to reconnect");
+        //todo:
+        //check if id was present in serverplayers
+        //if so, check if someone else has used the name
+        //if so, return with a prompt to enter a new name
+        //when no nameissues are present anymore return success
+
+        return null;
+    }
+    private BaseCommand reJoin(RejoinGameCommand command) {
+
+        System.out.print("attempting to rejoin game");
+        //todo:
+        //check if you are in the archives of the session
+        //if not, return an error
+        //if so, join game
+        //inform other players youve reconnected
+        //add yourself to session.players
+        //add yourself to turnorder
+        //connect yourself with the points youve made and the soldiers youve placed.
+
+
+        return null;
+    }
+
     private BaseCommand requestUserListCommandByID(RequestUserListCommandByID command){
         System.out.print("  current state: "+clientState);
         Session temp=null;
@@ -325,24 +423,43 @@ public class ClientThread extends Thread {
         this.serverPlayer.setName(name);
         this.serverPlayer.setId(ID);
         System.out.print("// serverplayer set//");
+       ServerPlayer archived= new ServerPlayer();
 
+       archived.setId(ID);
+       archived.setName(name);
+        Server.serverArchive.add(archived);
+        System.out.print("//player added to archive//");
         System.out.print ("// current state: "+ clientState+"// ");
         return ResponseCreator.getSuccess(command,ID);
     }
 
     public BaseCommand disconnectPlayer(DisconnectCommand command){ //todo: implement errors
-        System.out.print("//todo: disconnect player "+player.getName()+"//");
+        try {
+            System.out.print("//todo: disconnect player "+player.getName()+"//");
+        } catch (NullPointerException e) {
+            System.out.print("//player not yet instantiated//");
+        }
         try {
             objectOutputStream.writeObject(ResponseCreator.getSuccess(command,"Disconnect initiated"));
         } catch (IOException e) {
             e.printStackTrace();
         }
         if(clientState.equals(ClientState.LOBBY)){
-            session.removePlayer(player);
-            session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
+
+            try {
+                session.removePlayer(player);
+                session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()),player);
+            } catch (NoSuchElementException e) {
+                System.out.print("//Player already disconnected//");
+            }
         }
         if(clientState.equals(ClientState.GAME)){
-            //todo: implement
+            try {
+                session.leaveGame(player);
+            } catch (NoSuchElementException e) {
+                return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
+            }
+            return ResponseCreator.getSuccess(command,"Game Successfully left.");
         }
         Server.activeServerPlayers.remove(serverPlayer);
         try {

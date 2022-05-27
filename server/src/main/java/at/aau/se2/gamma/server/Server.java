@@ -28,6 +28,7 @@ public  class Server implements Runnable {
     private final ServerSocket socket;
     //static LinkedList<ServerPlayer> activeServerPlayers =new LinkedList<>(); //todo check concurrency problems
     static ConcurrentLinkedDeque<ServerPlayer> activeServerPlayers=new ConcurrentLinkedDeque<>();
+    static ConcurrentLinkedDeque<ServerPlayer> serverArchive =new ConcurrentLinkedDeque<>();
     ClientHandler clientHandler=null;
     public static Server server=null;
     static Scanner scanner=new Scanner(System.in);
@@ -259,16 +260,14 @@ public  class Server implements Runnable {
             if(input.equals("startgame")){
                 SessionHandler.getSession("Name").startGame();
             }
+            if(input.equals("removefromgame")){
+
+                SessionHandler.getSession("Name").leaveGame(getPlayerbyName("eins5"));
+            }
             if(input.equals("success")){
                 try {
                     SessionHandler.getSession("Name").executeGameMove(new GameMove());
-                } catch (InvalidPositionGameMapException e) {
-                    e.printStackTrace();
-                } catch (SurroundingConflictGameMapException e) {
-                    e.printStackTrace();
-                } catch (NoSurroundingCardGameMapException e) {
-                    e.printStackTrace();
-                } catch (PositionNotFreeGameMapException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
