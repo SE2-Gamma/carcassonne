@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 
 import java.util.LinkedList;
 
+import at.aau.se2.gamma.carcassonne.Launcher;
 import at.aau.se2.gamma.carcassonne.MainActivity;
 import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.UtilityKlasse;
@@ -64,6 +65,7 @@ public class SelectNameActivity extends BaseActivity {
                                     binding.pbSelectNameActivity.setVisibility(View.INVISIBLE);
                                     Intent intent = new Intent(SelectNameActivity.this, MainActivity.class);
                                     intent.putExtra("UserName", userInput);
+                                    intent.putExtra("UserID", (String)payload);
                                     startActivity(intent);
                                 }
 
@@ -88,6 +90,13 @@ public class SelectNameActivity extends BaseActivity {
                     binding.tvError.setText("Bitte gib einen Namen ein!");
                     binding.tvError.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        binding.btnGameplayTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SelectNameActivity.this, Launcher.class));
             }
         });
     }

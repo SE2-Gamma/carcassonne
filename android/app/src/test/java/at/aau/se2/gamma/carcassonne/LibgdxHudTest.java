@@ -15,6 +15,8 @@ import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Screens.Gamescreen;
+import at.aau.se2.gamma.core.models.impl.GameMap;
+import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 
 public class LibgdxHudTest {
 
@@ -34,6 +36,8 @@ public class LibgdxHudTest {
 
         private Hud myHud;
 
+        private GameMap firstMap;
+
 
        // @Before
         public void before(){
@@ -52,10 +56,12 @@ public class LibgdxHudTest {
 
             myTexture = Mockito.mock(Texture.class);
             position = new Vector2(0,0);
-            gc = new GameCard(myTexture,position);
+            gc = new GameCard(myTexture,position, Mockito.mock(GameMapEntry.class));
 
+            firstMap = new GameMap();
+            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap);
 
-            myMap = new GameMapManager(playercam, gameviewport, sb);
+            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap);
             Mockito.doNothing().when(sb).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
 
             //Viewport myViewport = Mockito.mock(ScreenViewport.class);
@@ -75,7 +81,7 @@ public class LibgdxHudTest {
         public void Hud_draw_test(){
             //no textures set, thats why we have 0 sb.draw calls
 
-            myHud.drawStage("testing");
+            myHud.drawStage();
            // Mockito.verify(sb, Mockito.times(0)).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
 
             //myMap.setGamecard(new Vector2(10,10), gc);

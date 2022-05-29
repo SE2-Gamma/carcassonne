@@ -1,10 +1,7 @@
 package at.aau.se2.gamma.server.models;
 
 import at.aau.se2.gamma.core.commands.BroadcastCommands.*;
-import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
-import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
-import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
-import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
+import at.aau.se2.gamma.core.exceptions.*;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
@@ -25,10 +22,11 @@ public class Session extends BaseModel implements Serializable {
     final LinkedList<KickOffer>kickOffers=new LinkedList<>();
    // public LinkedList<Player> players = new LinkedList<>();
     public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
+    public ConcurrentLinkedDeque<Player>playerArchive=new ConcurrentLinkedDeque<>();
     public ConcurrentLinkedDeque<Player>readyPlayers=new ConcurrentLinkedDeque<>();
    // public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
-    GameLoop gameLoop=null;
+   public  GameLoop gameLoop=null;
 
 //--------------------------Lobby-Methods---------------------
     public void playerReady(Player player){
@@ -86,6 +84,7 @@ public class Session extends BaseModel implements Serializable {
             }
         }
         players.add(player);
+        playerArchive.add(new Player(player.getId(),player.getName()));
     }
     public void removePlayer(Player player){
         System.out.print("//removing player "+player.getName());
@@ -99,6 +98,10 @@ public class Session extends BaseModel implements Serializable {
 
 
         System.out.print("//notifying all  "+player.getName()+"  has been removed");
+        for (Player a:players
+             ) {
+            System.out.print("//notified: "+a.getName());
+        }
         broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()),player);
 
         if(players.size()==0){
@@ -165,17 +168,23 @@ public class Session extends BaseModel implements Serializable {
      public void startGame(){
         //todo: check if the first gamemapentry is supposed to be in the game
         GameMap gameMap = new GameMap();
-         gameMap.placeGameMapEntry(new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), new Player("-1","server")), new GameMapEntryPosition(0,0));
+         gameMap.placeGameMapEntry(new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), new Player("-1","server")), new GameMapEntryPosition(49,49));
         gameObject=new GameObject(gameMap);
+
         for (Player temp:players
              ) {
             Server.identify(temp).getClientThread().setClientState(ClientState.GAME);
         }
 
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
-        setDeck(1);
+         try {
+             Thread.sleep(1000);
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+         setDeck(1);
         deck.printDeck();
-        gameLoop=new GameLoop(this);
+        gameLoop=new GameLoop(this,gameObject);
         gameLoop.start();
          System.out.println();
          System.out.println("//------------------Game "+id+" started--------------------------//");
@@ -188,25 +197,47 @@ public class Session extends BaseModel implements Serializable {
     public int timeout=60000;
     public void executeGameMove(GameMove gameturn) throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
         System.out.print("//checking incoming turn!//");
-      gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
+        gameLoop.gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
             //do gamemove, updating the gameobject. once updated, the gameloop will continue and send the updated gameobject to all clients
         System.out.print("//turn has been succesfull!//");
-        while (!interruptable) {
-            gameLoop.interrupt();//interrupt waiting gameloop
-
-
+        while (!interruptable) { //if the gameloop is in another state than waiting for a turn we busywait for it to finish (only relevant if you enter a turn 1 ms after your turnstart)
+            System.out.print(".");
         }
+        broadcastAllPlayers(new GameTurnBroadCastCommand(gameturn));
+         gameLoop.interrupt();//interrupt waiting gameloop
 
-
-}
+    }
+    public void executeCheat(CheatMove cheatMove) throws CheatMoveImpossibleException {
+        System.out.print("//checking cheatmove//");
+        gameLoop.gameObject.getGameMap().executeCheatMove(cheatMove);
+        broadcastAllPlayers(new CheatMoveBroadcastCommand(cheatMove));
+        System.out.print("// cheatmove broadcasted//");
+    }
+    public void detectCheat(Soldier soldier) throws NoSuchCheatActiveException {
+        broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(gameLoop.gameObject.getGameMap().detectCheatMove(soldier))  );
+    }
+    public void leaveGame(Player player){
+        gameLoop.turnOrder.remove(player);
+        players.remove(player);
+        if(gameLoop.turnOrder.size()==0){
+            gameLoop.gameEnded();
+        }
+        if(gameLoop.onTurn.getId().equals(player.getId())){
+            gameLoop.interrupt();
+        }
+        //remove player from gameobject?
+        broadcastAllPlayers(new PlayerLeftGameBroadcastCommand(player.getName()));
+    }
 public boolean interruptable=false;
     public class GameLoop extends Thread{
-
+        GameObject gameObject;
         Session session;
         boolean playing;
+        public Player onTurn;
         LinkedList<Player>turnOrder;
-        GameLoop(Session session){
+        GameLoop(Session session, GameObject gameObject){
             this.session=session;
+            this.gameObject=gameObject;
         }
         @Override
         public void run() {
@@ -220,7 +251,7 @@ public boolean interruptable=false;
             while (playing){
                 interruptable=false;
                 System.out.print("//a new iteration has started//");
-                Player onTurn=turnOrder.pop();
+                onTurn=turnOrder.pop();
                 turnOrder.addLast(onTurn);
                 GameCard card=null;
                 System.out.println("//its "+onTurn.getName()+"'s turn!//");
@@ -232,7 +263,7 @@ public boolean interruptable=false;
                     gameEnded(); //todo: implement
                 }
 
-                Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card));
+                Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card)); //throws socket exception end of stream if player disconnected
                 System.out.print("//"+onTurn.getName()+" has been notified//");
                 broadcastAllPlayers(new PlayerXsTurnBroadcastCommand(onTurn.getName()),onTurn);
                 System.out.print("//notifying all players//");
@@ -241,10 +272,13 @@ public boolean interruptable=false;
                     interruptable=true;
                     System.out.print("//waiting for move to be made//");
                     Thread.sleep(timeout); //waiting for succesfull move to be made
+
                 } catch (InterruptedException e) {
                     System.out.print("//notifying all players a turn has been made//");
-                    broadcastAllPlayers(new GameTurnBroadCastCommand(gameObject));
+                // broadcastAllPlayers(new GameTurnBroadCastCommand(this.gameObject));
+
                 }
+
 
 
             }
@@ -253,6 +287,11 @@ public boolean interruptable=false;
         }
 
         private void gameEnded() {
+            System.out.print("//stopping game//");
+            gameLoop.playing=false;
+            gameLoop.interrupt();
+            broadcastAllPlayers(new GameCompletedBroadcastCommand("game ended"));
+            System.out.print("//all players have been notified. //");
         }
 
         static void printTurnOrder(LinkedList<Player>list){

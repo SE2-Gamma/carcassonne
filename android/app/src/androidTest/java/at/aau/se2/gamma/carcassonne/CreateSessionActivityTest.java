@@ -128,7 +128,7 @@ public class CreateSessionActivityTest {
         onView(withId(R.id.progressBar_JoinSessionActivity)).check(matches(not(isDisplayed())));
     }
 
-    @Test
+    //@Test
     public void test_with_input() {
         onView(withId(R.id.btn_navigate_create_session)).perform(forceClick());
 
@@ -156,6 +156,7 @@ public class CreateSessionActivityTest {
         onView(withId(R.id.tv_player_count)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_LeaveLobby)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_ready)).check(matches(isDisplayed()));
+
         onView(withId(R.id.rv_lobby)).check(matches(isDisplayed()));
     }
 

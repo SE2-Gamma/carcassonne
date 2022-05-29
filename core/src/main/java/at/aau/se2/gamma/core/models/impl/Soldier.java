@@ -6,8 +6,18 @@ import java.io.Serializable;
  * soldiers placed on the field by the player
  */
 public class Soldier implements Serializable {
+
     private Player player; // reference to the player, who owns this soldier
+
+    public SoldierPlacement getSoldierPlacement() {return soldierPlacement;}
+
     private SoldierPlacement soldierPlacement; // current placement
+
+    public boolean isCheatActive() {return cheatActive;}
+
+    public void setCheatActive(boolean cheatActive) {this.cheatActive = cheatActive;}
+
+    private boolean cheatActive;
 
     public Soldier(Player player) {
         this.player = player;

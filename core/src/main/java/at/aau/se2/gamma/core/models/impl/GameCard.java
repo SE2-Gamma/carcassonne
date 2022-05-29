@@ -12,6 +12,7 @@ public class GameCard implements Serializable {
     private GameCardSide sideEast;
     private GameCardSide sideSouth;
     private GameCardSide sideWest;
+    private GameCardSide sideMid;
     private SpecialType specialType;
     private GameCardSide[] neswSides; // north, east, south, west sides
     private String cardId; // id of card type (multiple instances with same id are possible, because we have duplicate cards in the game)
@@ -62,5 +63,13 @@ public class GameCard implements Serializable {
 
     public GameCardSide[] getNeswSides() {
         return neswSides;
+    }
+
+    public GameCardSide getSideMid() {
+        return sideMid;
+    }
+
+    public void setSideMid(GameCardSide sideMid) {
+        this.sideMid = sideMid;
     }
 }
