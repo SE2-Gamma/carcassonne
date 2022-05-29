@@ -155,7 +155,8 @@ public class CreateSessionActivityTest {
         onView(withId(R.id.tv_lobby_name)).check(matches(isDisplayed()));
         onView(withId(R.id.tv_player_count)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_LeaveLobby)).check(matches(isDisplayed()));
-        //onView(withId(R.id.btn_start_game)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_ready)).check(matches(isDisplayed()));
+
         onView(withId(R.id.rv_lobby)).check(matches(isDisplayed()));
     }
 
