@@ -3,6 +3,7 @@ package at.aau.se2.gamma.carcassonne.libgdxScreens.Screens;
 import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,11 +21,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.LinkedList;
 
+import at.aau.se2.gamma.carcassonne.AndroidInterface;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCardTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
-import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.SoldierTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.UISkin;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Utility.InputCalculations;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
@@ -35,10 +36,7 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCom
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand;
 import at.aau.se2.gamma.core.commands.GameTurnCommand;
-import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
-import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
-import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
-import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
+import at.aau.se2.gamma.core.commands.LeaveGameCommand;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 import at.aau.se2.gamma.core.models.impl.GameMapEntryPosition;
@@ -98,10 +96,17 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     Player myPlayerID;
 
 
+    AndroidInterface androidInterface;
+    String userName;
+    String userID;
 
 
+    public Gamescreen(String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
 
-    public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject){
+        this.androidInterface = androidInterface;
+        this.userName = userName;
+        this.userID = UserID;
+
         currentGameObject = initialGameObject;
         myPlayerID = new Player(UserID, userName);
 
@@ -289,6 +294,28 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         hud.drawStage();
 
 
+        Gdx.input.setCatchBackKey(true);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            Log.d("GameScreen: Render", "isKeyPressed");
+            ServerThread.instance.sendCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
+                @Override
+                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                    Gdx.app.exit();
+                    androidInterface.makeToast("You left the game!");
+                    Log.d("UserName", userName);
+                    Log.d("UserID", userID);
+                    //TODO: Fix
+                    //androidInterface.startMainActivity(userName, userID);
+                }
+
+                @Override
+                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                    Log.d("LeaveGameCommand", "onFailure");
+                    androidInterface.makeToast("Something went wrong!");
+                }
+            });
+        }
 
 
     }
