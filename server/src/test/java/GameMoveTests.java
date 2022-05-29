@@ -44,7 +44,7 @@ boolean running=true;
                 try {
                     synchronized (returncommands) {
                         Object object = ServerResponseDecrypter.payloadRetriever(objectInputStream);
-                        returncommands.add(ServerResponseDecrypter.payloadRetriever(objectInputStream));
+                        returncommands.add(object);
                        System.err.println("//-----------------------------------------" + object + " added to responses--------------------------------------------/");
 
                     }
@@ -160,13 +160,14 @@ e.printStackTrace();
 
         GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.NORTH);
 
-        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(-1,0));
+        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(48,49));
         try {
+            waitForResponse(2000);
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
             waitForResponse();
             LinkedList<Object>error= (LinkedList<Object>) returncommands.getLast();
             String response= (String) error.pop();
-            assertEquals("Invalid Position on Gamemap",response);
+            assertEquals("Surrounding Conflict on Gamemap",response);
 
 
         } catch (IOException e) {
@@ -178,10 +179,12 @@ e.printStackTrace();
     @Test
     public void positionNotFree() {
         GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.NORTH);
-        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(0,0));
+        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(49,49));
         try {
+            waitForResponse(2000);
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
             waitForResponse();
+
             LinkedList<Object>error= (LinkedList<Object>) returncommands.getLast();
             String response= (String) error.pop();
             assertEquals("Position not free on Gamemap",response);
@@ -196,12 +199,13 @@ e.printStackTrace();
     @Test
     public void noSurroundings() {
         GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.NORTH);
-        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(2,0));
+        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(51,49));
         System.out.println();
         System.out.println("testing first incorrect move");
         try {
-            objectOutputStream.writeObject(new GameTurnCommand(gameMove));
-            waitForResponse();
+            waitForResponse(3000);
+            objectOutputStream.writeObject(new GameTurnCommand(gameMove));waitForResponse();
+
             System.out.println(returncommands);
             LinkedList<Object>error= (LinkedList<Object>) returncommands.getLast();
             String response= (String) error.pop();
@@ -213,7 +217,7 @@ e.printStackTrace();
         }
         System.out.println();
         System.out.println("testing second incorrect move");
-        GameMove gameMove2 = new GameMove(player1, entry, new GameMapEntryPosition(1,1));
+        GameMove gameMove2 = new GameMove(player1, entry, new GameMapEntryPosition(50,50));
         try {
             objectOutputStream.writeObject(new GameTurnCommand(gameMove2));
 
@@ -230,7 +234,7 @@ e.printStackTrace();
         System.out.println();
         System.out.println("testing third incorrect move");
 
-        GameMove gameMove3 = new GameMove(player1, entry, new GameMapEntryPosition(0,2));
+        GameMove gameMove3 = new GameMove(player1, entry, new GameMapEntryPosition(49,51));
         try {
             objectOutputStream.writeObject(new GameTurnCommand(gameMove3));
             waitForResponse();
@@ -248,7 +252,7 @@ e.printStackTrace();
     @Test
     public void surroundingConflict() {
         GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.EAST);
-        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(1,0));
+        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(50,49));
 
         /**
          *  G    C
@@ -257,8 +261,9 @@ e.printStackTrace();
          */
 
         try {
-            objectOutputStream.writeObject(new GameTurnCommand(gameMove));
-            waitForResponse();
+            waitForResponse(3000);
+            objectOutputStream.writeObject(new GameTurnCommand(gameMove));waitForResponse();
+
             System.out.println(returncommands);
             LinkedList<Object>error= (LinkedList<Object>) returncommands.getLast();
             String response= (String) error.pop();
@@ -270,7 +275,7 @@ e.printStackTrace();
         }
 
     GameMapEntry entry2 = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.NORTH);
-    GameMove gameMove2 = new GameMove(player1, entry2, new GameMapEntryPosition(1,0));
+    GameMove gameMove2 = new GameMove(player1, entry2, new GameMapEntryPosition(50,49));
 
     /**
      *  G    G
@@ -295,7 +300,7 @@ e.printStackTrace();
     @Test
     public void success() {
         GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.SOUTH);
-        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(1,0));
+        GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(50,49));
 
         /**
          *  G    S
@@ -304,12 +309,14 @@ e.printStackTrace();
          */
 
         try {
+            waitForResponse(3000);
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
-            waitForResponse();
+           waitForResponse();
 
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
+        returncommands.removeLast(); //removing new gamecard
         String response=(String)returncommands.getLast();
         assertEquals("turn succesfull",response);
     }

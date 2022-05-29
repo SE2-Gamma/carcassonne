@@ -340,5 +340,4 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         }
 
     }
-
 }

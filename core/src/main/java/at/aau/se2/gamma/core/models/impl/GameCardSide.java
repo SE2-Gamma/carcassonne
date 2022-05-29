@@ -8,16 +8,18 @@ public class GameCardSide implements Serializable {
     public enum Type {
         GRAS,
         CASTLE,
-        STREET
+        STREET,
+        MONASTERY
     }
 
     public boolean isClosingSide;
+    public boolean isMidOfCard;
 
     private Type type;
     // possible connections as array, to extend it later with bonus cards, which can connects to more than one other type
     private Type[] possibleConnectionTypes;
     private int points;
-    private int multiplier;
+    private int multiplier = 1;
 
     /**
      * GameCardSide with type, which only can connects to same type (often used)
@@ -83,5 +85,45 @@ public class GameCardSide implements Serializable {
         return "GameCardSide{" +
                 "type=" + type +
                 '}';
+    }
+
+    public boolean isClosingSide() {
+        return isClosingSide;
+    }
+
+    public void setClosingSide(boolean closingSide) {
+        isClosingSide = closingSide;
+    }
+
+    public boolean isMidOfCard() {
+        return isMidOfCard;
+    }
+
+    public void setMidOfCard(boolean midOfCard) {
+        isMidOfCard = midOfCard;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public void setPossibleConnectionTypes(Type[] possibleConnectionTypes) {
+        this.possibleConnectionTypes = possibleConnectionTypes;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getMultiplier() {
+        return multiplier;
+    }
+
+    public void setMultiplier(int multiplier) {
+        this.multiplier = multiplier;
     }
 }

@@ -95,7 +95,7 @@ public class GameMapEntry implements Serializable {
         // check if the both sides can connect and return the bool value
         GameCardSide mySide = this.getAlignedCardSides()[mySideOrientation.ordinal()];
         GameCardSide otherSide = otherEntry.getAlignedCardSides()[onSide.ordinal()];
-
+        System.out.println("My side can connect to: "+mySide.getType().name()+" - "+ otherSide.getType().name());
         return mySide.canConnectTo(otherSide);
     }
 }
