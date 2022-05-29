@@ -184,7 +184,6 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
 
                     }
 
-                    startIfPlayersReady();
 
                 }
 
@@ -213,7 +212,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                             public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                                 Log.d("PInput","Player set ready");
                                 player.setPlayerState(true);
-                                startIfPlayersReady();
+
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -341,31 +340,5 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         }
 
     }
-    private void startIfPlayersReady(){
-        boolean playersReady = true;
 
-        for (LobbyPlayerDisplay player:playerList) {
-
-            Log.d("PState",player.playerName);
-            Log.d("PState",player.playerState.toString());
-
-            if(!player.playerState){
-                playersReady=false;
-            }
-
-        }
-        Log.d("Players Debug",(playersReady)?"Players are ready":"Players are not ready");
-
-        if(playersReady){
-            Intent intent = new Intent();
-            Bundle extras=new Bundle();
-            extras.putString("PLAYERNAME",userName);
-            extras.putString("PLAYERID",userID);
-            extras.putSerializable("GAMEOBJECT",gameobject);
-            extras.putSerializable("PLAYERLIST",playerList);
-
-            intent.putExtra("GAMEBUNDLE",extras);
-            startActivity(new Intent(LobbyActivity.this, Launcher.class));
-        }
-    }
 }
