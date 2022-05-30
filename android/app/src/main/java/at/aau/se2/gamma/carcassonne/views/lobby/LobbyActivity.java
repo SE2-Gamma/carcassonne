@@ -43,6 +43,9 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
     public ActivityLobbyBinding binding;
     private LinkedList<LobbyPlayerDisplay> playerList;
     private RecyclerViewAdapter adapter;
+    private String userName;
+    private String userID;
+    private GameObject gameobject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +58,8 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         String gameKey = extras.getString("GameKey");
-        String userName = extras.getString("UserName");
-        String userID = extras.getString("UserID");
+        userName = extras.getString("UserName");
+        userID = extras.getString("UserID");
         //Get Player List from Server
         sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
             @Override
@@ -133,7 +136,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                         }
 
                     } else if(response.getPayload() instanceof GameStartedBroadcastCommand){
-                        GameObject gameobject = (GameObject) payload;
+                        gameobject = (GameObject) payload;
                         startActivity(new Intent(LobbyActivity.this, Launcher.class).putExtra("GameKey", gameKey).putExtra("UserName", userName).putExtra("GameObject", gameobject).putExtra("UserID", userID));
                     }else if(response.getPayload() instanceof PlayerXsTurnBroadcastCommand){
                         //wenn jemand anderes am zug ist
@@ -181,7 +184,6 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
 
                     }
 
-                    startIfPlayersReady();
 
                 }
 
@@ -210,7 +212,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                             public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                                 Log.d("PInput","Player set ready");
                                 player.setPlayerState(true);
-                                startIfPlayersReady();
+
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -337,24 +339,5 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
             startActivity(intent);
         }
 
-    }
-    private void startIfPlayersReady(){
-        boolean playersReady = true;
-
-        for (LobbyPlayerDisplay player:playerList) {
-
-            Log.d("PState",player.playerName);
-            Log.d("PState",player.playerState.toString());
-
-            if(!player.playerState){
-                playersReady=false;
-            }
-
-        }
-        Log.d("Players Debug",(playersReady)?"Players are ready":"Players are not ready");
-
-        //if(playersReady){
-            //startActivity(new Intent(LobbyActivity.this, Launcher.class));
-        //}
     }
 }
