@@ -301,12 +301,12 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             ServerThread.instance.sendCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
                 @Override
                 public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                    Gdx.app.exit();
+                    dispose();
                     androidInterface.makeToast("You left the game!");
                     Log.d("UserName", userName);
                     Log.d("UserID", userID);
                     //TODO: Fix
-                    //androidInterface.startMainActivity(userName, userID);
+                    androidInterface.startMainActivity();
                 }
 
                 @Override
@@ -330,7 +330,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     public void dispose() {
         myfont.dispose();
         batch.dispose();
-        CardTextures.disposeTexutres();
+        //TODO: Fix CardTextures.disposeTexutres();
         shaprenderer.dispose();
         hud.dispose();
         myMap.dispose();

@@ -7,9 +7,25 @@ import android.widget.Toast;
 
 public class AndroidPlatform implements AndroidInterface{
     private Activity context;
+    private String userName;
+    private String userID;
 
-    public AndroidPlatform(Activity context) {
+    public AndroidPlatform(Activity context, String userName, String userID) {
         this.context = context;
+        this.userName = userName;
+        this.userID = userID;
+    }
+
+    public Activity getContext() {
+        return context;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserID() {
+        return userID;
     }
 
     @Override
@@ -23,8 +39,7 @@ public class AndroidPlatform implements AndroidInterface{
     }
 
     @Override
-    public void startMainActivity(String userName, String userID) {
-        Intent prevIntent = context.getIntent();
+    public void startMainActivity() {
         Intent intent = new Intent(context, MainActivity.class);
         Bundle extras = new Bundle();
         extras.putString("UserName", userName);

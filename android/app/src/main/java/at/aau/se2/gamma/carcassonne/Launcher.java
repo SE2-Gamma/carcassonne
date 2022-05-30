@@ -11,6 +11,7 @@ import at.aau.se2.gamma.carcassonne.libgdxScreens.MyGame;
 import at.aau.se2.gamma.core.models.impl.GameObject;
 
 public class Launcher extends AndroidApplication {
+    AndroidPlatform androidPlatform;
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +24,8 @@ public class Launcher extends AndroidApplication {
         String userID = extras.getString("UserID");
         GameObject initialGameObject = (GameObject) extras.get("GameObject");
         Log.i("LauncherGame", gameKey+" | " +userName);
-        initialize(new MyGame(gameKey, userName, userID,initialGameObject, new AndroidPlatform(this)), config);
+        androidPlatform = new AndroidPlatform(Launcher.this, userName, userID);
+        initialize(new MyGame(gameKey, userName, userID,initialGameObject, androidPlatform), config);
 
     }
 
