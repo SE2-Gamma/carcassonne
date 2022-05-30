@@ -256,7 +256,15 @@ public boolean interruptable=false;
                 GameCard card=null;
                 System.out.println("//its "+onTurn.getName()+"'s turn!//");
                 try {
-                     card=deck.drawCard();
+                    card=deck.drawCard();
+
+                   while(!gameObject.getGameMap().checkCardPlaceability(card)){
+                       System.out.print(card.getCardId()+" has been drawn//");
+                       System.out.print("//card not placable, draw new card//");
+                       deck.putBackCard(card);
+                       card=deck.drawCard();
+                   }
+
                     System.out.print(card.getCardId()+" has been drawn//");
                 } catch (NoSuchElementException e) {
                     System.out.println("----------------------game ended---------------------");

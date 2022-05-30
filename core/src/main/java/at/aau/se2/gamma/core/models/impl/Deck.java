@@ -24,6 +24,9 @@ public class Deck {
         System.out.print("//card "+card.getCardId()+" drawn. remaining cards:"+deck.size()+"//");
             return card;
     }
+    public void putBackCard(GameCard card){
+        deck.addLast(card);
+    }
     public Deck(int multfaktor) {
         deck= GameCardFactory.getDeck(multfaktor);
 
