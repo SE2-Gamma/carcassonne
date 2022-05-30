@@ -100,6 +100,9 @@ public class ClientThread extends Thread {
                session.broadcastAllPlayers(new PlayerLeftLobbyBroadcastCommand(player.getName()));
                session.players.remove(player);
             }
+            if(clientState.equals(ClientState.GAME)){
+                session.leaveGame(player);
+            }
             Server.activeServerPlayers.remove(serverPlayer);
         }
         catch (Exception exception){
