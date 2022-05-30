@@ -129,4 +129,30 @@ public class GameMapTest {
         // should be zero, because vertical field is open
         assertNull(returnedDetectionData[0]);
     }
+    /**
+     *      G    G
+     *     S C  C G
+     *      S    G
+     *           G
+     *          C G
+     *           G
+     */
+    @Test
+    public void testCardNotPlaceable() throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException{
+        gameMap = new GameMap();
+        gameMap.placeGameMapEntry(
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.NORTH),
+                new GameMapEntryPosition(1,1));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleGrassGrass(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(2,1)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleGrassGrass(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(2,0)));
+
+        assertNotNull(gameMap.getMapArray()[1][2]);
+        assertFalse(gameMap.checkCardPlaceability(GameCardFactory.createCastleCastleCastleCastle()));
+        assertTrue(gameMap.checkCardPlaceability(GameCardFactory.createCastleCastleGrasStreet()));
+
+    }
 }
