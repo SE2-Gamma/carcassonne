@@ -19,6 +19,11 @@ public class GameMapEntry implements Serializable {
         this.orientation = orientation;
     }
 
+    public GameMapEntry(GameCard card,Orientation orientation){
+        this.card = card;
+        this.orientation = orientation;
+    }
+
     public boolean setSoldier(Soldier soldier, GameCardSide gameCardSide) {
         // check if soldier is free
         if (soldier.isCurrentlyPlaced()) {
