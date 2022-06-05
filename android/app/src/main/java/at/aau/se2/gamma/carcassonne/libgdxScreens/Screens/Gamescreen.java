@@ -305,7 +305,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     androidInterface.makeToast("You left the game!");
                     Log.d("UserName", userName);
                     Log.d("UserID", userID);
-                    //TODO: Fix
                     androidInterface.startMainActivity();
                 }
 
