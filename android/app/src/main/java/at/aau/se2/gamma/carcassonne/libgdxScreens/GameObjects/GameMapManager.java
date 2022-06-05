@@ -296,7 +296,7 @@ public class GameMapManager {
            for (int j = 0; j < Playingfield.length; j++) {
                for (int i = 0; i < Playingfield[j].length; i++) {
                    if(Playingfield[j][i] != null && Playingfield[j][i].getGameMapEntry().getPlacedByPlayer() != null){
-                       if(!playerlist.contains(Playingfield[j][i].getGameMapEntry().getPlacedByPlayer())){
+                       if(!playerlist.contains(Playingfield[j][i].getGameMapEntry().getPlacedByPlayer().getId())){
                            playerlist.add(Playingfield[j][i].getGameMapEntry().getPlacedByPlayer().getId());
                        }
                    }
