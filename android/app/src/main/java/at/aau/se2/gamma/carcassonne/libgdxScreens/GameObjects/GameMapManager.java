@@ -143,10 +143,10 @@ public class GameMapManager {
                      //right side of upper y limit
                     }else if (col == lastGameArrayNumber){
                         if(Playingfield[row][col-1] != null || Playingfield[row-1][col] != null){
-                            if(Playingfield[row][col-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col-1].getGameMapEntry(), Orientation.WEST) == false){
+                            if(Playingfield[row][col-1] != null && card.getGameMapEntry().canConnectTo(Playingfield[row][col-1].getGameMapEntry(), Orientation.EAST) == false){
                                 CardConnectable = false;
                             }
-                            if(Playingfield[row-1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row-1][col].getGameMapEntry(), Orientation.SOUTH) == false){
+                            if(Playingfield[row-1][col] != null && card.getGameMapEntry().canConnectTo(Playingfield[row-1][col].getGameMapEntry(), Orientation.NORTH) == false){
                                 CardConnectable = false;
                             }
                             if(CardConnectable){

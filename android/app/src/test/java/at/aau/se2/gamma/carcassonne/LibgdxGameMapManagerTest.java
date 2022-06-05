@@ -112,12 +112,12 @@ public class LibgdxGameMapManagerTest {
         firstMap = new GameMap();
         firstMap.placeGameMapEntry(new GameMapEntry(GameCardFactory.D(), null, Orientation.EAST), new GameMapEntryPosition(98, 99));
         myMap.setGameMap(firstMap);
-        Assert.assertTrue(myMap.setGamecard(new Vector2(144*99,144*99), new GameCard(Mockito.mock(Texture.class), new Vector2(0,144*99), new GameMapEntry(GameCardFactory.H(), player,  Orientation.NORTH))));
+        Assert.assertTrue(myMap.setGamecard(new Vector2(144*99,144*99), new GameCard(Mockito.mock(Texture.class), new Vector2(0,144*99), new GameMapEntry(GameCardFactory.H(), player,  Orientation.EAST))));
 
         firstMap = new GameMap();
         firstMap.placeGameMapEntry(new GameMapEntry(GameCardFactory.D(), null, Orientation.EAST), new GameMapEntryPosition(98, 99));
         myMap.setGameMap(firstMap);
-        Assert.assertFalse(myMap.setGamecard(new Vector2(144*99,144*99), new GameCard(Mockito.mock(Texture.class), new Vector2(0,144*99), new GameMapEntry(GameCardFactory.H(), player,  Orientation.EAST))));
+        Assert.assertFalse(myMap.setGamecard(new Vector2(144*99,144*99), new GameCard(Mockito.mock(Texture.class), new Vector2(0,144*99), new GameMapEntry(GameCardFactory.H(), player,  Orientation.NORTH))));
 
         firstMap = new GameMap();
         firstMap.placeGameMapEntry(new GameMapEntry(GameCardFactory.D(), null, Orientation.EAST), new GameMapEntryPosition(99, 98));
@@ -135,5 +135,9 @@ public class LibgdxGameMapManagerTest {
         myMap.setGameMap(firstMap);
         Assert.assertFalse(myMap.setGamecard(new Vector2(144*99,144*99), new GameCard(Mockito.mock(Texture.class), new Vector2(0,144*99), new GameMapEntry(GameCardFactory.H(), player,  Orientation.NORTH))));
 
+        firstMap = new GameMap();
+        firstMap.placeGameMapEntry(new GameMapEntry(GameCardFactory.D(), null, Orientation.EAST), new GameMapEntryPosition(98, 99));
+        myMap.setGameMap(firstMap);
+        Assert.assertFalse(myMap.setGamecard(new Vector2(144*99,144*99), new GameCard(Mockito.mock(Texture.class), new Vector2(0,144*99), new GameMapEntry(GameCardFactory.H(), player,  Orientation.NORTH))));
     }
 }
