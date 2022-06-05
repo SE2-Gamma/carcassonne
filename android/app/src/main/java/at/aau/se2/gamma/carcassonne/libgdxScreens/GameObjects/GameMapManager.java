@@ -385,6 +385,52 @@ public class GameMapManager {
         return null;
     }
 
+    //the thing is i have no idea right now how the cheat move is implemented on the server, so i am just passing everythign i think could be importand
+    public CheatMoveSoldierPosition touchedSoldierGetALL(float x, float y){
+        for (int j = 0; j < Playingfield.length; j++) {
+            for (int i = 0; i < Playingfield[j].length; i++) {
+                if (Playingfield[i][j] != null && Playingfield[i][j].getGameCardTexture() != null) {
+                    ArrayList<SoldierPlacement> cardSoldiers = Playingfield[i][j].getGameMapEntry().getSoldierPlacements();
+                    GameCardSide cardSides[] = Playingfield[i][j].getGameMapEntry().getAlignedCardSides();
+                    for (SoldierPlacement sp : cardSoldiers) {
+                        for (int s = 0; s < cardSides.length; s++) {
+                            if (cardSides[s].equals(sp.getGameCardSide())) {
+                                switch (s) {
+                                    case 0:
+                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y + 96, 32, 32, x, y)) {
+                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[i][j].getPosition().x + 48,Playingfield[i][j].getPosition().y + 96), sp.getSoldier(), Playingfield[i][j]);
+                                        }
+                                        //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y + 96);
+                                        break;
+                                    case 1:
+                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 96, Playingfield[i][j].getPosition().y + 48, 32, 32, x, y)) {
+                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[i][j].getPosition().x + 96,Playingfield[i][j].getPosition().y + 48), sp.getSoldier(), Playingfield[i][j]);
+                                        }
+                                        //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 96, Playingfield[i][j].getPosition().y + 48);
+                                        break;
+                                    case 2:
+                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y, 32, 32, x, y)) {
+                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[i][j].getPosition().x + 48,Playingfield[i][j].getPosition().y), sp.getSoldier(), Playingfield[i][j]);
+                                        }
+                                        //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y);
+                                        break;
+                                    case 3:
+                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y + 48, 32, 32, x, y)) {
+                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[i][j].getPosition().x,Playingfield[i][j].getPosition().y +48), sp.getSoldier(), Playingfield[i][j]);
+                                        }
+                                        //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y + 48);
+                                        break;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public void dispose() {
         //batch.dispose();
         // shaperender.dispose();

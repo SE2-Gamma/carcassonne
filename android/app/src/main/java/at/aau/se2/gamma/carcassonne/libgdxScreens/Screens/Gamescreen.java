@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.CheatMoveSoldierPosition;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCardTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
@@ -104,9 +105,12 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     Player myPlayerID;
     boolean myTurn;
 
+    private CheatMoveSoldierPosition selectedCheatingSoldier;
+
 
 
     public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject){
+        selectedCheatingSoldier = null;
         currentGameObject = initialGameObject;
         myPlayerID = new Player(UserID, userName);
         myTurn = false;
@@ -317,6 +321,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     myMap.setGamecard(playedCard_x, playedCard_y, null);
                 }
                 hud.changeHudState(Hud.Hud_State.CHEATING);
+
+                hud.showErrorText("Select soldier to cheat with!");
             }
         });
 
@@ -439,7 +445,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             allDistances[1] = distance(mapPos, point_right);
             allDistances[2] = distance(mapPos, point_top);
             allDistances[3] = distance(mapPos, point_bottom);
-            //allDistances[4] = distance(mapPos, point_middle);
+           // allDistances[4] = distance(mapPos, point_middle);
+           // if(!lastCard.getGameMapEntry().getCard().getSpecialType().equals(at.aau.se2.gamma.core.models.impl.GameCard.SpecialType.MONASTERY)){
+                //allDistances[4] = Float.MAX_VALUE;
+           // }
 
             Soldier mySoldier = new Soldier(myPlayerID);
 
@@ -465,6 +474,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[2]);
                     break;
                 //case 4:
+                    //lastCard.getGameMapEntry().setSoldier(mySoldier,);
+                    //break;
             }
             hud.changeHudState(Hud.Hud_State.ACCEPT_PLACING_SOLDIER);
 
@@ -509,8 +520,63 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             }
 
 
+        }else if(hud.getCurrentState().equals(Hud.Hud_State.CHEATING)){
+
+            Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            selectedCheatingSoldier = myMap.touchedSoldierGetALL(mapPos.x, mapPos.y);
+
+            if(selectedCheatingSoldier != null){
+                Log.i("ReportedPlayer", "Touched Soldier");
+                Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+selectedCheatingSoldier.getSoldier().getPlayer().getId());
+                hud.changeHudState(Hud.Hud_State.CHEATING_DIRECTION);
+                hud.showErrorText("Tap the direction you want to move the soldier");
+            }
+
+        }else if(hud.getCurrentState().equals(Hud.Hud_State.CHEATING_DIRECTION)){
+
+            Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            //change lenght when churches are implemented/ no idea how my teammates planned them right now
+            float[] allDistances = new float[4];
+
+            Vector2 point_left = new Vector2(selectedCheatingSoldier.getPosition().x, selectedCheatingSoldier.getPosition().y+16);
+            Vector2 point_right = new Vector2(selectedCheatingSoldier.getPosition().x+32, selectedCheatingSoldier.getPosition().y+16);
+            Vector2 point_top = new Vector2(selectedCheatingSoldier.getPosition().x+16, selectedCheatingSoldier.getPosition().y+32);
+            Vector2 point_bottom = new Vector2(selectedCheatingSoldier.getPosition().x+16, selectedCheatingSoldier.getPosition().y);
+
+            allDistances[0] = distance(mapPos, point_left);
+            allDistances[1] = distance(mapPos, point_right);
+            allDistances[2] = distance(mapPos, point_top);
+            allDistances[3] = distance(mapPos, point_bottom);
+
+            Soldier mySoldier = new Soldier(myPlayerID);
+
+            //getting smallest distance
+            int smallestIndex = 0;
+            for(int i = 0; i<allDistances.length; i++){
+                if(allDistances[i]<allDistances[smallestIndex]){
+                    smallestIndex = i;
+                }
+            }
+
+            switch (smallestIndex){
+                case 0:
+                    hud.showErrorText("LEFT");
+                    break;
+                case 1:
+                    hud.showErrorText("RIGHT");
+                    break;
+                case 2:
+                    hud.showErrorText("TOP");
+                    break;
+                case 3:
+                    hud.showErrorText("BOTTOM");
+                    break;
+            }
+
         }
-        //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
+
+
+            //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
         //Log.e("info", "button: "+button + " | count: "+count);
 
         return false;
@@ -542,7 +608,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
     @Override
     public boolean zoom(float initialDistance, float distance) {
-        //MathUtils.lerp() sounds interesting
+        //MathUtils.lerp() sounds interestingHud.Hud_State.CHEATING
         return false;
     }
 
