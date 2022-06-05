@@ -51,6 +51,37 @@ public class Hud_Item_AcceptDeclineButtons {
 
     }
 
+    public Hud_Item_AcceptDeclineButtons(String AcceptText, String DeclineText){
+        skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        acceptButton = new TextButton(AcceptText, skin, "default");
+        declineButton = new TextButton(DeclineText, skin, "default");
+        acceptButton.getLabel().setFontScale(5f);
+        declineButton.getLabel().setFontScale(5f);
+        declineButton.pack();
+        acceptButton.pack();
+        buttonTable = new Table();
+        buttonTable.setFillParent(true);
+        buttonTable.align(Align.right | Align.bottom).pad(10f);
+        buttonTable.add(acceptButton).pad(10f);
+        buttonTable.add(declineButton).pad(10f);
+
+        acceptButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+            }
+        });
+
+        declineButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+            }
+        });
+
+
+    }
+
     public Table getButtonTable(){
         return buttonTable;
     }

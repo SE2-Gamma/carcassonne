@@ -39,7 +39,7 @@ public class LibgdxHudTest {
         private GameMap firstMap;
 
 
-       // @Before
+        //@Before
         public void before(){
 
             playercam = new OrthographicCamera();
@@ -59,9 +59,9 @@ public class LibgdxHudTest {
             gc = new GameCard(myTexture,position, Mockito.mock(GameMapEntry.class));
 
             firstMap = new GameMap();
-            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap);
+            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap, true);
 
-            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap);
+            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap, true);
             Mockito.doNothing().when(sb).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
 
             //Viewport myViewport = Mockito.mock(ScreenViewport.class);

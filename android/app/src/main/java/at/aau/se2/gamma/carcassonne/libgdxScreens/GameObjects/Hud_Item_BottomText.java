@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-public class Hud_Item_TopText {
+public class Hud_Item_BottomText {
 
     private Table table;
     private Label statusFirstRowLabel;
@@ -13,9 +13,9 @@ public class Hud_Item_TopText {
 
     private Label.LabelStyle labelstyle;
 
-    public Hud_Item_TopText() {
+    public Hud_Item_BottomText() {
         table = new Table(); //table for layout management
-        table.top(); //aligns item on top
+        table.bottom(); //aligns item on bottom
         table.setFillParent(true); //set table to size of stage
 
         labelstyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
