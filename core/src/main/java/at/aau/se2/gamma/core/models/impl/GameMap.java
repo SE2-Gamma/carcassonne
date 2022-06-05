@@ -251,6 +251,60 @@ public class GameMap implements Serializable {
         }
         return surroundingFields;
     }
+    //Diese Methode checkt ob es Stellen am Spielfeld gibt an denen eine Karte plaziert werden kann
+    public boolean checkCardPlaceability(GameCard gameCard){
+
+        GameMapEntry mapentry;
+        GameMapEntry[] surroundingfields;
+        Orientation[] orientationArr = new Orientation[4];
+        orientationArr[0] = Orientation.NORTH;
+        orientationArr[1] = Orientation.EAST;
+        orientationArr[2] = Orientation.SOUTH;
+        orientationArr[3] = Orientation.WEST;
+
+        for(int y = 0; y < mapArray.length; y++){
+            for (int x = 0; x < mapArray[y].length; x++){
+                //es werden alle positionen gefunden in denen bereits eine Karte liegt da nur an diese eine neue angefügt werden kann
+                //in diesen Positionen werden dann alle leeren Nachbarn überprüft ob die momemtane Karte in irgendeiner
+                //Orientierung hineingelegt werden kann
+                if(!(mapArray[y][x] == null)){
+
+                    for (Orientation orientation:orientationArr) {
+                        if(y< mapArray.length-1&&mapArray[y+1][x] == null){
+                            mapentry = new GameMapEntry(gameCard,orientation);
+                            surroundingfields = getNESWSurroundingFields(new GameMapEntryPosition(x,y+1));
+                            if(gameCardMatchesNeighbors(surroundingfields,mapentry)){
+                                return true;
+                            }
+                        }
+                        if(y>0&&mapArray[y-1][x] == null){
+                            mapentry = new GameMapEntry(gameCard,orientation);
+                            surroundingfields = getNESWSurroundingFields(new GameMapEntryPosition(x,y-1));
+                            if(gameCardMatchesNeighbors(surroundingfields,mapentry)){
+                                return true;
+                            }
+                        }
+                        if(x< mapArray.length-1&&mapArray[y][x+1] == null){
+                            mapentry = new GameMapEntry(gameCard,orientation);
+                            surroundingfields = getNESWSurroundingFields(new GameMapEntryPosition(x+1,y));
+                            if(gameCardMatchesNeighbors(surroundingfields,mapentry)){
+                                return true;
+                            }
+                        }
+                        if(x>0&&mapArray[y][x-1] == null){
+                            mapentry = new GameMapEntry(gameCard,orientation);
+                            surroundingfields = getNESWSurroundingFields(new GameMapEntryPosition(x-1,y));
+                            if(gameCardMatchesNeighbors(surroundingfields,mapentry)){
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     public GameMapHandler getGameMapHandler() {
         return gameMapHandler;
@@ -259,4 +313,31 @@ public class GameMap implements Serializable {
     public void setGameMapHandler(GameMapHandler gameMapHandler) {
         this.gameMapHandler = gameMapHandler;
     }
+
+    public boolean gameCardMatchesNeighbors(GameMapEntry[] neswSurroundingFields, GameMapEntry entryCandidate) {
+
+        for(int i = 0; i < neswSurroundingFields.length; i++) {
+            GameMapEntry neighbour = neswSurroundingFields[i];
+
+            if (neighbour != null) {
+                // get orientation side where the neighbour is located
+                Orientation side;
+                switch (i) {
+                    case 1: side = Orientation.EAST; break;
+                    case 2: side = Orientation.SOUTH; break;
+                    case 3: side = Orientation.WEST; break;
+                    default: side = Orientation.NORTH;
+                }
+
+                System.out.println("side: "+i+" - "+side.toString());
+
+                // if it can't connect to each other, set false
+                if (!neighbour.canConnectTo(entryCandidate, side)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 }
