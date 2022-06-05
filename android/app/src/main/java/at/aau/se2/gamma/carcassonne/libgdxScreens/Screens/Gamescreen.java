@@ -5,6 +5,7 @@ import android.util.Log;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,10 +15,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
@@ -34,12 +37,14 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.GameTurnBroadCastCommand
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand;
+import at.aau.se2.gamma.core.commands.DetectCheatCommand;
 import at.aau.se2.gamma.core.commands.GameTurnCommand;
 import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
 import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
 import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
 import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
+import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 import at.aau.se2.gamma.core.models.impl.GameMapEntryPosition;
 import at.aau.se2.gamma.core.models.impl.GameMove;
@@ -47,6 +52,7 @@ import at.aau.se2.gamma.core.models.impl.GameObject;
 import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Soldier;
+import at.aau.se2.gamma.core.models.impl.SoldierPlacement;
 
 public class Gamescreen extends ScreenAdapter implements GestureDetector.GestureListener {
 
@@ -96,14 +102,14 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     //dataFromServer
     GameObject currentGameObject;
     Player myPlayerID;
-
-
+    boolean myTurn;
 
 
 
     public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject){
         currentGameObject = initialGameObject;
         myPlayerID = new Player(UserID, userName);
+        myTurn = false;
 
         playercam = new OrthographicCamera();
         playercam.setToOrtho(false);
@@ -134,7 +140,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         errorTextur = new Texture("testTexture.jpg");
 
         //setting up playable area / map
-        myMap = new GameMapManager(playercam, gameviewport, batch, currentGameObject.getGameMap());
+        myMap = new GameMapManager(playercam, gameviewport, batch, currentGameObject.getGameMap(), true);
 
         playedCard_x = 0;
         playedCard_y = 0;
@@ -200,7 +206,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     }
                 });
 
-
                 lastCard = null;
                 //HERE send GameMove with gameMapEntry etc. later
 
@@ -254,6 +259,86 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         ServerThread.instance.setBroadcastHandler(myBroadCastHandler);
 
+        //play button click listener
+        hud.getPlay_button().addListener(new ClickListener(){
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //hud.getPlay_button().setChecked(true);
+                super.clicked(event, x, y);
+                //hud.getButtonGroup().setChecked("PLAY");
+                if(!(hud.getCurrentState().equals(Hud.Hud_State.PLAYING)||hud.getCurrentState().equals(Hud.Hud_State.VIEWING))){
+                    if(myTurn){
+                        hud.changeHudState(Hud.Hud_State.PLAYING);
+                    }else {
+                        hud.changeHudState(Hud.Hud_State.VIEWING);
+                    }
+                }
+
+            }
+        });
+
+        //play button click listener
+        hud.getReport_button().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                //hud.getButtonGroup().setChecked("REPORT");
+                if(hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_ACTION)||
+                        hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_PLACING_SOLDIER) ||
+                        hud.getCurrentState().equals(Hud.Hud_State.PLACING_SOLDIER)){
+                    currentGameCard = lastCard;
+                    hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+                    currentGameCard.getGameMapEntry().getSoldierPlacements().clear();
+                    lastCard = null;
+                    myMap.setGamecard(playedCard_x, playedCard_y, null);
+                }
+                hud.changeHudState(Hud.Hud_State.REPORTING);
+
+                hud.showErrorText("Select the suspicious soldier!");
+
+
+            }
+        });
+
+        //cheat button click listener
+        hud.getCheat_button().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                //hud.getButtonGroup().setChecked("CHEAT");
+                if(hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_ACTION)||
+                        hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_PLACING_SOLDIER) ||
+                        hud.getCurrentState().equals(Hud.Hud_State.PLACING_SOLDIER)){
+                    currentGameCard = lastCard;
+                    hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+                    currentGameCard.getGameMapEntry().getSoldierPlacements().clear();
+                    lastCard = null;
+                    myMap.setGamecard(playedCard_x, playedCard_y, null);
+                }
+                hud.changeHudState(Hud.Hud_State.CHEATING);
+            }
+        });
+
+        //cheat button click listener
+        hud.getStat_button().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                //hud.getButtonGroup().setChecked("STATS");
+                if(hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_ACTION)||
+                        hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_PLACING_SOLDIER) ||
+                        hud.getCurrentState().equals(Hud.Hud_State.PLACING_SOLDIER)){
+                    currentGameCard = lastCard;
+                    hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+                    currentGameCard.getGameMapEntry().getSoldierPlacements().clear();
+                    lastCard = null;
+                    myMap.setGamecard(playedCard_x, playedCard_y, null);
+                }
+                hud.changeHudState(Hud.Hud_State.SCOREBOARD);
+            }
+        });
+
 
     }
 
@@ -270,7 +355,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         batch.begin();
 
         //drawing empty Game Map
-        myMap.draw();
+        myMap.draw(hud.getCurrentState());
 
         //printing fps and playercam position inside of the Gameworld
         //myfont.draw(batch, String.format("fps:%.2f | x pos: %f",(float)(1/delta), playercam.position.x), 0,0);
@@ -383,9 +468,51 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             }
             hud.changeHudState(Hud.Hud_State.ACCEPT_PLACING_SOLDIER);
 
+        } else if(hud.getCurrentState().equals(Hud.Hud_State.REPORTING)){
+            Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            Soldier touchedSoldier = myMap.touchedSoldier(mapPos.x, mapPos.y);
+
+            if(touchedSoldier != null){
+                Log.i("ReportedPlayer", "Touched player");
+                Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+touchedSoldier.getPlayer().getId());
+                if(!(myPlayerID.getId().equals(touchedSoldier.getPlayer().getId()))){
+                    //Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+touchedSoldier.getPlayer().getId());
+                    hud.changeHudState(Hud.Hud_State.ACCEPT_REPORTING);
+                    hud.getReportAcceptButton().addListener(new ClickListener(){
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            super.clicked(event, x, y);
+                            hud.changeHudState(Hud.Hud_State.REPORTING);
+                            ServerThread.instance.sendCommand(new DetectCheatCommand(touchedSoldier), new ServerThread.RequestResponseHandler() {
+                                @Override
+                                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                                    String responseString = (String) payload;
+                                    Log.i("ReportedPlayer", responseString);
+                                    hud.showErrorText(responseString);
+                                }
+
+                                @Override
+                                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
+                                }
+                            });
+                        }
+                    });
+                    hud.getReportDeclineButton().addListener(new ClickListener(){
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            super.clicked(event, x, y);
+                            hud.changeHudState(Hud.Hud_State.REPORTING);
+                        }
+                    });
+                }
+            }
+
+
         }
         //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
         //Log.e("info", "button: "+button + " | count: "+count);
+
         return false;
     }
 
@@ -447,8 +574,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         public void onBroadcastResponse(ServerResponse response, Object payload) {
             if(response.getPayload() instanceof StringBroadcastCommand){
                 Log.i("LauncherGame", "alles");
+                myTurn = false;
             }else
             if(response.getPayload() instanceof GameTurnBroadCastCommand){
+                myTurn = false;
                 //nach einen zug
                 //currentGameObject = (GameObject) payload;
                 GameMove gm = (GameMove) payload;
@@ -469,21 +598,32 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     lastCard = null;
                     myMap.setGamecard(playedCard_x, playedCard_y, null);
                 }
+                if(!(hud.getCurrentState().equals(Hud.Hud_State.SCOREBOARD)||hud.getCurrentState().equals(Hud.Hud_State.CHEATING)||hud.getCurrentState().equals(Hud.Hud_State.REPORTING))){
+                    hud.changeHudState(Hud.Hud_State.VIEWING);
+                }
 
-                hud.changeHudState(Hud.Hud_State.VIEWING);
                 currentGameCard = null;
                 hud.setNextCardTexture(null);
                 hud.showInfoText("It's "+ (String)payload +"'s turn!");
+                hud.setMyTurn(false);
+                myTurn = false;
 
             } else if(response.getPayload() instanceof YourTurnBroadcastCommand){
+
                 Log.i("LauncherGame", "Spieler ist nun an der Reihe");
                 at.aau.se2.gamma.core.models.impl.GameCard gm = (at.aau.se2.gamma.core.models.impl.GameCard) payload;
                 GameMapEntry gme = new GameMapEntry(gm, myPlayerID);
                 currentGameCard = new GameCard(GameCardTextures.getInstance().getTextureFromCardID(gm.getCardId()), new Vector2(0,0), gme);
                 hud.setNextCardTexture(currentGameCard.getGameCardTexture());
-                hud.changeHudState(Hud.Hud_State.PLAYING);
+
+                if(hud.getCurrentState().equals(Hud.Hud_State.VIEWING)){
+                    hud.changeHudState(Hud.Hud_State.PLAYING);
+                }
+
                 Log.i("LauncherGame", "Spieler ist nun an der Reihe mit dieser karte:  "+ currentGameCard.getGameMapEntry().getCard().getCardId());
                 hud.showInfoText("It's Your turn!");
+                hud.setMyTurn(true);
+                myTurn = true;
 
                 //at.aau.se2.gamma.core.models.impl.GameMapEntry newCardFromDeck = new GameMapEntry(CardDeck.get((int)(Math.random()*20)), myPlayerID, Orientation.NORTH);
                 //currentGameCard = new GameCard(CardTextures.getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0),270f,newCardFromDeck);
