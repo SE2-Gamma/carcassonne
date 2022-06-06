@@ -18,7 +18,7 @@ public class GlobalVariables {
     }
 
     private static String defaultname="XXXXXXXXXXXX";
-    private static int port=1234;
+    private static int port=53212;
     private static String defaultID="-1";
     public static String getDefaultID() {
         return defaultID;
