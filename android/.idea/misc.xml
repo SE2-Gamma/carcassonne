@@ -3,7 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-
         <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_create_session.xml" value="0.22760416666666666" />
         <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_game_result.xml" value="0.18541666666666667" />
         <entry key="..\:/Users/phili/AndroidStudioProjects/Einzelbeispiel2/carcassonne/android/app/src/main/res/layout/activity_game_result2.xml" value="0.22" />
@@ -28,9 +27,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
-
   <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="openjdk-17" project-jdk-type="JavaSDK">
-
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="SwUserDefinedSpecifications">
