@@ -31,7 +31,9 @@ public class Hud {
         ACCEPT_PLACING_SOLDIER,
         SCOREBOARD,
         ACCEPT_REPORTING,
-        ACCEPT_CHEATING
+        ACCEPT_CHEATING,
+        CHEATING_DIRECTION
+
     }
 
 
@@ -192,6 +194,9 @@ public class Hud {
             case ACCEPT_REPORTING:
                 stage.clear();
                 stage.addActor(accept_decline_buttons_report.getButtonTable());
+                break;
+            case CHEATING_DIRECTION:
+                stage.clear();
                 break;
 
         }
