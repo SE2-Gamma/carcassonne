@@ -249,7 +249,7 @@ public  class Server implements Runnable {
     public static void main(String[] args) throws IOException {
 
         String input="null";
-        Server server = new Server("localhost", GlobalVariables.getPort(), maxPlayers);
+        Server server = new Server(GlobalVariables.getAdress(), GlobalVariables.getPort(), maxPlayers);
         Thread thread=new Thread(server);
         thread.start();
         System.out.println("server running");

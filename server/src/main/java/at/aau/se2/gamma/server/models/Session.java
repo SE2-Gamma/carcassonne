@@ -178,7 +178,7 @@ public class Session extends BaseModel implements Serializable {
 
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
          try {
-             Thread.sleep(5000);
+             Thread.sleep(1000);
          } catch (InterruptedException e) {
              e.printStackTrace();
          }
@@ -214,7 +214,15 @@ public class Session extends BaseModel implements Serializable {
         System.out.print("// cheatmove broadcasted//");
     }
     public void detectCheat(Soldier soldier) throws NoSuchCheatActiveException {
-        broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(gameLoop.gameObject.getGameMap().detectCheatMove(soldier))  );
+        System.out.print("//trying to detect a cheat.//");
+
+        LinkedList<CheatMove> cheats=gameLoop.gameObject.getGameMap().detectCheatMove(soldier);
+        System.out.print("//cheat detected//");
+        System.out.print(cheats);
+        gameLoop.gameObject.getGameMap().undoCheatMove(cheats);
+        System.out.print("//cheat undone//");
+        System.out.print(cheats);
+        broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(new LinkedList<>(cheats)));
     }
     public void leaveGame(Player player){
         gameLoop.turnOrder.remove(player);
