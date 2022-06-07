@@ -30,6 +30,7 @@ public class GameMapEntry implements Serializable {
             return false;
         }
 
+
         // check if the placer placed this card
         if(!soldier.getPlayer().getId().equals(this.placedByPlayer.getId())) {
             return false;

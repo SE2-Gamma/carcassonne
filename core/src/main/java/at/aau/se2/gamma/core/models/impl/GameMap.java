@@ -4,9 +4,11 @@ import at.aau.se2.gamma.core.exceptions.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.logging.Logger;
 
 public class GameMap implements Serializable {
     // default values for the map
@@ -16,30 +18,65 @@ public class GameMap implements Serializable {
     private GameMapEntry[][] mapArray;
     private ConcurrentLinkedDeque<CheatMove> cheatMoves=new ConcurrentLinkedDeque<>();
     public void executeCheatMove(CheatMove cheatMove)throws CheatMoveImpossibleException{
+        int x=cheatMove.soldier.getX();
+        int y=cheatMove.soldier.getY();
+        //checks if a soldier is on the card
+
+        if(mapArray[x][y].getSoldierPlacements().size()==0){
+            throw new CheatMoveImpossibleException("no soldier on card");
+        }
+        //checks if gamecardside is present on the gamecard
+        if(!mapArray[x][y].getCard().containsSide(cheatMove.newPosition.getGameCardSide())){
+            throw new CheatMoveImpossibleException("gamecardside not found on card");
+        }
+        //checks if original cheatposition is equal to found soldierposition
+        if(!mapArray[x][y].getSoldierPlacements().get(0).getGameCardSide().equals(cheatMove.originalPosition.getGameCardSide())){
+            throw new CheatMoveImpossibleException("original position is not equal to found soldierposition");
+        }
+
+        cheatMove.newPosition.getSoldier().addCheat(cheatMove);
+
         synchronized (cheatMoves) {
-            //todo: implement
+           //removes first soldierplacement. requires that only one soldier can be placed per gamecard
+            mapArray[x][y].getSoldierPlacements().clear();
+            //adds new soldierplacement
+            mapArray[x][y].getSoldierPlacements().add(cheatMove.newPosition);
+
 
             cheatMoves.add(cheatMove);
         }
 
     }
-    public CheatMove detectCheatMove(Soldier soldier) throws  NoSuchCheatActiveException {
+    public LinkedList<CheatMove> detectCheatMove(Soldier soldier) throws  NoSuchCheatActiveException {
         //todo: check if correct soldier has been selected. at the moment im just checking for playername.
         synchronized (cheatMoves) {
-            for (CheatMove cheat:cheatMoves
-                 ) {
-                if((cheat.soldier.getPlayer().getName().equals(soldier.getPlayer().getName())&&cheat.active)){
-                    //todo; check if soldier.getSoldierplacement()==cheat.newPosition;
-                    undoCheatMove(cheat);
-                    cheatMoves.remove(cheat);
-                    return cheat;
+            try {
+                if(mapArray[soldier.getX()][soldier.getY()].getSoldierPlacements().get(0).getSoldier().getActiveCheats().size()==0){
+                    throw new NoSuchCheatActiveException();
                 }
+            } catch (IndexOutOfBoundsException e) {
+                throw new NoSuchCheatActiveException();
+            }
+            System.err.println("///////////---------------------------"+mapArray[soldier.getX()][soldier.getY()].getSoldierPlacements().get(0).getSoldier().getActiveCheats());
+            return mapArray[soldier.getX()][soldier.getY()].getSoldierPlacements().get(0).getSoldier().getActiveCheats();
+
+        }
+
+    }
+    public void undoCheatMove(LinkedList<CheatMove> moves){
+        synchronized (cheatMoves) {
+            for (CheatMove move:cheatMoves
+                 ) {
+                cheatMoves.remove(move);
             }
         }
-        throw new NoSuchCheatActiveException();
-    }
-    public void undoCheatMove(CheatMove cheatMove){
-        //todo: implement
+
+        //clears soldierplacements of the gamemapentry and sets it to the very first original position
+            mapArray[moves.getFirst().soldier.getX()][moves.getFirst().soldier.getY()].getSoldierPlacements().clear();
+            mapArray[moves.getFirst().soldier.getX()][moves.getFirst().soldier.getY()].getSoldierPlacements().add(moves.getFirst().originalPosition);
+            //todo: give each cheater the correct penalty (CheatMove.getPlayername <- the cheater
+            // CheatMove.getPenalty <- the correct number of points lost. is independent from detected cheats but number of cheats done.
+            // so if a player has done 4 cheats but the very first is detected he only loses 1 points, but if the last cheat is detected first he loses 2^4 points.
     }
 
     public GameMap() {

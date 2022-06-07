@@ -38,7 +38,7 @@ public class ClientThread extends Thread {
     private String ID;
     private ServerPlayer serverPlayer;
     private boolean communicating =false;
-    private int numberOfCheats=1;
+    public int numberOfCheats=1;
 
     private SecureObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
@@ -240,7 +240,7 @@ public class ClientThread extends Thread {
         }
 
         CheatMove cheatMove=(CheatMove) command.getPayload();
-        cheatMove.setPointsLostIfDetected((int) Math.pow(2,numberOfCheats));
+        cheatMove.setPenalty((int) Math.pow(2,numberOfCheats));
         try {
             session.executeCheat(cheatMove);
         } catch (CheatMoveImpossibleException e) {
@@ -259,6 +259,7 @@ public class ClientThread extends Thread {
         } catch (NoSuchElementException e) {
             return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
         }
+        clientState=ClientState.INITIAl;
         return ResponseCreator.getSuccess(command,"Game Successfully left.");
         //todo:
         //check if ingame

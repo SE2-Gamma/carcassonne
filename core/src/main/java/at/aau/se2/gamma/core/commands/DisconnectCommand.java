@@ -3,7 +3,8 @@ package at.aau.se2.gamma.core.commands;
 import at.aau.se2.gamma.core.states.ClientState;
 
 public class DisconnectCommand extends BaseCommand{
-//input: null
+
+    //input: null
     //return: string
 
     public DisconnectCommand(Object payload) {
@@ -19,4 +20,5 @@ public class DisconnectCommand extends BaseCommand{
     public ClientState getState() {
         return ClientState.ANY;
     }
+
 }
