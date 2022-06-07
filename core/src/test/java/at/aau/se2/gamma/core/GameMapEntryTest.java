@@ -18,6 +18,7 @@ public class GameMapEntryTest {
 
     GameCard gameCardPlayer1;
     GameCard gameCardPlayer2;
+    GameCard gameCardMonastaryPlayer1;
 
     @BeforeEach
     public void beforeTest() {
@@ -29,6 +30,7 @@ public class GameMapEntryTest {
 
         gameCardPlayer1 = GameCardFactory.createGrasCastleGrasStreet();
         gameCardPlayer2 = GameCardFactory.createCastleCastleGrasStreet();
+        gameCardMonastaryPlayer1 = GameCardFactory.createMonasteryGrassGrassGrassGrass();
     }
 
 
@@ -65,5 +67,13 @@ public class GameMapEntryTest {
     public void setSoldierUnknownCardSide() {
         GameMapEntry gameMapEntry = new GameMapEntry(gameCardPlayer1, player1);
         assertFalse(gameMapEntry.setSoldier(soldier1Player1, gameCardPlayer2.getSideNorth()));
+    }
+
+    @Test
+    public void setSoldierOnMidCard() {
+        GameMapEntry gameMapEntry = new GameMapEntry(gameCardMonastaryPlayer1, player1);
+        gameMapEntry.setSoldier(soldier1Player1, gameCardMonastaryPlayer1.getSideMid());
+
+        assertTrue(soldier1Player1.isCurrentlyPlaced());
     }
 }
