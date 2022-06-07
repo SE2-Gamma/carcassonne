@@ -303,7 +303,7 @@ public class GameTests {
         sendCommand(new CreateGameCommand("cheatOnMyTurn"));
         sendCommand(new PlayerReadyCommand(null));
         waitForResponse(2000);
-        sendCommand(new CheatCommand(new CheatMove("cheatOnMyTurn", new Soldier(testplayer))));
+        sendCommand(new CheatCommand(new CheatMove(testplayer, new Soldier(testplayer))));
         LinkedList<Object> error = (LinkedList<Object>) returncommands.getLast();
         Codes.ERROR response = (Codes.ERROR) error.getLast();
         assertEquals(Codes.ERROR.NO_CHEAT_ON_TURN, response);
@@ -334,7 +334,7 @@ public class GameTests {
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(testplayer, entry, new GameMapEntryPosition(49,50));
             sendCommand(new GameTurnCommand(gameMove));
-            CheatMove cheatMove= new CheatMove("cheat",soldier);
+            CheatMove cheatMove= new CheatMove(testplayer,soldier);
             cheatMove.setOriginalPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[0]));
             cheatMove.setNewPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[1]));
             sendCommand(new CheatCommand(cheatMove));
@@ -349,7 +349,7 @@ public class GameTests {
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(two, entry, new GameMapEntryPosition(49,50));
             sendCommand(new GameTurnCommand(gameMove),playertwo.objectOutputStream);
-            CheatMove cheatMove= new CheatMove("cheat2",soldier);
+            CheatMove cheatMove= new CheatMove(two,soldier);
             cheatMove.setOriginalPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[0]));
             cheatMove.setNewPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[1]));
             sendCommand(new CheatCommand(cheatMove),playertwo.objectOutputStream);
@@ -383,7 +383,7 @@ public class GameTests {
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(testplayer, entry, new GameMapEntryPosition(49,50));
             sendCommand(new GameTurnCommand(gameMove));
-            CheatMove cheatMove= new CheatMove("detectcheat",soldier);
+            CheatMove cheatMove= new CheatMove(testplayer,soldier);
             cheatMove.setOriginalPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[0]));
             cheatMove.setNewPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[1]));
             sendCommand(new CheatCommand(cheatMove));
@@ -399,7 +399,7 @@ public class GameTests {
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(two, entry, new GameMapEntryPosition(49,50));
             sendCommand(new GameTurnCommand(gameMove),playertwo.objectOutputStream);
-            CheatMove cheatMove= new CheatMove("detectcheat2",soldier);
+            CheatMove cheatMove= new CheatMove(two,soldier);
             cheatMove.setOriginalPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[0]));
             cheatMove.setNewPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[1]));
             sendCommand(new CheatCommand(cheatMove),playertwo.objectOutputStream);
@@ -422,7 +422,7 @@ public class GameTests {
             assertTrue(returncommands.contains("Cheat detection successfull."));
             returncommands.removeLast();
             LinkedList<CheatMove> cheats=(LinkedList<CheatMove>) returncommands.getLast();
-            assertEquals(cheats.pop().getPlayername(),"detectcheat2");
+            assertEquals(cheats.pop().getCheater().getName(),"detectcheat2");
         }
 
 

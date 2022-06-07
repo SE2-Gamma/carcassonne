@@ -1,8 +1,9 @@
 package at.aau.se2.gamma.core.models.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ClosedFieldDetectionData {
+public class ClosedFieldDetectionData implements Serializable {
     private boolean isClosed = true;
     private int points = 0;
     private ArrayList<GameCardSide> gameCardSides;

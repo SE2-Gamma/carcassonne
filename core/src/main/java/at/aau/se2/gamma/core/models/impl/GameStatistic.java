@@ -1,12 +1,13 @@
 package at.aau.se2.gamma.core.models.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Game statistics handles the statistics for one game.
  * It should be initialized at game start by the game session.
  */
-public class GameStatistic {
+public class GameStatistic implements Serializable {
     private ArrayList<Player> players;
 
     public GameStatistic(ArrayList<Player> players) {
