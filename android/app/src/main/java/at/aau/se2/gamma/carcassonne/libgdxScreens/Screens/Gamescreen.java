@@ -3,6 +3,7 @@ package at.aau.se2.gamma.carcassonne.libgdxScreens.Screens;
 import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -106,6 +107,11 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     boolean myTurn;
 
     private CheatMoveSoldierPosition selectedCheatingSoldier;
+
+    //for shake detection
+    float last_x;
+    float last_y;
+    float last_z;
 
 
 
@@ -240,10 +246,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                         String responseString = (String) payload;
-                            Log.i("LauncherGame", responseString);
-                            if(!responseString.equals("turn succesfull")){
-                                hud.showErrorText(responseString);
-                            }
+                        Log.i("LauncherGame", responseString);
+                        if(!responseString.equals("turn succesfull")){
+                            hud.showErrorText(responseString);
+                        }
 
                     }
 
@@ -345,6 +351,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             }
         });
 
+        last_x = -1f;
+        last_y = -1f;
+        last_z = -1f;
+
 
     }
 
@@ -379,9 +389,29 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         //String.format("fps:%.2f | x pos: %f |",(float)(1/delta), playercam.position.x)
         hud.drawStage();
 
+        if(hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_CHEATING)){
+            boolean gyroscopeAvail = Gdx.input.isPeripheralAvailable(Input.Peripheral.Gyroscope);
+
+            if(gyroscopeAvail){
+                float gyroX = Gdx.input.getGyroscopeX();
+                float gyroY = Gdx.input.getGyroscopeY();
+                float gyroZ = Gdx.input.getGyroscopeZ();
 
 
+                float speed = Math.abs(gyroX+gyroY+gyroZ - last_x - last_y - last_z) / delta * 10000;
+                //SHAKE_THRESHOLD
+                if (speed > 1000000) {
+                    Log.d("sensor", "shake detected w/ speed: " + speed);
+                    hud.showErrorText(""+speed);
+                }
+                last_x = gyroX;
+                last_y = gyroY;
+                last_z = gyroZ;
 
+            }else {
+                hud.showErrorText("BRUHHH NO Gyroscope YIKES");
+            }
+        }
     }
 
     @Override
@@ -445,12 +475,14 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             allDistances[1] = distance(mapPos, point_right);
             allDistances[2] = distance(mapPos, point_top);
             allDistances[3] = distance(mapPos, point_bottom);
-           // allDistances[4] = distance(mapPos, point_middle);
-           // if(!lastCard.getGameMapEntry().getCard().getSpecialType().equals(at.aau.se2.gamma.core.models.impl.GameCard.SpecialType.MONASTERY)){
-                //allDistances[4] = Float.MAX_VALUE;
-           // }
+            // allDistances[4] = distance(mapPos, point_middle);
+            // if(!lastCard.getGameMapEntry().getCard().getSpecialType().equals(at.aau.se2.gamma.core.models.impl.GameCard.SpecialType.MONASTERY)){
+            //   allDistances[4] = Float.MAX_VALUE;
+            // }
 
             Soldier mySoldier = new Soldier(myPlayerID);
+            //mySoldier.setX((int) mapPos.x / 144);
+            //mySoldier.setY((int) mapPos.y / 144);
 
             //getting smallest distance
             int smallestIndex = 0;
@@ -474,8 +506,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[2]);
                     break;
                 //case 4:
-                    //lastCard.getGameMapEntry().setSoldier(mySoldier,);
-                    //break;
+                //lastCard.getGameMapEntry().setSoldier(mySoldier,);
+                //break;
             }
             hud.changeHudState(Hud.Hud_State.ACCEPT_PLACING_SOLDIER);
 
@@ -576,7 +608,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         }
 
 
-            //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
+        //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
         //Log.e("info", "button: "+button + " | count: "+count);
 
         return false;
