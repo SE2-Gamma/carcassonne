@@ -240,10 +240,22 @@ public class GameMap implements Serializable {
                     }
 
                     if (closed) {
-                        // add gamecard sides and points to detectionData
+                        // reset the points to 0
+                        detectionData.setPoints(0);
+
+                        // add new gamecard sides with their points to detectionData
                         for(ClosedFieldDetectionData dat: closedFieldDetectionDataArr) {
-                            detectionData.getGameCardSides().addAll(dat.getGameCardSides());
-                            detectionData.addPoints(dat.getPoints());
+                            for(GameCardSide newGameCardSide: dat.getGameCardSides()) {
+                                // if the gamecard side isn't added to the summarized detectionData
+                                if (!detectionData.getGameCardSides().contains(newGameCardSide)) {
+                                    detectionData.getGameCardSides().add(newGameCardSide);
+                                }
+                            }
+                        }
+
+                        // recalculate points
+                        for(GameCardSide gameCardSide: detectionData.getGameCardSides()) {
+                            detectionData.addPoints(gameCardSide.getPoints() * gameCardSide.getMultiplier());
                         }
 
                         // notify listener
@@ -309,7 +321,18 @@ public class GameMap implements Serializable {
                 GameCardSide cardSide = neighbourAlignedSides[i];
                 // check if the other side isn't closed (so it's connected to our side here), and if the types are the same
                 if (!cardSide.isClosingSide && cardSide.getType() == currentCardSide.getType()) {
-                    checkClosedState(i, nextPosition, detectionData, cardSide);
+                    //check if cardSide is already visited before start a new check, to prevent a circle loop
+                    boolean alreadyVisited = false;
+                    for(GameCardSide cs: detectionData.getGameCardSides()) {
+                        if(cs == cardSide) {
+                            alreadyVisited = true;
+                            break;
+                        }
+                    }
+
+                    if(!alreadyVisited) {
+                        checkClosedState(i, nextPosition, detectionData, cardSide);
+                    }
                 }
             }
         }

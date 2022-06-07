@@ -304,6 +304,65 @@ public class GameMapTest {
         // should have 2 closed fields
         assertEquals(returnedDetectionData.size(), 2);
         assertEquals(returnedDetectionData.get(0).getPoints(), GameCardSideFactory.POINTS_CASTLE*8);
+        assertEquals(returnedDetectionData.get(1).getPoints(), GameCardSideFactory.POINTS_DEFAULT*6);
+    }
+
+    /**
+     *  X    X    X
+     * X S  S S  S X
+     *  S    G    S
+     *  S    G    S
+     * X S  S S  S X
+     *  X    X    X
+     *
+     * @throws InvalidPositionGameMapException
+     * @throws SurroundingConflictGameMapException
+     * @throws NoSurroundingCardGameMapException
+     * @throws PositionNotFreeGameMapException
+     */
+    @Test
+    public void testCircleOfFields() throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
+        gameMap = new GameMap();
+        final ArrayList<ClosedFieldDetectionData> returnedDetectionData = new ArrayList<>();
+        gameMap.setGameMapHandler(new GameMapHandler() {
+            @Override
+            public void onClosedField(ClosedFieldDetectionData detectionData) {
+                returnedDetectionData.add(detectionData);
+            }
+        });
+        gameMap.placeGameMapEntry(
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(0,0));
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createCgrassStreetCgrassStreet(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(1,0))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.WEST),
+                new GameMapEntryPosition(2,0))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.EAST),
+                new GameMapEntryPosition(0,1))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createCgrassStreetCgrassStreet(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(1,1))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1),
+                new GameMapEntryPosition(2,1))
+        );
+
+        // should have 2 closed fields
+        assertEquals(returnedDetectionData.size(), 2);
+        assertEquals(returnedDetectionData.get(1).getPoints(), GameCardSideFactory.POINTS_DEFAULT*12);
+        assertEquals(returnedDetectionData.get(0).getPoints(), GameCardSideFactory.POINTS_DEFAULT*2);
     }
 
     /**
