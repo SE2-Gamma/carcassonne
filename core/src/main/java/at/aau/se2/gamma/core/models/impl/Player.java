@@ -8,9 +8,12 @@ public class Player extends BaseModel implements PlayerInterface, Serializable {
     private String id;
     private String name;
 
+    private PlayerPoints playerPoints;
+
     public Player(String id, String name) {
         this.id = id;
         this.name = name;
+        playerPoints = new PlayerPoints(0);
     }
 
     public String getId() {
@@ -27,5 +30,21 @@ public class Player extends BaseModel implements PlayerInterface, Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public PlayerPoints getPlayerPoints() {
+        return playerPoints;
+    }
+
+    public void setPlayerPoints(PlayerPoints playerPoints) {
+        this.playerPoints = playerPoints;
+    }
+
+    public void addPlayerPoints(int points) {
+        this.playerPoints.addPoints(points);
+    }
+
+    public int getPoints() {
+        return this.playerPoints.getPoints();
     }
 }
