@@ -5,9 +5,13 @@ import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
 import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
 import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
+import at.aau.se2.gamma.core.factories.GameCardSideFactory;
 import at.aau.se2.gamma.core.models.impl.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameMapTest {
@@ -129,6 +133,179 @@ public class GameMapTest {
         // should be null, because vertical field is open
         assertNull(returnedDetectionData[0]);
     }
+
+    /**
+     * test closed field with vertical fields
+     *  X
+     * X X
+     *  C
+     *  C
+     * X X
+     *  X
+     *
+     * @throws InvalidPositionGameMapException
+     * @throws SurroundingConflictGameMapException
+     * @throws NoSurroundingCardGameMapException
+     * @throws PositionNotFreeGameMapException
+     */
+    @Test
+    public void testClosedTwoVerticalFields() throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
+        gameMap = new GameMap();
+        final ClosedFieldDetectionData[] returnedDetectionData = {null};
+        gameMap.setGameMapHandler(new GameMapHandler() {
+            @Override
+            public void onClosedField(ClosedFieldDetectionData detectionData) {
+                returnedDetectionData[0] = detectionData;
+            }
+        });
+        gameMap.placeGameMapEntry(
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.EAST),
+                new GameMapEntryPosition(0,0));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createGrassGrassCcastleCcastle(), player1, Orientation.EAST),
+                new GameMapEntryPosition(0,1)));
+        // should be closed with 4 points
+        assertNotNull(returnedDetectionData[0]);
+    }
+
+    /**
+     *  X    X
+     * X X  X X
+     *  X    C
+     *  X    C    X
+     * X C  C C  C X
+     *  X    X    X
+     *
+     * @throws InvalidPositionGameMapException
+     * @throws SurroundingConflictGameMapException
+     * @throws NoSurroundingCardGameMapException
+     * @throws PositionNotFreeGameMapException
+     */
+    @Test
+    public void testClosedFieldsVerticalAndHorizontalFields() throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
+        gameMap = new GameMap();
+        final ClosedFieldDetectionData[] returnedDetectionData = {null};
+        gameMap.setGameMapHandler(new GameMapHandler() {
+            @Override
+            public void onClosedField(ClosedFieldDetectionData detectionData) {
+                returnedDetectionData[0] = detectionData;
+            }
+        });
+        gameMap.placeGameMapEntry(
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1),
+                new GameMapEntryPosition(0,0));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createCastleCastleCastleCgrass(), player1, Orientation.EAST),
+                new GameMapEntryPosition(1,0)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(2,0)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.WEST),
+                new GameMapEntryPosition(1,1)));
+
+        // should not be null
+        assertNotNull(returnedDetectionData[0]);
+        assertEquals(returnedDetectionData[0].getPoints(), GameCardSideFactory.POINTS_CASTLE*6);
+    }
+
+    /**
+     *  X    X
+     * X X  X X
+     *  X    C
+     *  X    C    X
+     * X C  C C  C X
+     *  X    C    X
+     *  X    C    X
+     * X X  X X  X X
+     *  X    X    X
+     *
+     * @throws InvalidPositionGameMapException
+     * @throws SurroundingConflictGameMapException
+     * @throws NoSurroundingCardGameMapException
+     * @throws PositionNotFreeGameMapException
+     */
+    @Test
+    public void testClosedFieldsCrossVerticalAndHorizontalFields() throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
+        gameMap = new GameMap();
+        final ClosedFieldDetectionData[] returnedDetectionData = {null};
+        gameMap.setGameMapHandler(new GameMapHandler() {
+            @Override
+            public void onClosedField(ClosedFieldDetectionData detectionData) {
+                returnedDetectionData[0] = detectionData;
+            }
+        });
+        gameMap.placeGameMapEntry(
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1),
+                new GameMapEntryPosition(0,1));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createCastleCastleCastleCastle(), player1, Orientation.EAST),
+                new GameMapEntryPosition(1,1)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(2,1)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.WEST),
+                new GameMapEntryPosition(1,2)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.EAST),
+                new GameMapEntryPosition(1,0)));
+
+        // should not be null
+        assertNotNull(returnedDetectionData[0]);
+        assertEquals(returnedDetectionData[0].getPoints(), GameCardSideFactory.POINTS_CASTLE*8);
+    }
+
+    /**
+     *  X    X
+     * X C  C X
+     *  G    C
+     *  G    C    X
+     * X C  C C  C X
+     *  X    X    X
+     *
+     * @throws InvalidPositionGameMapException
+     * @throws SurroundingConflictGameMapException
+     * @throws NoSurroundingCardGameMapException
+     * @throws PositionNotFreeGameMapException
+     */
+    @Test
+    public void testTwoClosedFieldsAtSameTime() throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
+        gameMap = new GameMap();
+        final ArrayList<ClosedFieldDetectionData> returnedDetectionData = new ArrayList<>();
+        gameMap.setGameMapHandler(new GameMapHandler() {
+            @Override
+            public void onClosedField(ClosedFieldDetectionData detectionData) {
+                returnedDetectionData.add(detectionData);
+            }
+        });
+        gameMap.placeGameMapEntry(
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1),
+                new GameMapEntryPosition(1,0));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createCastleCastleCastleCgrass(), player1, Orientation.EAST),
+                new GameMapEntryPosition(2,0)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(3,0)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createCastleCastleGrasStreet(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(2,1)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createCgrassStreetCgrassStreet(), player1),
+                new GameMapEntryPosition(0,0)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createStreetGrassGrassStreet(), player1),
+                new GameMapEntryPosition(0,1)));
+        gameMap.executeGameMove(new GameMove(player1,
+                new GameMapEntry(GameCardFactory.createCcastleCcastleGrassGrass(), player1),
+                new GameMapEntryPosition(1,1)));
+
+        // should have 2 closed fields
+        assertEquals(returnedDetectionData.size(), 2);
+        assertEquals(returnedDetectionData.get(0).getPoints(), GameCardSideFactory.POINTS_CASTLE*8);
+    }
+
     /**
      *      G    G
      *     S C  C G

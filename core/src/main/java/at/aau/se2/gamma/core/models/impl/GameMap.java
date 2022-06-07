@@ -171,6 +171,7 @@ public class GameMap implements Serializable {
 
         // check current state, and notify observer if needed
         GameCardSide[] alignedSides = entryCandidate.getAlignedCardSides();
+        ArrayList<Integer> usedIds = new ArrayList<>();
         for(int i = 0; i < alignedSides.length; i++) {
             GameCardSide cardSide = alignedSides[i];
             if (cardSide.isClosingSide) {
@@ -184,6 +185,73 @@ public class GameMap implements Serializable {
                         gameMapHandler.onClosedField(detectionData);
                     }
                 }
+            } else {
+                // check if the open side close something
+                // pretend this side is closed, and check if it would lead to a closed field
+                // repeat this step with all other sides with the same open type,
+                // if all pretended closed sides leads to closed fields, then these sides are closing the whole field.
+
+                // break if the field was already used in this else branch for a previous side
+                for(int n: usedIds) {
+                    if(n == i) {
+                        break;
+                    }
+                }
+
+                // check if this side would close a field
+                ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
+                checkClosedState(i, position, detectionData, cardSide);
+
+                // if this one would lead to a closed field, check the next sides on this card
+                if(detectionData.isClosed()) {
+                    ArrayList<ClosedFieldDetectionData> closedFieldDetectionDataArr = new ArrayList<>();
+                    ArrayList<Integer> checkedIds = new ArrayList<>();
+                    checkedIds.add(i);
+                    boolean closed = true;
+
+                    for(int j = i+1; j < alignedSides.length; j++) {
+                        GameCardSide subCardSide = alignedSides[j];
+
+                        // continue for different types or closing sides
+                        if (!subCardSide.getType().equals(cardSide.getType()) || subCardSide.isClosingSide) {
+                            continue;
+                        }
+
+                        // check if this side would close a field
+                        ClosedFieldDetectionData subDetectionData = new ClosedFieldDetectionData();
+                        checkClosedState(j, position, subDetectionData, subCardSide);
+
+                        checkedIds.add(j);
+
+                        if(subDetectionData.isClosed()) {
+                            closedFieldDetectionDataArr.add(subDetectionData);
+                            continue;
+                        }
+
+                        closed = false;
+                    }
+
+                    // add used ids
+                    usedIds.addAll(checkedIds);
+
+                    // side is not closed, if there are only one open side which closes the field
+                    if (closedFieldDetectionDataArr.size() < 1) {
+                        closed = false;
+                    }
+
+                    if (closed) {
+                        // add gamecard sides and points to detectionData
+                        for(ClosedFieldDetectionData dat: closedFieldDetectionDataArr) {
+                            detectionData.getGameCardSides().addAll(dat.getGameCardSides());
+                            detectionData.addPoints(dat.getPoints());
+                        }
+
+                        // notify listener
+                        if (gameMapHandler != null) {
+                            gameMapHandler.onClosedField(detectionData);
+                        }
+                    }
+                }
             }
         }
     }
@@ -192,9 +260,9 @@ public class GameMap implements Serializable {
         // calculate position of neighbour card side
         GameMapEntryPosition nextPosition = null;
         switch(orientation) {
-            case 0: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()-1); break;
+            case 0: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()+1); break;
             case 1: nextPosition = new GameMapEntryPosition(position.getX()+1, position.getY()); break;
-            case 2: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()+1); break;
+            case 2: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()-1); break;
             case 3: nextPosition = new GameMapEntryPosition(position.getX()-1, position.getY()); break;
         }
 
