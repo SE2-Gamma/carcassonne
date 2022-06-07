@@ -10,7 +10,7 @@ public class GlobalVariables {
         GlobalVariables.adress = adress;
     }
 
-    static String adress="192.168.0.69";
+    static String adress="192.168.56.1";
 
 
     public static String getDefaultname() {
@@ -18,7 +18,7 @@ public class GlobalVariables {
     }
 
     private static String defaultname="XXXXXXXXXXXX";
-    private static int port=1234;
+    private static int port=53212;
     private static String defaultID="-1";
     public static String getDefaultID() {
         return defaultID;

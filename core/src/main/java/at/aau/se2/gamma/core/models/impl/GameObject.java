@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class GameObject implements Serializable {
     private GameMap gameMap;
-    private ArrayList<PlayerListEntry> playerListEntries = new ArrayList<>();
+    private GameStatistic gameStatistic;
 
     public GameObject(GameMap gameMap) {
         this.gameMap = gameMap;
@@ -15,7 +15,15 @@ public class GameObject implements Serializable {
         return gameMap;
     }
 
-    public ArrayList<PlayerListEntry> getPlayerListEntries() {
-        return playerListEntries;
+    public void setGameMap(GameMap gameMap) {
+        this.gameMap = gameMap;
+    }
+
+    public GameStatistic getGameStatistic() {
+        return gameStatistic;
+    }
+
+    public void setGameStatistic(GameStatistic gameStatistic) {
+        this.gameStatistic = gameStatistic;
     }
 }
