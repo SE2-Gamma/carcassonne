@@ -126,7 +126,7 @@ public class GameMapTest {
         gameMap.executeGameMove(new GameMove(player1,
                 new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.SOUTH),
                 new GameMapEntryPosition(2,0)));
-        // should be zero, because vertical field is open
+        // should be null, because vertical field is open
         assertNull(returnedDetectionData[0]);
     }
     /**

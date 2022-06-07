@@ -61,4 +61,20 @@ public class Soldier implements Serializable {
     public void setSoldierPlacement(SoldierPlacement soldierPlacement) {
         this.soldierPlacement = soldierPlacement;
     }
+
+    /**
+     * let the soldier coming back to the player
+     */
+    public void comeBackHome() {
+        this.soldierPlacement.setClosed(true);
+        this.soldierPlacement = null;
+    }
+
+    /**
+     * check if soldier is available for a placement
+     * @return
+     */
+    public boolean isAvailable() {
+        return this.soldierPlacement == null;
+    }
 }
