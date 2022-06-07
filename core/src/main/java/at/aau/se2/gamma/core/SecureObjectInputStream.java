@@ -111,6 +111,13 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(CheatMoveBroadcastCommand.class.getName());
             allowedClasses.add(CheatMoveDetectedBroadcastCommand.class.getName());
             allowedClasses.add(DetectCheatCommand.class.getName());
+            allowedClasses.add(PlayerListEntry.class.getName());
+            allowedClasses.add(PlayerPoints.class.getName());
+            allowedClasses.add(ClosedFieldDetectionData.class.getName());
+            allowedClasses.add(GameMapHandler.class.getName());
+            allowedClasses.add(GameStatistic.class.getName());
+            allowedClasses.add(GameState.class.getName());
+
 
             allowedClasses.add(java.lang.StackTraceElement.class.getName());
 
@@ -158,7 +165,8 @@ public class SecureObjectInputStream extends ObjectInputStream {
                 return super.resolveClass(osc);
             }
         }
-        System.err.println(osc.getName()+" not resolved");
+
+       System.err.println(osc.getName()+" not resolved");
        throw new ClassNotFoundException("Illegal Class sent: "+osc.getName());
 
     }

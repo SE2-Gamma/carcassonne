@@ -19,6 +19,7 @@ public class Session extends BaseModel implements Serializable {
     Deck deck;
     String id;
     int maxPlayers=5;
+    int amountOfSoldiers=8;
     final LinkedList<KickOffer>kickOffers=new LinkedList<>();
    // public LinkedList<Player> players = new LinkedList<>();
     public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
@@ -176,7 +177,22 @@ public class Session extends BaseModel implements Serializable {
             Server.identify(temp).getClientThread().setClientState(ClientState.GAME);
         }
 
+         for (Player player:players
+         ) {
+             player.addAmountOfSoldiers(amountOfSoldiers);
+         }
+         gameObject.setGameStatistic(new GameStatistic(new ArrayList<>(players)));
+
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
+
+        gameObject.getGameMap().setGameMapHandler(new GameMapHandler() {
+             @Override
+             public void onClosedField(ClosedFieldDetectionData detectionData) {
+                 gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
+                 broadcastAllPlayers(new FieldCompletedBroadcastCommand(gameObject.getGameStatistic()));
+
+             }
+         });
          try {
              Thread.sleep(1000);
          } catch (InterruptedException e) {
@@ -219,7 +235,9 @@ public class Session extends BaseModel implements Serializable {
         LinkedList<CheatMove> cheats=gameLoop.gameObject.getGameMap().detectCheatMove(soldier);
         System.out.print("//cheat detected//");
         System.out.print(cheats);
+        //todo: give penalties
         gameLoop.gameObject.getGameMap().undoCheatMove(cheats);
+
         System.out.print("//cheat undone//");
         System.out.print(cheats);
         broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(new LinkedList<>(cheats)));
@@ -243,6 +261,7 @@ public boolean interruptable=false;
         boolean playing;
         public Player onTurn;
         LinkedList<Player>turnOrder;
+
         GameLoop(Session session, GameObject gameObject){
             this.session=session;
             this.gameObject=gameObject;
