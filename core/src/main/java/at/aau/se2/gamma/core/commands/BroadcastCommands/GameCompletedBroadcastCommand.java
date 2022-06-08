@@ -4,6 +4,7 @@ import at.aau.se2.gamma.core.states.ClientState;
 
 public class GameCompletedBroadcastCommand  extends BroadcastCommand {
     //todo:implement
+    //return: GameStatistic
     public GameCompletedBroadcastCommand(Object payload) {
         super(payload);
     }

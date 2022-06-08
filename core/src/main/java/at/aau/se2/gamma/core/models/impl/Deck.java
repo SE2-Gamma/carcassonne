@@ -2,12 +2,13 @@ package at.aau.se2.gamma.core.models.impl;
 
 import at.aau.se2.gamma.core.factories.GameCardFactory;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-public class Deck {
+public class Deck implements Serializable {
 
 
     LinkedList<GameCard>deck;
