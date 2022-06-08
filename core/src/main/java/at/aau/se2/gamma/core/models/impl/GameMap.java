@@ -1,6 +1,7 @@
 package at.aau.se2.gamma.core.models.impl;
 
 import at.aau.se2.gamma.core.exceptions.*;
+import at.aau.se2.gamma.core.factories.GameCardSideFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -169,11 +170,35 @@ public class GameMap implements Serializable {
         // place the movement
         this.mapArray[position.getY()][position.getX()] = entryCandidate;
 
+        // TODO: if the new entry contains a monastery, check if it is already completed.
+
+        // TODO: check if neighbour (diagonal, vertical and horizontal) is a monastery, if that is the case,
+        // check if the monastery is finished, and return an own detection data object
+        for(GameMapEntry[] row: get3x3SubMap(position)) {
+            for(GameMapEntry neighbour: row) {
+                if (neighbour != null
+                        && neighbour.getCard().getSideMid() != null
+                        && neighbour.getCard().getSideMid().getType() == GameCardSide.Type.MONASTERY) {
+                    // check monastery
+                    GameMapEntryPosition monasteryPosition = getPositionFromEntry(neighbour);
+                    if (isFieldFullyCompleted(monasteryPosition)) {
+                        ClosedFieldDetectionData monasteryDetectionData = new ClosedFieldDetectionData();
+                        monasteryDetectionData.addPoints(GameCardSideFactory.POINTS_DEFAULT*9);
+                        monasteryDetectionData.addGameCardSide(neighbour.getCard().getSideMid());
+                        if (gameMapHandler != null) {
+                            gameMapHandler.onClosedField(monasteryDetectionData);
+                        }
+                    }
+                }
+            }
+        }
+
         // check current state, and notify observer if needed
         GameCardSide[] alignedSides = entryCandidate.getAlignedCardSides();
         ArrayList<Integer> usedIds = new ArrayList<>();
         for(int i = 0; i < alignedSides.length; i++) {
             GameCardSide cardSide = alignedSides[i];
+
             if (cardSide.isClosingSide) {
 
                 // check all connected sides to check if we have a full closed thing here
@@ -268,9 +293,49 @@ public class GameMap implements Serializable {
         }
     }
 
-    private void checkClosedState(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide) {
-        // calculate position of neighbour card side
+    /**
+     * Get the position of an entry which is present in the array. Otherwise, it returns null.
+     * @param entry
+     * @return GameMapEntryPosition: position of entry if one exists
+     */
+    private GameMapEntryPosition getPositionFromEntry(GameMapEntry entry) {
+        for(int y = 0; y < mapArray.length; y++) {
+            for(int x = 0; x < mapArray[y].length; x++) {
+                GameMapEntry currentEntry = mapArray[y][x];
+                if (currentEntry != null && currentEntry == entry) {
+                    return new GameMapEntryPosition(x, y);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * check if a card is fully completed like if a monastery is complete (each 8 neighbours are set)
+     * @param monasteryEntryPosition
+     * @return
+     */
+    private boolean isFieldFullyCompleted(GameMapEntryPosition monasteryEntryPosition) {
+        GameMapEntry[][] submap = get3x3SubMap(monasteryEntryPosition);
+        for(GameMapEntry[] row: submap) {
+            for(GameMapEntry entry: row) {
+                if (entry == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Get the position of the neighbour, which connects to the cardSide with position
+     * @param orientation of the cardSide
+     * @param position of current card in map array
+     * @return GameMapEntryPosition position of neighbour card
+     */
+    private GameMapEntryPosition getNeighbourPosition(int orientation, GameMapEntryPosition position) {
         GameMapEntryPosition nextPosition = null;
+
         switch(orientation) {
             case 0: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()+1); break;
             case 1: nextPosition = new GameMapEntryPosition(position.getX()+1, position.getY()); break;
@@ -278,15 +343,34 @@ public class GameMap implements Serializable {
             case 3: nextPosition = new GameMapEntryPosition(position.getX()-1, position.getY()); break;
         }
 
+        return nextPosition;
+    }
+
+    /**
+     Get the neighbour card, which connects to the cardSide with position
+     * @param orientation of the cardSide
+     * @param position of current card in map array
+     * @return GameMapEntry neighbour of card side if one exists, otherwise return null
+     */
+    private GameMapEntry getNeighbour(int orientation, GameMapEntryPosition position) {
+        GameMapEntryPosition nextPosition = getNeighbourPosition(orientation, position);
+
         // check if position is valid
         if (nextPosition == null || nextPosition.getX() < 0 || nextPosition.getX() >= mapArray.length
-        || nextPosition.getY() < 0 || nextPosition.getY() >= mapArray.length) {
-            detectionData.setClosed(false);
-            return;
+                || nextPosition.getY() < 0 || nextPosition.getY() >= mapArray.length) {
+            return null;
         }
 
+        // return card or null
+        return mapArray[nextPosition.getY()][nextPosition.getX()];
+    }
+
+    private void checkClosedState(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide) {
+        // calculate position of neighbour card side
+        GameMapEntryPosition nextPosition = getNeighbourPosition(orientation, position);
+
         // check if we have a card on this position
-        GameMapEntry nextMapEntry = mapArray[nextPosition.getY()][nextPosition.getX()];
+        GameMapEntry nextMapEntry = getNeighbour(orientation, position);
         if (nextMapEntry == null) {
             detectionData.setClosed(false);
             return;
