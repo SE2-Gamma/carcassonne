@@ -173,6 +173,7 @@ public class GameMap implements Serializable {
 
         // check current state, and notify observer if needed
         GameCardSide[] alignedSides = entryCandidate.getAlignedCardSides();
+        ArrayList<Integer> usedIds = new ArrayList<>();
         for(int i = 0; i < alignedSides.length; i++) {
             GameCardSide cardSide = alignedSides[i];
             if (cardSide.isClosingSide) {
@@ -186,6 +187,85 @@ public class GameMap implements Serializable {
                         gameMapHandler.onClosedField(detectionData);
                     }
                 }
+            } else {
+                // check if the open side close something
+                // pretend this side is closed, and check if it would lead to a closed field
+                // repeat this step with all other sides with the same open type,
+                // if all pretended closed sides leads to closed fields, then these sides are closing the whole field.
+
+                // break if the field was already used in this else branch for a previous side
+                for(int n: usedIds) {
+                    if(n == i) {
+                        break;
+                    }
+                }
+
+                // check if this side would close a field
+                ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
+                checkClosedState(i, position, detectionData, cardSide);
+
+                // if this one would lead to a closed field, check the next sides on this card
+                if(detectionData.isClosed()) {
+                    ArrayList<ClosedFieldDetectionData> closedFieldDetectionDataArr = new ArrayList<>();
+                    ArrayList<Integer> checkedIds = new ArrayList<>();
+                    checkedIds.add(i);
+                    boolean closed = true;
+
+                    for(int j = i+1; j < alignedSides.length; j++) {
+                        GameCardSide subCardSide = alignedSides[j];
+
+                        // continue for different types or closing sides
+                        if (!subCardSide.getType().equals(cardSide.getType()) || subCardSide.isClosingSide) {
+                            continue;
+                        }
+
+                        // check if this side would close a field
+                        ClosedFieldDetectionData subDetectionData = new ClosedFieldDetectionData();
+                        checkClosedState(j, position, subDetectionData, subCardSide);
+
+                        checkedIds.add(j);
+
+                        if(subDetectionData.isClosed()) {
+                            closedFieldDetectionDataArr.add(subDetectionData);
+                            continue;
+                        }
+
+                        closed = false;
+                    }
+
+                    // add used ids
+                    usedIds.addAll(checkedIds);
+
+                    // side is not closed, if there are only one open side which closes the field
+                    if (closedFieldDetectionDataArr.size() < 1) {
+                        closed = false;
+                    }
+
+                    if (closed) {
+                        // reset the points to 0
+                        detectionData.setPoints(0);
+
+                        // add new gamecard sides with their points to detectionData
+                        for(ClosedFieldDetectionData dat: closedFieldDetectionDataArr) {
+                            for(GameCardSide newGameCardSide: dat.getGameCardSides()) {
+                                // if the gamecard side isn't added to the summarized detectionData
+                                if (!detectionData.getGameCardSides().contains(newGameCardSide)) {
+                                    detectionData.getGameCardSides().add(newGameCardSide);
+                                }
+                            }
+                        }
+
+                        // recalculate points
+                        for(GameCardSide gameCardSide: detectionData.getGameCardSides()) {
+                            detectionData.addPoints(gameCardSide.getPoints() * gameCardSide.getMultiplier());
+                        }
+
+                        // notify listener
+                        if (gameMapHandler != null) {
+                            gameMapHandler.onClosedField(detectionData);
+                        }
+                    }
+                }
             }
         }
     }
@@ -194,9 +274,9 @@ public class GameMap implements Serializable {
         // calculate position of neighbour card side
         GameMapEntryPosition nextPosition = null;
         switch(orientation) {
-            case 0: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()-1); break;
+            case 0: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()+1); break;
             case 1: nextPosition = new GameMapEntryPosition(position.getX()+1, position.getY()); break;
-            case 2: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()+1); break;
+            case 2: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()-1); break;
             case 3: nextPosition = new GameMapEntryPosition(position.getX()-1, position.getY()); break;
         }
 
@@ -243,7 +323,18 @@ public class GameMap implements Serializable {
                 GameCardSide cardSide = neighbourAlignedSides[i];
                 // check if the other side isn't closed (so it's connected to our side here), and if the types are the same
                 if (!cardSide.isClosingSide && cardSide.getType() == currentCardSide.getType()) {
-                    checkClosedState(i, nextPosition, detectionData, cardSide);
+                    //check if cardSide is already visited before start a new check, to prevent a circle loop
+                    boolean alreadyVisited = false;
+                    for(GameCardSide cs: detectionData.getGameCardSides()) {
+                        if(cs == cardSide) {
+                            alreadyVisited = true;
+                            break;
+                        }
+                    }
+
+                    if(!alreadyVisited) {
+                        checkClosedState(i, nextPosition, detectionData, cardSide);
+                    }
                 }
             }
         }
