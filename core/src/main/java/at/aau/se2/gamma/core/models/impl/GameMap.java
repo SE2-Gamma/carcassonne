@@ -170,9 +170,7 @@ public class GameMap implements Serializable {
         // place the movement
         this.mapArray[position.getY()][position.getX()] = entryCandidate;
 
-        // TODO: if the new entry contains a monastery, check if it is already completed.
-
-        // TODO: check if neighbour (diagonal, vertical and horizontal) is a monastery, if that is the case,
+        // check if neighbour (diagonal, vertical and horizontal) is a monastery, if that is the case,
         // check if the monastery is finished, and return an own detection data object
         for(GameMapEntry[] row: get3x3SubMap(position)) {
             for(GameMapEntry neighbour: row) {
