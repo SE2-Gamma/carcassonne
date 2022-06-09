@@ -77,9 +77,9 @@ public class ClientThread extends Thread {
                 if(!(command instanceof DisconnectCommand)) {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
                     checkingAvailability();
-                  //  lock();
+                   lock();
                     objectOutputStream.writeObject(response);
-                   // unlock();
+                    unlock();
                 }
 
 
@@ -140,10 +140,10 @@ public class ClientThread extends Thread {
             System.out.print("//Size of responseCommand in Bytes: "+Server.sizeof(message));
             System.out.print("//available,locking");
             checkingAvailability();
-           // lock();
+            lock();
 
             objectOutputStream.writeObject(message);
-            //unlock();
+            unlock();
             System.out.print("//unlocking//");
             System.out.print("//message sent");
         } catch (IOException e) {

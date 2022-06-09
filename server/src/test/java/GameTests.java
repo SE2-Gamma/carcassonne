@@ -298,7 +298,7 @@ public class GameTests {
     }
 
     @Test
-    public void cheatOnMyTurn() {
+    public void testinvalidcheatmove() {
         sendName("cheatOnMyTurn");
         sendCommand(new CreateGameCommand("cheatOnMyTurn"));
         sendCommand(new PlayerReadyCommand(null));
@@ -306,7 +306,7 @@ public class GameTests {
         sendCommand(new CheatCommand(new CheatMove(testplayer, new Soldier(testplayer))));
         LinkedList<Object> error = (LinkedList<Object>) returncommands.getLast();
         Codes.ERROR response = (Codes.ERROR) error.getLast();
-        assertEquals(Codes.ERROR.NO_CHEAT_ON_TURN, response);
+        assertEquals(Codes.ERROR.INVALID_CHEATMOVE, response);
 
     }
 
@@ -329,8 +329,8 @@ public class GameTests {
 
             GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), testplayer, Orientation.SOUTH);
             Soldier soldier=new Soldier(testplayer);
-            soldier.setX(50);
-            soldier.setY(49);
+            soldier.setX(49);
+            soldier.setY(50);
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(testplayer, entry, new GameMapEntryPosition(49,50));
             sendCommand(new GameTurnCommand(gameMove));
@@ -344,8 +344,8 @@ public class GameTests {
             Player two= new Player(playertwo.id,"cheat2");
             GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), two, Orientation.SOUTH);
             Soldier soldier=new Soldier(two);
-            soldier.setX(50);
-            soldier.setY(49);
+            soldier.setX(49);
+            soldier.setY(50);
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(two, entry, new GameMapEntryPosition(49,50));
             sendCommand(new GameTurnCommand(gameMove),playertwo.objectOutputStream);
@@ -378,8 +378,8 @@ public class GameTests {
 
             GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), testplayer, Orientation.SOUTH);
             Soldier soldier=new Soldier(testplayer);
-            soldier.setX(50);
-            soldier.setY(49);
+            soldier.setX(49);
+            soldier.setY(50);
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(testplayer, entry, new GameMapEntryPosition(49,50));
             sendCommand(new GameTurnCommand(gameMove));
@@ -394,8 +394,8 @@ public class GameTests {
             Player two= new Player(playertwo.id,"detectcheat2");
             GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), two, Orientation.SOUTH);
             Soldier soldier=new Soldier(two);
-            soldier.setX(50);
-            soldier.setY(49);
+            soldier.setX(49);
+            soldier.setY(50);
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(two, entry, new GameMapEntryPosition(49,50));
             sendCommand(new GameTurnCommand(gameMove),playertwo.objectOutputStream);
@@ -410,14 +410,14 @@ public class GameTests {
 
         if(player1cheated){
             Soldier soldier=new Soldier(new Player(playertwo.id,"detectcheat2"));
-            soldier.setX(50);
-            soldier.setY(49);
+            soldier.setX(49);
+            soldier.setY(50);
             sendCommand(new DetectCheatCommand(soldier),playertwo.objectOutputStream);
             assertTrue(playertwo.returncommands.contains("Cheat detection successfull."));
         }else{
             Soldier soldier=new Soldier(testplayer);
-            soldier.setX(50);
-            soldier.setY(49);
+            soldier.setX(49);
+            soldier.setY(50);
             sendCommand(new DetectCheatCommand(soldier));
             assertTrue(returncommands.contains("Cheat detection successfull."));
             returncommands.removeLast();
