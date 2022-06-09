@@ -468,9 +468,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                             Log.i("LauncherGame", responseString);
                             //if(!responseString.equals("sucessfull")){
                                 hud.showErrorText(responseString);
-                                while(true){
-                                    Log.i("LauncherGame", "BOOOOOIIIIIIIIIIIIII");
-                                }
                             //}
 
                         }
