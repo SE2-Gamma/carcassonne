@@ -16,10 +16,15 @@ public class Hud_Item_ErrorText {
         table = new Table();
         table.setFillParent(true); //set table to size of stage
         labelstyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
-        table.center();
+        //table.center();
+        table.bottom();
         errorLabel = new Label("", labelstyle);
         errorLabel.setFontScale(5f);
         table.add(errorLabel).expandX().pad(10);
+        table.row();
+        Label emptyLabel = new Label("", labelstyle);
+        emptyLabel.setFontScale(5f);
+        table.add(emptyLabel);
 
 
     }

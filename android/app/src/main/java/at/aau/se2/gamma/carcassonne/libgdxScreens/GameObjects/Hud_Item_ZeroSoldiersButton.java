@@ -27,6 +27,18 @@ public class Hud_Item_ZeroSoldiersButton {
 
     }
 
+    public Hud_Item_ZeroSoldiersButton(String text){
+        skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        Button = new TextButton(text, skin, "default");
+        Button.getLabel().setFontScale(5f);
+        Button.pack();
+        buttonTable = new Table();
+        buttonTable.setFillParent(true);
+        buttonTable.align(Align.right | Align.bottom).pad(10f);
+        buttonTable.add(Button).pad(10f);
+
+    }
+
     public Table getButtonTable(){
         return buttonTable;
     }

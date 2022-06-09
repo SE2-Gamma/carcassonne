@@ -42,15 +42,13 @@ public class GameMap implements Serializable {
         cheatMove.newPosition.getSoldier().addCheat(cheatMove);
 
         synchronized (cheatMoves) {
-           //removes first soldierplacement. requires that only one soldier can be placed per gamecard
+            //removes first soldierplacement. requires that only one soldier can be placed per gamecard
             System.out.print("/replaces soldier placement //");
-            cheatMove.soldier.soldierPlacement=null;
+            mapArray[y][x].getSoldierPlacements().get(0).getSoldier().soldierPlacement=null;
             mapArray[y][x].getSoldierPlacements().clear();
-
+            cheatMove.soldier.soldierPlacement = null;
             //adds new soldierplacement
             mapArray[y][x].setSoldier(cheatMove.soldier,cheatMove.newPosition.getGameCardSide());
-
-
 
             cheatMoves.add(cheatMove);
         }

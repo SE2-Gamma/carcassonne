@@ -77,4 +77,5 @@ public class Soldier implements Serializable {
     public boolean isAvailable() {
         return this.soldierPlacement == null;
     }
+
 }
