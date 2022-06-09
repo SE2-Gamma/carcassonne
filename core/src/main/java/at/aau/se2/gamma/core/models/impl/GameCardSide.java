@@ -15,6 +15,9 @@ public class GameCardSide implements Serializable {
     public boolean isClosingSide;
     public boolean isMidOfCard;
 
+    private static int counter;
+
+
     private Type type;
     // possible connections as array, to extend it later with bonus cards, which can connects to more than one other type
     private Type[] possibleConnectionTypes;
@@ -39,6 +42,7 @@ public class GameCardSide implements Serializable {
     }
 
     public GameCardSide(Type type, Type[] possibleConnectionTypes, boolean isClosingSide, int points) {
+
         this.type = type;
         this.possibleConnectionTypes = possibleConnectionTypes;
         this.isClosingSide = isClosingSide;
