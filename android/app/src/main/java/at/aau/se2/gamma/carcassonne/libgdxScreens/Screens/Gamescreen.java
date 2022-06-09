@@ -37,6 +37,7 @@ import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveDetectedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.FieldCompletedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.GameTurnBroadCastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
@@ -847,7 +848,12 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 } catch (CheatMoveImpossibleException e) {
                     e.printStackTrace();
                 }
+            }else if(response.getPayload() instanceof CheatMoveDetectedBroadcastCommand){
+                Log.i("Reported", "GOT RESPONCE FROM SERVER for CHEATING");
+                currentGameObject.getGameMap().undoCheatMove((LinkedList<CheatMove>) payload);
+                myMap.setGameMap(currentGameObject.getGameMap());
             }
+
         }
 
         @Override
