@@ -24,8 +24,14 @@ public class GameMap implements Serializable {
         int y=cheatMove.soldier.getY();
         //checks if a soldier is on the card
         System.out.print("//checking if soldier is on card//");
+        System.out.println(x);
+        System.out.println(y);
+        if(mapArray[y][x]==null){
+            System.out.println("for some reason there is no gamemapentry");
+            throw new CheatMoveImpossibleException("dont ask me");
+        }
         if(mapArray[y][x].getSoldierPlacements().size()==0){
-            throw new CheatMoveImpossibleException("no soldier on card");
+           // throw new CheatMoveImpossibleException("no soldier on card");
         }
         //checks if gamecardside is present on the gamecard
         /*System.out.print("//cchecks if gamecardside is present on the gamecard//");
@@ -38,8 +44,14 @@ public class GameMap implements Serializable {
            // throw new CheatMoveImpossibleException("original position is not equal to found soldierposition");
         }
         System.out.print("//new positiion on soldier//");
-
-        cheatMove.newPosition.getSoldier().addCheat(cheatMove);
+        Soldier copy=new Soldier(cheatMove.getSoldier().getPlayer());
+        copy.setX(cheatMove.soldier.getX());
+        copy.setY(cheatMove.soldier.getY());
+        copy.getActiveCheats().add(cheatMove);
+        SoldierPlacement pcopy=new SoldierPlacement(copy,cheatMove.getNewPosition().getGameCardSide());
+        pcopy.setSoldier(copy);
+        cheatMove.setSoldier(copy);
+      //  cheatMove.newPosition.getSoldier().addCheat(cheatMove);
 
         synchronized (cheatMoves) {
             //removes first soldierplacement. requires that only one soldier can be placed per gamecard
@@ -59,7 +71,7 @@ public class GameMap implements Serializable {
             try {
                 System.out.print("//searching soldier//");
 
-                if(mapArray[soldier.getY()][soldier.getX()].getSoldierPlacements().get(0).getSoldier().getActiveCheats().size()==0){
+                if(soldier.getActiveCheats().size()==0){
                     throw new NoSuchCheatActiveException();
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -67,15 +79,31 @@ public class GameMap implements Serializable {
             }catch (NullPointerException e){
                 throw new NoSuchCheatActiveException();
             }
+           LinkedList<CheatMove>cheatscopy=new LinkedList<>();
 
-            return mapArray[soldier.getY()][soldier.getX()].getSoldierPlacements().get(0).getSoldier().getActiveCheats();
+           for (CheatMove cheat: soldier.getActiveCheats()
+           ) {
+
+               Soldier copy=new Soldier(cheat.getSoldier().getPlayer());
+               copy.setX(cheat.getSoldier().getX());
+               copy.setY(cheat.getSoldier().getY());
+               copy.soldierPlacement=new SoldierPlacement(copy,cheat.getNewPosition().getGameCardSide());
+               copy.soldierPlacement.setSoldier(copy);
+               CheatMove cheatcopy=new CheatMove(cheat.cheater,copy);
+               cheatcopy.setOriginalPosition(new SoldierPlacement(copy,cheat.getOriginalPosition().getGameCardSide()));
+               cheatcopy.setNewPosition(new SoldierPlacement(copy,cheat.getNewPosition().getGameCardSide()));
+
+               cheatscopy.add(cheatcopy);
+           }
+        //   mapArray[soldier.getY()][soldier.getX()].getSoldierPlacements().get(0).getSoldier().getActiveCheats().clear();
+           return cheatscopy;
 
         }
 
     }
     public void undoCheatMove(LinkedList<CheatMove> moves){
         synchronized (cheatMoves) {
-            for (CheatMove move:cheatMoves
+            for (CheatMove move:moves
                  ) {
                 cheatMoves.remove(move);
             }
@@ -86,6 +114,7 @@ public class GameMap implements Serializable {
             mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().get(0).getSoldier().soldierPlacement=null;
         mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().clear();
         moves.getFirst().soldier.soldierPlacement=null;
+
            mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().add(moves.getFirst().originalPosition);
             mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().get(0).getSoldier().setSoldierPlacement(moves.getFirst().originalPosition);
 

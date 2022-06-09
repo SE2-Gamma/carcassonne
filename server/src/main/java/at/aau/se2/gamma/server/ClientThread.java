@@ -68,7 +68,7 @@ public class ClientThread extends Thread {
             while(running) {
 
 
-                BaseCommand command = (BaseCommand) objectInputStream.readObject(); //potential issue. if server sends broadcast message while busy ready here might doublelock
+                BaseCommand command = (BaseCommand) objectInputStream.readUnshared(); //potential issue. if server sends broadcast message while busy ready here might doublelock
 
                 BaseCommand response=handleCommand(command);
 
@@ -78,7 +78,8 @@ public class ClientThread extends Thread {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
                     checkingAvailability();
                    lock();
-                    objectOutputStream.writeObject(response);
+
+                    objectOutputStream.writeUnshared(response);
                     unlock();
                 }
 
@@ -142,7 +143,7 @@ public class ClientThread extends Thread {
             checkingAvailability();
             lock();
 
-            objectOutputStream.writeObject(message);
+            objectOutputStream.writeUnshared(message);
             unlock();
             System.out.print("//unlocking//");
             System.out.print("//message sent");
@@ -245,6 +246,7 @@ public class ClientThread extends Thread {
         } catch (CheatMoveImpossibleException e) {
            return ResponseCreator.getError(command,"Cheatmove not possible",Codes.ERROR.INVALID_CHEATMOVE);
         }catch(NullPointerException e){
+            e.printStackTrace();
             return ResponseCreator.getError(command,"cheatmove error",Codes.ERROR.INVALID_CHEATMOVE);
         }
         numberOfCheats++;

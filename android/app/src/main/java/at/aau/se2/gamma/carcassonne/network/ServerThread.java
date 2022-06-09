@@ -73,7 +73,7 @@ public class ServerThread extends Thread {
             while (true) {
                 try {
 
-                    ServerResponseCommand responseCommand = (ServerResponseCommand) objectInputStream.readObject();
+                    ServerResponseCommand responseCommand = (ServerResponseCommand) objectInputStream.readUnshared();
                     ServerResponse response = (ServerResponse) responseCommand.getPayload();
                     Logger.debug("command server");
                     if(response.getPayload() instanceof BroadcastCommand){
@@ -121,7 +121,8 @@ public class ServerThread extends Thread {
         }
 
        try {
-            objectOutputStream.writeObject(command);
+           
+            objectOutputStream.writeUnshared(command);
         } catch (IOException e) {
             e.printStackTrace();
         }

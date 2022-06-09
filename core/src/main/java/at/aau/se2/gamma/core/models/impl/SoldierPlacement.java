@@ -28,4 +28,8 @@ public class SoldierPlacement implements Serializable {
     public void setClosed(boolean closed) {
         this.closed = closed;
     }
+
+    public void setSoldier(Soldier soldiercopy) {
+        this.soldier=soldiercopy;
+    }
 }

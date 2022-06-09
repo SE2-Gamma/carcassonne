@@ -224,6 +224,7 @@ public class Session extends BaseModel implements Serializable {
     public void executeCheat(CheatMove cheatMove) throws CheatMoveImpossibleException {
         System.out.print("//checking cheatmove//");
         gameLoop.gameObject.getGameMap().executeCheatMove(cheatMove);
+
         broadcastAllPlayers(new CheatMoveBroadcastCommand(cheatMove));
         System.out.print("// cheatmove broadcasted//");
     }
@@ -238,6 +239,9 @@ public class Session extends BaseModel implements Serializable {
 
         System.out.print("//cheat undone//");
         System.out.print(cheats);
+
+
+
         broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(new LinkedList<>(cheats)));
     }
     public void leaveGame(Player player){
