@@ -186,12 +186,13 @@ public class Session extends BaseModel implements Serializable {
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
 
         gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
+            System.out.print("//field completed, sending broadcast command");
             gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
             broadcastAllPlayers(new FieldCompletedBroadcastCommand(gameObject.getGameStatistic()));
 
         });
          try {
-             Thread.sleep(1000);
+             Thread.sleep(3000);
          } catch (InterruptedException e) {
              e.printStackTrace();
          }

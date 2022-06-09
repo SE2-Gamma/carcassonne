@@ -162,7 +162,7 @@ e.printStackTrace();
 
         GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(48,49));
         try {
-            waitForResponse(2000);
+            waitForResponse(4000);
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
             waitForResponse();
             LinkedList<Object>error= (LinkedList<Object>) returncommands.getLast();
@@ -181,7 +181,7 @@ e.printStackTrace();
         GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.NORTH);
         GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(49,49));
         try {
-            waitForResponse(2000);
+            waitForResponse(4000);
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
             waitForResponse();
 
@@ -203,7 +203,7 @@ e.printStackTrace();
         System.out.println();
         System.out.println("testing first incorrect move");
         try {
-            waitForResponse(3000);
+            waitForResponse(4000);
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));waitForResponse();
 
             System.out.println(returncommands);
@@ -261,7 +261,7 @@ e.printStackTrace();
          */
 
         try {
-            waitForResponse(3000);
+            waitForResponse(4000);
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));waitForResponse();
 
             System.out.println(returncommands);
@@ -309,7 +309,7 @@ e.printStackTrace();
          */
 
         try {
-            waitForResponse(3000);
+            waitForResponse(4000);
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
            waitForResponse();
 

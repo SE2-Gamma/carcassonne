@@ -206,7 +206,7 @@ public class GameTests {
             waitForResponse();
             objectOutputStream.writeObject(new PlayerReadyCommand(null));
             waitForResponse();
-            waitForResponse(2000);
+            waitForResponse(4000);
             objectOutputStream.writeObject(new LeaveGameCommand(null));
             waitForResponse();
             assertTrue(returncommands.contains("Game Successfully left."));
@@ -251,13 +251,13 @@ public class GameTests {
             objectOutputStream.writeObject(new PlayerReadyCommand(null));
             waitForResponse();
             sendCommand(new PlayerReadyCommand(null), playertwo.objectOutputStream);
-            waitForResponse(2000);
+            waitForResponse(4000);
             sendCommand(new RequestUserListCommand(null), objectOutputStream);
             LinkedList<String> list = (LinkedList<String>) returncommands.getLast();
             assertTrue(list.contains("requestuserlistingamel"));
             assertTrue(list.contains("requestuserlistingamel2"));
             sendCommand(new LeaveGameCommand(null), playertwo.objectOutputStream);
-            waitForResponse(1000);//in case it was playertwos turn
+            waitForResponse(4000);//in case it was playertwos turn
             sendCommand(new RequestUserListCommand(null), objectOutputStream);
             LinkedList<String> list2 = (LinkedList<String>) returncommands.getLast();
             assertTrue(list2.contains("requestuserlistingamel"));
@@ -302,7 +302,7 @@ public class GameTests {
         sendName("cheatOnMyTurn");
         sendCommand(new CreateGameCommand("cheatOnMyTurn"));
         sendCommand(new PlayerReadyCommand(null));
-        waitForResponse(2000);
+        waitForResponse(4000);
         sendCommand(new CheatCommand(new CheatMove(testplayer, new Soldier(testplayer))));
         LinkedList<Object> error = (LinkedList<Object>) returncommands.getLast();
         Codes.ERROR response = (Codes.ERROR) error.getLast();
@@ -321,7 +321,7 @@ public class GameTests {
 
 
 
-        waitForResponse(2000);
+        waitForResponse(4000);
         Object gamestarted = returncommands.getLast();
 
 
@@ -370,7 +370,7 @@ public class GameTests {
 
 
 
-        waitForResponse(2000);
+        waitForResponse(4000);
         Object gamestarted = returncommands.getLast();
 
 
@@ -437,7 +437,7 @@ public class GameTests {
         sendCommand(new InitialJoinCommand("detectCheat"), playertwo.objectOutputStream);
         sendCommand(new PlayerReadyCommand(null));
         sendCommand(new PlayerReadyCommand(null), playertwo.objectOutputStream);
-        waitForResponse(2000);
+        waitForResponse(4000);
         Soldier soldier=new Soldier(new Player(playertwo.id,"detectcheat"));
         soldier.setX(49);
         soldier.setY(49);
