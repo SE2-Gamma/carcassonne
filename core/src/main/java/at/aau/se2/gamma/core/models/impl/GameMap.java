@@ -81,7 +81,7 @@ public class GameMap implements Serializable {
             }
            LinkedList<CheatMove>cheatscopy=new LinkedList<>();
 
-           for (CheatMove cheat: soldier.getActiveCheats()
+         /*  for (CheatMove cheat: soldier.getActiveCheats()
            ) {
 
                Soldier copy=new Soldier(cheat.getSoldier().getPlayer());
@@ -94,9 +94,9 @@ public class GameMap implements Serializable {
                cheatcopy.setNewPosition(new SoldierPlacement(copy,cheat.getNewPosition().getGameCardSide()));
 
                cheatscopy.add(cheatcopy);
-           }
+           }*/
         //   mapArray[soldier.getY()][soldier.getX()].getSoldierPlacements().get(0).getSoldier().getActiveCheats().clear();
-           return cheatscopy;
+           return mapArray[soldier.getY()][soldier.getX()].getSoldierPlacements().get(0).getSoldier().getActiveCheats();
 
         }
 
@@ -118,6 +118,7 @@ public class GameMap implements Serializable {
            mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().add(moves.getFirst().originalPosition);
             mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().get(0).getSoldier().setSoldierPlacement(moves.getFirst().originalPosition);
         moves.remove(moves.getFirst());
+        moves.clear();
             //todo: give each cheater the correct penalty (CheatMove.getPlayername <- the cheater
             // CheatMove.getPenalty <- the correct number of points lost. is independent from detected cheats but number of cheats done.
             // so if a player has done 4 cheats but the very first is detected he only loses 1 points, but if the last cheat is detected first he loses 2^4 points.
