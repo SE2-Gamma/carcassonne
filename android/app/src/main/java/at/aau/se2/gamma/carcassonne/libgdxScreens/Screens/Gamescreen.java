@@ -196,7 +196,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 hud.setNextCardTexture(null);
                 Soldier mySoldier = null;
                 for(Player p : currentGameObject.getGameStatistic().getPlayers()){
-                    if(p.equals(myPlayerID)){
+                    if(p.getId().equals(myPlayerID.getId())){
                         mySoldier = p.getFreeSoldier();
                         break;
                     }
@@ -560,41 +560,43 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
             Soldier mySoldier = null;
             for(Player p : currentGameObject.getGameStatistic().getPlayers()){
-                if(p.equals(myPlayerID)){
+                if(p.getId().equals(myPlayerID.getId())){
                     mySoldier = p.getFreeSoldier();
                     break;
                 }
 
             }
+            if(mySoldier != null){
+                mySoldier.setX((int) mapPos.x / 144);
+                mySoldier.setY((int) mapPos.y / 144);
 
-            mySoldier.setX((int) mapPos.x / 144);
-            mySoldier.setY((int) mapPos.y / 144);
+                //getting smallest distance
+                int smallestIndex = 0;
+                for(int i = 0; i<allDistances.length; i++){
+                    if(allDistances[i]<allDistances[smallestIndex]){
+                        smallestIndex = i;
+                    }
+                }
 
-            //getting smallest distance
-            int smallestIndex = 0;
-            for(int i = 0; i<allDistances.length; i++){
-                if(allDistances[i]<allDistances[smallestIndex]){
-                    smallestIndex = i;
+                switch (smallestIndex){
+                    case 0:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[3]);
+                        break;
+                    case 1:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[1]);
+                        break;
+                    case 2:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[0]);
+                        break;
+                    case 3:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[2]);
+                        break;
+                    case 4:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier,lastCard.getGameMapEntry().getCard().getSideMid());
+                        break;
                 }
             }
 
-            switch (smallestIndex){
-                case 0:
-                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[3]);
-                    break;
-                case 1:
-                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[1]);
-                    break;
-                case 2:
-                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[0]);
-                    break;
-                case 3:
-                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[2]);
-                    break;
-                case 4:
-                    lastCard.getGameMapEntry().setSoldier(mySoldier,lastCard.getGameMapEntry().getCard().getSideMid());
-                    break;
-            }
             hud.changeHudState(Hud.Hud_State.ACCEPT_PLACING_SOLDIER);
 
         } else if(hud.getCurrentState().equals(Hud.Hud_State.REPORTING)){
