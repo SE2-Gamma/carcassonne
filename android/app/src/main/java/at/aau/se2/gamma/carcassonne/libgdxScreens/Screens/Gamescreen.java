@@ -122,9 +122,13 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     float last_y;
     float last_z;
 
+    //cheat detection
+    private Soldier touchedSoldier;
+
 
 
     public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject){
+        touchedSoldier = null;
         currentCheatMove = null;
         selectedCheatingSoldier = null;
         currentGameObject = initialGameObject;
@@ -606,11 +610,12 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         } else if(hud.getCurrentState().equals(Hud.Hud_State.REPORTING)){
             Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            Soldier touchedSoldier = myMap.touchedSoldier(mapPos.x, mapPos.y);
+            touchedSoldier = myMap.touchedSoldier(mapPos.x, mapPos.y);
 
             if(touchedSoldier != null){
                 Log.i("ReportedPlayer", "Touched player");
                 Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+touchedSoldier.getPlayer().getId());
+                Log.i("ReportedPlayer", touchedSoldier.getX()+"|"+touchedSoldier.getY());
                 //if(!(myPlayerID.getId().equals(touchedSoldier.getPlayer().getId()))){
                     //Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+touchedSoldier.getPlayer().getId());
                     hud.changeHudState(Hud.Hud_State.ACCEPT_REPORTING);
@@ -619,13 +624,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                         public void clicked(InputEvent event, float x, float y) {
                             super.clicked(event, x, y);
                             hud.changeHudState(Hud.Hud_State.REPORTING);
-                            Soldier copy=new Soldier(touchedSoldier.getPlayer());
-                            copy.setX(touchedSoldier.getX());
-                           copy.setY(touchedSoldier.getY());
-                            copy.setSoldierPlacement(new SoldierPlacement(copy,touchedSoldier.getSoldierPlacement().getGameCardSide()));
-                            Log.e("testx", Integer.toString(touchedSoldier.getX()) );
-                            Log.e("testy", Integer.toString(touchedSoldier.getY()) );
-                            ServerThread.instance.sendCommand(new DetectCheatCommand(copy), new ServerThread.RequestResponseHandler() {
+                            Log.i("REPORT", touchedSoldier.getX()+"|"+touchedSoldier.getY());
+                            ServerThread.instance.sendCommand(new DetectCheatCommand(touchedSoldier), new ServerThread.RequestResponseHandler() {
                                 @Override
                                 public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                                     String responseString = (String) payload;
@@ -682,23 +682,18 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             allDistances[4] = distance(mapPos, point_middle);
 
 
-            try {
-                if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[0].UID==(selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID)){
-                    allDistances[2] = Float.MAX_VALUE;
-                }else if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[1].equals(selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide())){
-                    allDistances[1] = Float.MAX_VALUE;
-                }else if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[2].equals(selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide())){
-                    allDistances[3] = Float.MAX_VALUE;
-                }else if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[3].equals(selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide())){
-                    allDistances[0] = Float.MAX_VALUE;
-                }
-                if((selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid() != null && selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid().UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID) || selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid() == null){
-                    allDistances[4] = Float.MAX_VALUE;
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
+            if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[0].UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID){
+                allDistances[2] = Float.MAX_VALUE;
+            }else if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[1].UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID){
+                allDistances[1] = Float.MAX_VALUE;
+            }else if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[2].UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID){
+                allDistances[3] = Float.MAX_VALUE;
+            }else if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[3].UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID){
+                allDistances[0] = Float.MAX_VALUE;
             }
-
+            if((selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid() != null && selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid().UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID) || selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid() == null){
+                allDistances[4] = Float.MAX_VALUE;
+            }
 
             //getting smallest distance
             int smallestIndex = 0;
