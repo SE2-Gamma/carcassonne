@@ -39,7 +39,7 @@ public class Soldier implements Serializable {
     private int y;
     public SoldierPlacement getSoldierPlacement() {return soldierPlacement;}
 
-    private SoldierPlacement soldierPlacement; // current placement
+    public SoldierPlacement soldierPlacement; // current placement
 
 
     public Soldier(Player player) {

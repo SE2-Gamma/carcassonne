@@ -235,9 +235,8 @@ public class ClientThread extends Thread {
         if(!clientState.equals(ClientState.GAME)){
             return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
         }
-        if(session.gameLoop.onTurn.getId().equals(player.getId())){
-            return ResponseCreator.getError(command,"its your turn, you cant cheat now.",Codes.ERROR.NO_CHEAT_ON_TURN);
-        }
+       // if(session.gameLoop.onTurn.getId().equals(player.getId())){
+          //  return ResponseCreator.getError(command,"its your turn, you cant cheat now.",Codes.ERROR.NO_CHEAT_ON_TURN);}
 
         CheatMove cheatMove=(CheatMove) command.getPayload();
         cheatMove.setPenalty((int) Math.pow(2,numberOfCheats));
