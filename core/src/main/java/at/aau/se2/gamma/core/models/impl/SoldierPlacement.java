@@ -30,6 +30,6 @@ public class SoldierPlacement implements Serializable {
     }
 
     public void setSoldier(Soldier soldiercopy) {
-        this.soldier = soldiercopy;
+        this.soldier=soldiercopy;
     }
 }
