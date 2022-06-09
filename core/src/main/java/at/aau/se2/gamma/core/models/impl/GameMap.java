@@ -82,8 +82,11 @@ public class GameMap implements Serializable {
         }
 
         //clears soldierplacements of the gamemapentry and sets it to the very first original position
-            mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().clear();
-            mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().add(moves.getFirst().originalPosition);
+
+            mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().get(0).getSoldier().soldierPlacement=null;
+        mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().clear();
+        moves.getFirst().soldier.soldierPlacement=null;
+           mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().add(moves.getFirst().originalPosition);
             mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().get(0).getSoldier().setSoldierPlacement(moves.getFirst().originalPosition);
 
             //todo: give each cheater the correct penalty (CheatMove.getPlayername <- the cheater
