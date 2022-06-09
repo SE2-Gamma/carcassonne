@@ -37,9 +37,9 @@ public class GameMapEntry implements Serializable {
         }
 
         // check if the side is on this card
-        if(!card.containsSide(gameCardSide)) {
-            return false;
-        }
+       // if(!card.containsSide(gameCardSide)) {
+            //return false;
+       // }
 
         SoldierPlacement soldierPlacement = new SoldierPlacement(soldier, gameCardSide);
         soldier.setSoldierPlacement(soldierPlacement);

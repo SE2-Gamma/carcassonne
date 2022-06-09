@@ -17,7 +17,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Screens.Gamescreen;
+import at.aau.se2.gamma.core.models.impl.Player;
 
 public class Hud {
 
@@ -49,6 +52,8 @@ public class Hud {
     private Hud_Item_AcceptDeclineButtons accept_decline_buttons_soldiers;
     private Hud_Item_ZeroSoldiersButton hud_ZeroSoldier_buttons;
     private Hud_Item_AcceptDeclineButtons accept_decline_buttons_report;
+    private Hud_Item_ZeroSoldiersButton decline_soldier_cheat;
+    private Hud_Item_Scoreboard hud_scoreboard;
 
     private TextButton stat_button;
     private TextButton play_button;
@@ -82,6 +87,7 @@ public class Hud {
         hud_ZeroSoldier_buttons = new Hud_Item_ZeroSoldiersButton();
         accept_decline_buttons_soldiers = new Hud_Item_AcceptDeclineButtons();
         accept_decline_buttons_report = new Hud_Item_AcceptDeclineButtons("Report selected soldier", "Decline");
+        hud_scoreboard = new Hud_Item_Scoreboard();
 
         changeHudState(Hud_State.PLAYING);
 
@@ -111,8 +117,6 @@ public class Hud {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 buttonGroupTextButtons.setChecked("STATS");
-                // changeHudState(Hud_State.REPORTING);
-
             }
         });
 
@@ -121,7 +125,6 @@ public class Hud {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 buttonGroupTextButtons.setChecked("REPORT");
-                //changeHudState(Hud_State.REPORTING);
             }
         });
         cheat_button.addListener(new ClickListener() {
@@ -149,6 +152,8 @@ public class Hud {
 
             }
         });
+
+        decline_soldier_cheat = new Hud_Item_ZeroSoldiersButton("Decline Cheat");
 
     }
 
@@ -190,6 +195,7 @@ public class Hud {
                 break;
             case SCOREBOARD:
                 stage.clear();
+                stage.addActor(hud_scoreboard.getTable());
                 break;
             case ACCEPT_REPORTING:
                 stage.clear();
@@ -197,6 +203,10 @@ public class Hud {
                 break;
             case CHEATING_DIRECTION:
                 stage.clear();
+                break;
+            case ACCEPT_CHEATING:
+                stage.clear();
+                stage.addActor(decline_soldier_cheat.getButtonTable());
                 break;
 
         }
@@ -379,6 +389,10 @@ public class Hud {
         return accept_decline_buttons_report.getDeclineButton();
     }
 
+    public TextButton getCheatDeclineButton(){
+        return decline_soldier_cheat.getButton();
+    }
+
 
     public void showErrorText(String text) {
         hud_errortext.setErrorText(text);
@@ -402,7 +416,9 @@ public class Hud {
                     }
                 }), Actions.alpha(1)));
             }
+    }
 
-
+    public void setHud_scoreboard(ArrayList<Player> players){
+        hud_scoreboard.setText(players);
     }
 }

@@ -18,31 +18,36 @@ public class GameMap implements Serializable {
     private GameMapEntry[][] mapArray;
     private ConcurrentLinkedDeque<CheatMove> cheatMoves=new ConcurrentLinkedDeque<>();
     public void executeCheatMove(CheatMove cheatMove)throws CheatMoveImpossibleException{
+        System.out.print("//startin to execute cheatmove//");
         int x=cheatMove.soldier.getX();
         int y=cheatMove.soldier.getY();
         //checks if a soldier is on the card
-
-        if(mapArray[x][y].getSoldierPlacements().size()==0){
+        System.out.print("//checking if soldier is on card//");
+        if(mapArray[y][x].getSoldierPlacements().size()==0){
             throw new CheatMoveImpossibleException("no soldier on card");
         }
         //checks if gamecardside is present on the gamecard
-        if(!mapArray[x][y].getCard().containsSide(cheatMove.newPosition.getGameCardSide())){
-            throw new CheatMoveImpossibleException("gamecardside not found on card");
-        }
+        //System.out.print("//cchecks if gamecardside is present on the gamecard//");
+        //if(!mapArray[y][x].getCard().containsSide(cheatMove.newPosition.getGameCardSide())){
+            //throw new CheatMoveImpossibleException("gamecardside not found on card");
+        //}
         //checks if original cheatposition is equal to found soldierposition
-        if(!mapArray[x][y].getSoldierPlacements().get(0).getGameCardSide().equals(cheatMove.originalPosition.getGameCardSide())){
-            throw new CheatMoveImpossibleException("original position is not equal to found soldierposition");
+        if(!mapArray[y][x].getSoldierPlacements().get(0).getGameCardSide().equals(cheatMove.originalPosition.getGameCardSide())){
+            System.out.print("//a soldier has been cheated another time");
+            // throw new CheatMoveImpossibleException("original position is not equal to found soldierposition");
         }
+        System.out.print("//new positiion on soldier//");
 
         cheatMove.newPosition.getSoldier().addCheat(cheatMove);
 
         synchronized (cheatMoves) {
-           //removes first soldierplacement. requires that only one soldier can be placed per gamecard
-            mapArray[x][y].getSoldierPlacements().clear();
+            //removes first soldierplacement. requires that only one soldier can be placed per gamecard
+            System.out.print("/replaces soldier placement //");
+            mapArray[y][x].getSoldierPlacements().get(0).getSoldier().soldierPlacement=null;
+            mapArray[y][x].getSoldierPlacements().clear();
+            cheatMove.soldier.soldierPlacement = null;
             //adds new soldierplacement
-            mapArray[x][y].getSoldierPlacements().add(cheatMove.newPosition);
-            mapArray[x][y].getSoldierPlacements().get(0).getSoldier().setSoldierPlacement(cheatMove.newPosition);
-
+            mapArray[y][x].setSoldier(cheatMove.soldier,cheatMove.newPosition.getGameCardSide());
 
             cheatMoves.add(cheatMove);
         }

@@ -97,6 +97,12 @@ public class GameMapManager {
                                         }
                                     }
                                 }
+
+                                if (sp.getGameCardSide() != null && sp.getGameCardSide().getType().equals(GameCardSide.Type.MONASTERY)) {
+                                    Texture currentSoldierTexture = solTextures.searchSoldierTexture(sp.getSoldier().getPlayer().getId());
+                                    batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y+48);
+                                }
+
                             }
                         }
                     }
@@ -378,6 +384,9 @@ public class GameMapManager {
 
                             }
                         }
+                        if (sp.getGameCardSide() != null && sp.getGameCardSide().getType().equals(GameCardSide.Type.MONASTERY) && checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y + 48, 32, 32, x, y)) {
+                            return sp.getSoldier();
+                        }
                     }
                 }
             }
@@ -424,6 +433,11 @@ public class GameMapManager {
 
                             }
                         }
+
+                        if (sp.getGameCardSide() != null && sp.getGameCardSide().getType().equals(GameCardSide.Type.MONASTERY) && checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y + 48, 32, 32, x, y)) {
+                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[i][j].getPosition().x+48,Playingfield[i][j].getPosition().y +48), sp.getSoldier(), Playingfield[i][j]);
+                        }
+
                     }
                 }
             }

@@ -350,7 +350,8 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
-                GameCardSideFactory.createClosedStreetSide(), null, "A");
+                GameCardSideFactory.createClosedStreetSide(),
+                GameCard.SpecialType.MONASTERY, "A");
     }
     public static GameCard B() {
         return new GameCard(
