@@ -196,7 +196,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 hud.setNextCardTexture(null);
                 Soldier mySoldier = null;
                 for(Player p : currentGameObject.getGameStatistic().getPlayers()){
-                    if(p.equals(myPlayerID)){
+                    if(p.getId().equals(myPlayerID.getId())){
                         mySoldier = p.getFreeSoldier();
                         break;
                     }
@@ -560,7 +560,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
             Soldier mySoldier = null;
             for(Player p : currentGameObject.getGameStatistic().getPlayers()){
-                if(p.equals(myPlayerID)){
+                if(p.getId().equals(myPlayerID.getId())){
                     mySoldier = p.getFreeSoldier();
                     break;
                 }
