@@ -31,7 +31,8 @@ public class GameMap implements Serializable {
         }
         //checks if original cheatposition is equal to found soldierposition
         if(!mapArray[x][y].getSoldierPlacements().get(0).getGameCardSide().equals(cheatMove.originalPosition.getGameCardSide())){
-            throw new CheatMoveImpossibleException("original position is not equal to found soldierposition");
+            System.out.print("//a soldier has been cheated another time");
+           // throw new CheatMoveImpossibleException("original position is not equal to found soldierposition");
         }
 
         cheatMove.newPosition.getSoldier().addCheat(cheatMove);
