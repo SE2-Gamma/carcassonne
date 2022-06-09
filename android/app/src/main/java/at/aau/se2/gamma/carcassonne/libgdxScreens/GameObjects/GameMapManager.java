@@ -78,7 +78,7 @@ public class GameMapManager {
                             GameCardSide cardSides[] = Playingfield[i][j].getGameMapEntry().getAlignedCardSides();
                             for(SoldierPlacement sp : cardSoldiers){
                                 for(int s = 0; s<cardSides.length; s++){
-                                    if(cardSides[s].equals(sp.getGameCardSide())){
+                                    if(cardSides[s].UID==sp.getGameCardSide().UID){
                                         //Texture currentSoldierTexture = solTextures.searchSoldierTexture(Playingfield[i][j].getGameMapEntry().getPlacedByPlayer().getId());
                                         Texture currentSoldierTexture = solTextures.searchSoldierTexture(sp.getSoldier().getPlayer().getId());
                                         switch (s){
@@ -354,7 +354,7 @@ public class GameMapManager {
                     GameCardSide cardSides[] = Playingfield[i][j].getGameMapEntry().getAlignedCardSides();
                     for (SoldierPlacement sp : cardSoldiers) {
                         for (int s = 0; s < cardSides.length; s++) {
-                            if (cardSides[s].equals(sp.getGameCardSide())) {
+                            if (cardSides[s].UID==(sp.getGameCardSide().UID)) {
                                 switch (s) {
                                     case 0:
                                         if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y + 96, 32, 32, x, y)) {
@@ -403,7 +403,7 @@ public class GameMapManager {
                     GameCardSide cardSides[] = Playingfield[i][j].getGameMapEntry().getAlignedCardSides();
                     for (SoldierPlacement sp : cardSoldiers) {
                         for (int s = 0; s < cardSides.length; s++) {
-                            if (cardSides[s].equals(sp.getGameCardSide())) {
+                            if (cardSides[s].UID==(sp.getGameCardSide().UID)) {
                                 switch (s) {
                                     case 0:
                                         if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y + 96, 32, 32, x, y)) {
