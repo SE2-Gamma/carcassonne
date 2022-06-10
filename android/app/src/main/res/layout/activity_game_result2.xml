@@ -100,4 +100,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_pointsWinner"
         app:layout_constraintVertical_bias="0.428" />
+
+    <TextView
+        android:id="@+id/tv_namefourth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Vierter Platz"
+        android:textColor="@color/primary"
+        app:layout_constraintBottom_toTopOf="@+id/tv_pointsFourth"
+        app:layout_constraintEnd_toEndOf="@+id/tv_pointsFourth"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_pointsFourth"
+        app:layout_constraintTop_toTopOf="@+id/tv_NameSecond"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tv_pointsFourth"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/primary"
+        android:text="Punkte"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_pointsSecond"
+        app:layout_constraintEnd_toStartOf="@+id/tv_pointsSecond"
+        app:layout_constraintTop_toTopOf="@+id/tv_pointsSecond"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tv_namefifth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Fünfter Platz"
+        android:textColor="@color/primary"
+        app:layout_constraintBottom_toTopOf="@+id/tv_pointsFifth"
+        app:layout_constraintEnd_toEndOf="@+id/tv_pointsFifth"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_pointsFifth"
+        app:layout_constraintTop_toTopOf="@+id/tv_NameThird"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tv_pointsFifth"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/white"
+        android:background="@color/primary"
+        android:text="Punkte"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_pointsThird"
+        app:layout_constraintStart_toEndOf="@+id/tv_pointsThird"
+        app:layout_constraintTop_toTopOf="@+id/tv_pointsThird"
+        app:layout_constraintVertical_bias="0.96" />
 </androidx.constraintlayout.widget.ConstraintLayout>

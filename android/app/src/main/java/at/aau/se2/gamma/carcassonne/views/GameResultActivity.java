@@ -1,19 +1,23 @@
 package at.aau.se2.gamma.carcassonne.views;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.LinkedList;
 
 import at.aau.se2.gamma.carcassonne.MainActivity;
+import at.aau.se2.gamma.carcassonne.R;
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyActivity;
 import at.aau.se2.gamma.carcassonne.views.lobby.LobbyPlayerDisplay;
+import at.aau.se2.gamma.carcassonne.views.lobby.RecyclerViewAdapter;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.InitialJoinCommand;
@@ -22,6 +26,9 @@ import at.aau.se2.gamma.carcassonne.databinding.ActivityGameResult2Binding;
 import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 
 public class GameResultActivity extends BaseActivity {
+    private LinkedList<LobbyPlayerDisplay> playerList;
+
+
     private ActivityGameResult2Binding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +36,6 @@ public class GameResultActivity extends BaseActivity {
         binding = ActivityGameResult2Binding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
 
         Intent intent= new Intent(GameResultActivity.this, MainActivity.class);
 
@@ -45,6 +51,28 @@ public class GameResultActivity extends BaseActivity {
             @Override
             public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
 
+            }
+        });
+        sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
+            @Override
+            public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                Log.d("Server Response", "LobbyActivity initial requestUserList");
+                playerList = new LinkedList<>();
+
+                //PayloadResponseCommand temp = (PayloadResponseCommand) payload;
+                LinkedList<String> players = (LinkedList<String>) payload;
+                for (String player:players
+                ) {
+                    Log.d("LobbyActivity", player);
+                }
+                for(int i = 0; i < players.size(); i++) {
+                    playerList.add(new LobbyPlayerDisplay(players.get(i)));
+                }
+
+            }
+            @Override
+            public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                Log.d("onFailure", "LobbyActivity");
             }
         });
     }
