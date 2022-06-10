@@ -19,6 +19,7 @@ public class Session extends BaseModel implements Serializable {
     Deck deck;
     String id;
     int maxPlayers=5;
+    int amountOfSoldiers=8;
     final LinkedList<KickOffer>kickOffers=new LinkedList<>();
    // public LinkedList<Player> players = new LinkedList<>();
     public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
@@ -176,9 +177,22 @@ public class Session extends BaseModel implements Serializable {
             Server.identify(temp).getClientThread().setClientState(ClientState.GAME);
         }
 
+         for (Player player:players
+         ) {
+             player.addAmountOfSoldiers(amountOfSoldiers);
+         }
+         gameObject.setGameStatistic(new GameStatistic(new ArrayList<>(players)));
+
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
+
+        gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
+            System.out.print("//field completed, sending broadcast command");
+            gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
+            broadcastAllPlayers(new FieldCompletedBroadcastCommand(gameObject.getGameStatistic()));
+
+        });
          try {
-             Thread.sleep(1000);
+             Thread.sleep(3000);
          } catch (InterruptedException e) {
              e.printStackTrace();
          }
@@ -210,11 +224,25 @@ public class Session extends BaseModel implements Serializable {
     public void executeCheat(CheatMove cheatMove) throws CheatMoveImpossibleException {
         System.out.print("//checking cheatmove//");
         gameLoop.gameObject.getGameMap().executeCheatMove(cheatMove);
+
         broadcastAllPlayers(new CheatMoveBroadcastCommand(cheatMove));
         System.out.print("// cheatmove broadcasted//");
     }
     public void detectCheat(Soldier soldier) throws NoSuchCheatActiveException {
-        broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(gameLoop.gameObject.getGameMap().detectCheatMove(soldier))  );
+        System.out.print("//trying to detect a cheat.//");
+
+        LinkedList<CheatMove> cheats=gameLoop.gameObject.getGameMap().detectCheatMove(soldier);
+        System.out.print("//cheat detected//");
+        System.out.print(cheats);
+        //todo: give penalties
+        gameLoop.gameObject.getGameMap().undoCheatMove(cheats);
+
+        System.out.print("//cheat undone//");
+        System.out.print(cheats);
+
+
+
+        broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(new LinkedList<>(cheats)));
     }
     public void leaveGame(Player player){
         gameLoop.turnOrder.remove(player);
@@ -235,6 +263,7 @@ public boolean interruptable=false;
         boolean playing;
         public Player onTurn;
         LinkedList<Player>turnOrder;
+
         GameLoop(Session session, GameObject gameObject){
             this.session=session;
             this.gameObject=gameObject;
@@ -300,9 +329,10 @@ public boolean interruptable=false;
             gameLoop.interrupt();
             broadcastAllPlayers(new GameCompletedBroadcastCommand("game ended"));
             System.out.print("//all players have been notified. //");
+            Server.SessionHandler.removeSession(session);
         }
 
-        static void printTurnOrder(LinkedList<Player>list){
+         void printTurnOrder(LinkedList<Player>list){
             int counter=1;
             for (Player player:list
                  ) {
@@ -310,7 +340,7 @@ public boolean interruptable=false;
                 counter++;
             }
         }
-        static void shuffle(LinkedList<Player>list)
+         void shuffle(LinkedList<Player>list)
         {
             Player[] arr=new Player[list.size()];
             list.toArray(arr);

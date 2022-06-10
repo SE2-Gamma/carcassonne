@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
+import org.w3c.dom.Text;
+
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Screens.Gamescreen;
 import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
@@ -123,14 +125,6 @@ public class GameCard {
         }
     }
 
-    public void addRotation(float rotation){
-        this.rotation = (this.rotation + rotation)%360;
-    }
-
-    public void subtractRotation(float rotation){
-        this.rotation = (this.rotation - rotation)%360;
-    }
-
     public float getRotation(){
         return rotation;
     }
@@ -139,9 +133,10 @@ public class GameCard {
         return ServerMapEntry;
     }
 
-    public void setGameMapEntry(GameMapEntry newEntry){
+    public void setGameMapEntry(GameMapEntry newEntry, Texture newCardTexutre){
             ServerMapEntry = newEntry;
-            gameCardTexture = GameCardTextures.getInstance().getTextureFromCardID(newEntry.getCard().getCardId());
+            //gameCardTexture = GameCardTextures.getInstance().getTextureFromCardID(newEntry.getCard().getCardId());
+            gameCardTexture = newCardTexutre;
             this.setRotation(newEntry.getOrientation());
 
     }

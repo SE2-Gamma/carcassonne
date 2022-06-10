@@ -3,11 +3,13 @@ package at.aau.se2.gamma.core.models.impl;
 import java.io.Serializable;
 
 public class CheatMove implements Serializable {
-    String playername;
+    Player cheater;
     boolean active;
     Soldier soldier;
     SoldierPlacement originalPosition;
     SoldierPlacement newPosition;
+    int penalty; // tbd, is set in clientthread, is 2^numberOfCheats
+
 
     public SoldierPlacement getOriginalPosition() {
         return originalPosition;
@@ -25,14 +27,14 @@ public class CheatMove implements Serializable {
         this.newPosition = newPosition;
     }
 
-    int pointsLostIfDetected; // tbd, is set in clientthread, is 2^numberOfCheats
 
-    public String getPlayername() {
-        return playername;
+
+    public Player getCheater() {
+        return cheater;
     }
 
-    public void setPlayername(String playername) {
-        this.playername = playername;
+    public void setCheater(Player cheater) {
+        this.cheater = cheater;
     }
 
     public boolean getActive() {
@@ -51,17 +53,17 @@ public class CheatMove implements Serializable {
         this.soldier = soldier;
     }
 
-    public int getPointsLostIfDetected() {
-        return pointsLostIfDetected;
+    public int getPenalty() {
+        return penalty;
     }
 
-    public void setPointsLostIfDetected(int pointsLostIfDetected) {
-        this.pointsLostIfDetected = pointsLostIfDetected;
+    public void setPenalty(int penalty) {
+        this.penalty = penalty;
     }
 
-    public CheatMove(String playername, Soldier soldier) {
+    public CheatMove(Player cheater, Soldier soldier) {
 
-        this.playername = playername;
+        this.cheater = cheater;
         this.active = true;
         this.soldier = soldier;
     }

@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.LinkedList;
 
 import at.aau.se2.gamma.carcassonne.AndroidInterface;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.CheatMoveSoldierPosition;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCardTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
@@ -31,20 +32,30 @@ import at.aau.se2.gamma.carcassonne.libgdxScreens.Utility.InputCalculations;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveDetectedBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.FieldCompletedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.GameTurnBroadCastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand;
+import at.aau.se2.gamma.core.commands.CheatCommand;
+import at.aau.se2.gamma.core.commands.DetectCheatCommand;
 import at.aau.se2.gamma.core.commands.GameTurnCommand;
 import at.aau.se2.gamma.core.commands.LeaveGameCommand;
+import at.aau.se2.gamma.core.exceptions.CheatMoveImpossibleException;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
+import at.aau.se2.gamma.core.models.impl.CheatMove;
+import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 import at.aau.se2.gamma.core.models.impl.GameMapEntryPosition;
 import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.GameObject;
+import at.aau.se2.gamma.core.models.impl.GameStatistic;
 import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Soldier;
+import at.aau.se2.gamma.core.models.impl.SoldierPlacement;
 
 public class Gamescreen extends ScreenAdapter implements GestureDetector.GestureListener {
 
@@ -94,6 +105,18 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     //dataFromServer
     GameObject currentGameObject;
     Player myPlayerID;
+    boolean myTurn;
+
+    private CheatMoveSoldierPosition selectedCheatingSoldier;
+    private CheatMove currentCheatMove;
+
+    //for shake detection
+    float last_x;
+    float last_y;
+    float last_z;
+
+    //cheat detection
+    private Soldier touchedSoldier;
 
 
     AndroidInterface androidInterface;
@@ -101,14 +124,23 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     String userID;
 
 
-    public Gamescreen(String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
 
+    public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
+        touchedSoldier = null;
+        currentCheatMove = null;
+        selectedCheatingSoldier = null;
         this.androidInterface = androidInterface;
         this.userName = userName;
         this.userID = UserID;
 
         currentGameObject = initialGameObject;
-        myPlayerID = new Player(UserID, userName);
+        for(Player p : currentGameObject.getGameStatistic().getPlayers()){
+            if(p.getId().equals(UserID) && p.getName().equals(userName)){
+                myPlayerID = p;
+                break;
+            }
+        }
+        myTurn = false;
 
         playercam = new OrthographicCamera();
         playercam.setToOrtho(false);
@@ -118,6 +150,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         batch = new SpriteBatch();
         hud = new Hud(batch, this);
+        hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
 
         shaprenderer = new ShapeRenderer();
 
@@ -139,7 +172,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         errorTextur = new Texture("testTexture.jpg");
 
         //setting up playable area / map
-        myMap = new GameMapManager(playercam, gameviewport, batch, currentGameObject.getGameMap());
+        myMap = new GameMapManager(playercam, gameviewport, batch, currentGameObject.getGameMap(), true);
 
         playedCard_x = 0;
         playedCard_y = 0;
@@ -167,7 +200,37 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 hud.setNextCardTexture(null);
-                hud.changeHudState(Hud.Hud_State.PLACING_SOLDIER);
+                Soldier mySoldier = null;
+                for(Player p : currentGameObject.getGameStatistic().getPlayers()){
+                    if(p.getId().equals(myPlayerID.getId())){
+                        mySoldier = p.getFreeSoldier();
+                        break;
+                    }
+
+                }
+                if(mySoldier != null){
+                    hud.changeHudState(Hud.Hud_State.PLACING_SOLDIER);
+                }else {
+                    hud.changeHudState(Hud.Hud_State.VIEWING);
+                    GameMove gm = new GameMove(myPlayerID, lastCard.getGameMapEntry(), new GameMapEntryPosition(playedCard_x, playedCard_y));
+                    ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
+                        @Override
+                        public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                            String responseString = (String) payload;
+                            Log.i("LauncherGame", responseString);
+                            if(!responseString.equals("turn succesfull")){
+                                hud.showErrorText(responseString);
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
+                        }
+                    });
+                }
+
             }
         });
 
@@ -188,6 +251,11 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 super.clicked(event, x, y);
                 hud.changeHudState(Hud.Hud_State.VIEWING);
                 GameMove gm = new GameMove(myPlayerID, lastCard.getGameMapEntry(), new GameMapEntryPosition(playedCard_x, playedCard_y));
+               Soldier soldiercopy=new Soldier(myPlayerID);
+               soldiercopy.soldierPlacement=new SoldierPlacement(soldiercopy,lastCard.getGameMapEntry().getSoldierPlacements().get(0).getGameCardSide());
+               soldiercopy.setX(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getX());
+               soldiercopy.setY(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getY());
+               gm.getGameMapEntry().getSoldierPlacements().get(0).setSoldier(soldiercopy);
                 ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -205,7 +273,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     }
                 });
 
-
                 lastCard = null;
                 //HERE send GameMove with gameMapEntry etc. later
 
@@ -217,10 +284,14 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 hud.changeHudState(Hud.Hud_State.PLACING_SOLDIER);
+                for(SoldierPlacement sp : lastCard.getGameMapEntry().getSoldierPlacements()){
+                    sp.getSoldier().setSoldierPlacement(null);
+                }
 
                 //clears the SoldierPlacements Array to remove placed Soldiers
                 // Works ONLY for new Card with single Soldier
                 lastCard.getGameMapEntry().getSoldierPlacements().clear();
+
             }
         });
 
@@ -236,10 +307,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                         String responseString = (String) payload;
-                            Log.i("LauncherGame", responseString);
-                            if(!responseString.equals("turn succesfull")){
-                                hud.showErrorText(responseString);
-                            }
+                        Log.i("LauncherGame", responseString);
+                        if(!responseString.equals("turn succesfull")){
+                            hud.showErrorText(responseString);
+                        }
 
                     }
 
@@ -259,6 +330,100 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         ServerThread.instance.setBroadcastHandler(myBroadCastHandler);
 
+        //play button click listener
+        hud.getPlay_button().addListener(new ClickListener(){
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //hud.getPlay_button().setChecked(true);
+                super.clicked(event, x, y);
+                //hud.getButtonGroup().setChecked("PLAY");
+                if(!(hud.getCurrentState().equals(Hud.Hud_State.PLAYING)||hud.getCurrentState().equals(Hud.Hud_State.VIEWING))){
+                    if(myTurn){
+                        hud.changeHudState(Hud.Hud_State.PLAYING);
+                    }else {
+                        hud.changeHudState(Hud.Hud_State.VIEWING);
+                    }
+                }
+
+            }
+        });
+
+        //play button click listener
+        hud.getReport_button().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                //hud.getButtonGroup().setChecked("REPORT");
+                if(hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_ACTION)||
+                        hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_PLACING_SOLDIER) ||
+                        hud.getCurrentState().equals(Hud.Hud_State.PLACING_SOLDIER)){
+                    currentGameCard = lastCard;
+                    hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+                    currentGameCard.getGameMapEntry().getSoldierPlacements().clear();
+                    lastCard = null;
+                    myMap.setGamecard(playedCard_x, playedCard_y, null);
+                }
+                hud.changeHudState(Hud.Hud_State.REPORTING);
+
+                hud.showErrorText("Select the suspicious soldier!");
+
+
+            }
+        });
+
+        //cheat button click listener
+        hud.getCheat_button().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                //hud.getButtonGroup().setChecked("CHEAT");
+                if(hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_ACTION)||
+                        hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_PLACING_SOLDIER) ||
+                        hud.getCurrentState().equals(Hud.Hud_State.PLACING_SOLDIER)){
+                    currentGameCard = lastCard;
+                    hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+                    currentGameCard.getGameMapEntry().getSoldierPlacements().clear();
+                    lastCard = null;
+                    myMap.setGamecard(playedCard_x, playedCard_y, null);
+                }
+                hud.changeHudState(Hud.Hud_State.CHEATING);
+
+                hud.showErrorText("Select soldier to cheat with!");
+            }
+        });
+
+        //cheat button click listener
+        hud.getStat_button().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                //hud.getButtonGroup().setChecked("STATS");
+                if(hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_ACTION)||
+                        hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_PLACING_SOLDIER) ||
+                        hud.getCurrentState().equals(Hud.Hud_State.PLACING_SOLDIER)){
+                    currentGameCard = lastCard;
+                    hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+                    currentGameCard.getGameMapEntry().getSoldierPlacements().clear();
+                    lastCard = null;
+                    myMap.setGamecard(playedCard_x, playedCard_y, null);
+                }
+                hud.changeHudState(Hud.Hud_State.SCOREBOARD);
+            }
+        });
+
+        last_x = -1f;
+        last_y = -1f;
+        last_z = -1f;
+
+        hud.getCheatDeclineButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+
+            }
+        });
+
 
     }
 
@@ -275,7 +440,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         batch.begin();
 
         //drawing empty Game Map
-        myMap.draw();
+        myMap.draw(hud.getCurrentState());
 
         //printing fps and playercam position inside of the Gameworld
         //myfont.draw(batch, String.format("fps:%.2f | x pos: %f",(float)(1/delta), playercam.position.x), 0,0);
@@ -293,6 +458,49 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         //String.format("fps:%.2f | x pos: %f |",(float)(1/delta), playercam.position.x)
         hud.drawStage();
 
+        if(hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_CHEATING)){
+            boolean gyroscopeAvail = Gdx.input.isPeripheralAvailable(Input.Peripheral.Gyroscope);
+
+            if(gyroscopeAvail){
+                float gyroX = Gdx.input.getGyroscopeX();
+                float gyroY = Gdx.input.getGyroscopeY();
+                float gyroZ = Gdx.input.getGyroscopeZ();
+
+
+                float speed = Math.abs(gyroX+gyroY+gyroZ - last_x - last_y - last_z) / delta * 10000;
+                //SHAKE_THRESHOLD
+                if (speed != 1500000) {
+                    Log.d("sensor", "shake detected w/ speed: " + speed);
+                    hud.showErrorText(""+speed);
+                    //do things after smartphone was shaken
+                    ServerThread.instance.sendCommand(new CheatCommand(currentCheatMove), new ServerThread.RequestResponseHandler() {
+                                @Override
+                                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                                    String responseString = (String) payload;
+                                    Log.i("LauncherGame", responseString);
+                                    //if(!responseString.equals("sucessfull")){
+                                    hud.showErrorText(responseString);
+                                    //}
+
+                                }
+
+                                @Override
+                                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
+                                }
+                            });
+
+                    hud.changeHudState(Hud.Hud_State.CHEATING);
+
+                }
+                last_x = gyroX;
+                last_y = gyroY;
+                last_z = gyroZ;
+
+            }else {
+                hud.showErrorText("BRUHHH NO Gyroscope YIKES");
+            }
+        }
 
         Gdx.input.setCatchBackKey(true);
 
@@ -315,9 +523,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 }
             });
         }
-
-
     }
+
 
     @Override
     public void resize(int width, int height) {
@@ -329,7 +536,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     public void dispose() {
         myfont.dispose();
         batch.dispose();
-        //TODO: Fix CardTextures.disposeTexutres();
+        //TODO: Fix disposeTexutres when leaving game with Back-Button
+        //CardTextures.disposeTexutres();
         shaprenderer.dispose();
         hud.dispose();
         myMap.dispose();
@@ -368,21 +576,150 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             Vector2 oldPos = lastCard.getPosition();
 
             //change lenght when churches are implemented/ no idea how my teammates planned them right now
-            float[] allDistances = new float[4];
+            float[] allDistances = new float[5];
 
             Vector2 point_left = new Vector2(oldPos.x, oldPos.y+64);
             Vector2 point_right = new Vector2(oldPos.x+128, oldPos.y+64);
             Vector2 point_top = new Vector2(oldPos.x+64, oldPos.y+128);
             Vector2 point_bottom = new Vector2(oldPos.x+64, oldPos.y);
-            //Vector2 point_middle = new Vector2(oldPos.x+64, oldPos.y+64);
+            Vector2 point_middle = new Vector2(oldPos.x+64, oldPos.y+64);
 
             allDistances[0] = distance(mapPos, point_left);
             allDistances[1] = distance(mapPos, point_right);
             allDistances[2] = distance(mapPos, point_top);
             allDistances[3] = distance(mapPos, point_bottom);
-            //allDistances[4] = distance(mapPos, point_middle);
+             allDistances[4] = distance(mapPos, point_middle);
+             if(!(lastCard.getGameMapEntry().getCard().getSideMid() != null && lastCard.getGameMapEntry().getCard().getSideMid().getType().equals(GameCardSide.Type.MONASTERY))){
+               allDistances[4] = Float.MAX_VALUE;
+             }
 
-            Soldier mySoldier = new Soldier(myPlayerID);
+            Soldier mySoldier = null;
+            for(Player p : currentGameObject.getGameStatistic().getPlayers()){
+                if(p.getId().equals(myPlayerID.getId())){
+                    mySoldier = p.getFreeSoldier();
+                    break;
+                }
+
+            }
+            if(mySoldier != null){
+                mySoldier.setX((int) mapPos.x / 144);
+                mySoldier.setY((int) mapPos.y / 144);
+
+                //getting smallest distance
+                int smallestIndex = 0;
+                for(int i = 0; i<allDistances.length; i++){
+                    if(allDistances[i]<allDistances[smallestIndex]){
+                        smallestIndex = i;
+                    }
+                }
+
+                switch (smallestIndex){
+                    case 0:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[3]);
+                        break;
+                    case 1:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[1]);
+                        break;
+                    case 2:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[0]);
+                        break;
+                    case 3:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[2]);
+                        break;
+                    case 4:
+                        lastCard.getGameMapEntry().setSoldier(mySoldier,lastCard.getGameMapEntry().getCard().getSideMid());
+                        break;
+                }
+            }
+
+            hud.changeHudState(Hud.Hud_State.ACCEPT_PLACING_SOLDIER);
+
+        } else if(hud.getCurrentState().equals(Hud.Hud_State.REPORTING)){
+            Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            touchedSoldier = myMap.touchedSoldier(mapPos.x, mapPos.y);
+
+            if(touchedSoldier != null){
+                Log.i("ReportedPlayer", "Touched player");
+                Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+touchedSoldier.getPlayer().getId());
+                Log.i("ReportedPlayer", touchedSoldier.getX()+"|"+touchedSoldier.getY());
+                //if(!(myPlayerID.getId().equals(touchedSoldier.getPlayer().getId()))){
+                    //Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+touchedSoldier.getPlayer().getId());
+                    hud.changeHudState(Hud.Hud_State.ACCEPT_REPORTING);
+                    hud.getReportAcceptButton().addListener(new ClickListener(){
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            super.clicked(event, x, y);
+                            hud.changeHudState(Hud.Hud_State.REPORTING);
+                            Log.i("REPORT", touchedSoldier.getX()+"|"+touchedSoldier.getY());
+                            ServerThread.instance.sendCommand(new DetectCheatCommand(touchedSoldier), new ServerThread.RequestResponseHandler() {
+                                @Override
+                                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                                    String responseString = (String) payload;
+                                    Log.i("ReportedPlayer", responseString);
+                                    hud.showErrorText(responseString);
+                                }
+
+                                @Override
+                                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
+                                }
+                            });
+                        }
+                    });
+                    hud.getReportDeclineButton().addListener(new ClickListener(){
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            super.clicked(event, x, y);
+                            hud.changeHudState(Hud.Hud_State.REPORTING);
+                        }
+                    });
+                //}
+            }
+
+
+        }else if(hud.getCurrentState().equals(Hud.Hud_State.CHEATING)){
+
+            Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            selectedCheatingSoldier = myMap.touchedSoldierGetALL(mapPos.x, mapPos.y);
+
+            if(selectedCheatingSoldier != null){
+                Log.i("ReportedPlayer", "Touched Soldier");
+                Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+selectedCheatingSoldier.getSoldier().getPlayer().getId());
+                hud.changeHudState(Hud.Hud_State.CHEATING_DIRECTION);
+                hud.showErrorText("Tap the direction you want to move the soldier");
+            }
+
+        }else if(hud.getCurrentState().equals(Hud.Hud_State.CHEATING_DIRECTION)){
+
+            Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            //change lenght when churches are implemented/ no idea how my teammates planned them right now
+            float[] allDistances = new float[5];
+
+            Vector2 point_left = new Vector2(selectedCheatingSoldier.getGamecard().getPosition().x, selectedCheatingSoldier.getGamecard().getPosition().y+64);
+            Vector2 point_right = new Vector2(selectedCheatingSoldier.getGamecard().getPosition().x+128, selectedCheatingSoldier.getGamecard().getPosition().y+64);
+            Vector2 point_top = new Vector2(selectedCheatingSoldier.getGamecard().getPosition().x+64, selectedCheatingSoldier.getGamecard().getPosition().y+128);
+            Vector2 point_bottom = new Vector2(selectedCheatingSoldier.getGamecard().getPosition().x+64, selectedCheatingSoldier.getGamecard().getPosition().y);
+            Vector2 point_middle = new Vector2(selectedCheatingSoldier.getGamecard().getPosition().x+64, selectedCheatingSoldier.getGamecard().getPosition().y+64);
+
+            allDistances[0] = distance(mapPos, point_left);
+            allDistances[1] = distance(mapPos, point_right);
+            allDistances[2] = distance(mapPos, point_top);
+            allDistances[3] = distance(mapPos, point_bottom);
+            allDistances[4] = distance(mapPos, point_middle);
+
+
+            if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[0].UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID){
+                allDistances[2] = Float.MAX_VALUE;
+            }else if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[1].UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID){
+                allDistances[1] = Float.MAX_VALUE;
+            }else if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[2].UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID){
+                allDistances[3] = Float.MAX_VALUE;
+            }else if(selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[3].UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID){
+                allDistances[0] = Float.MAX_VALUE;
+            }
+            if((selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid() != null && selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid().UID == selectedCheatingSoldier.getSoldier().getSoldierPlacement().getGameCardSide().UID) || selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid() == null){
+                allDistances[4] = Float.MAX_VALUE;
+            }
 
             //getting smallest distance
             int smallestIndex = 0;
@@ -394,24 +731,37 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
             switch (smallestIndex){
                 case 0:
-                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[3]);
+                    currentCheatMove = new CheatMove(myPlayerID, selectedCheatingSoldier.getSoldier());
+                    currentCheatMove.setOriginalPosition(currentCheatMove.getSoldier().getSoldierPlacement());
+                    currentCheatMove.setNewPosition(new SoldierPlacement(selectedCheatingSoldier.getSoldier(),selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[3]));
                     break;
                 case 1:
-                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[1]);
+                    currentCheatMove = new CheatMove(myPlayerID, selectedCheatingSoldier.getSoldier());
+                    currentCheatMove.setOriginalPosition(currentCheatMove.getSoldier().getSoldierPlacement());
+                    currentCheatMove.setNewPosition(new SoldierPlacement(selectedCheatingSoldier.getSoldier(),selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[1]));
                     break;
                 case 2:
-                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[0]);
+                    currentCheatMove = new CheatMove(myPlayerID, selectedCheatingSoldier.getSoldier());
+                    currentCheatMove.setOriginalPosition(currentCheatMove.getSoldier().getSoldierPlacement());
+                    currentCheatMove.setNewPosition(new SoldierPlacement(selectedCheatingSoldier.getSoldier(),selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[0]));
                     break;
                 case 3:
-                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[2]);
+                    currentCheatMove = new CheatMove(myPlayerID, selectedCheatingSoldier.getSoldier());
+                    currentCheatMove.setOriginalPosition(currentCheatMove.getSoldier().getSoldierPlacement());
+                    currentCheatMove.setNewPosition(new SoldierPlacement(selectedCheatingSoldier.getSoldier(),selectedCheatingSoldier.getGamecard().getGameMapEntry().getAlignedCardSides()[2]));
                     break;
-                //case 4:
+                case 4:
+                    currentCheatMove = new CheatMove(myPlayerID, selectedCheatingSoldier.getSoldier());
+                    currentCheatMove.setOriginalPosition(currentCheatMove.getSoldier().getSoldierPlacement());
+                    currentCheatMove.setNewPosition(new SoldierPlacement(selectedCheatingSoldier.getSoldier(),selectedCheatingSoldier.getGamecard().getGameMapEntry().getCard().getSideMid()));
+                    break;
             }
-            hud.changeHudState(Hud.Hud_State.ACCEPT_PLACING_SOLDIER);
+
+
+            hud.changeHudState(Hud.Hud_State.ACCEPT_CHEATING);
 
         }
-        //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
-        //Log.e("info", "button: "+button + " | count: "+count);
+
         return false;
     }
 
@@ -441,7 +791,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
     @Override
     public boolean zoom(float initialDistance, float distance) {
-        //MathUtils.lerp() sounds interesting
+        //MathUtils.lerp() sounds interestingHud.Hud_State.CHEATING
         return false;
     }
 
@@ -473,8 +823,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         public void onBroadcastResponse(ServerResponse response, Object payload) {
             if(response.getPayload() instanceof StringBroadcastCommand){
                 Log.i("LauncherGame", "alles");
+                myTurn = false;
             }else
             if(response.getPayload() instanceof GameTurnBroadCastCommand){
+                myTurn = false;
                 //nach einen zug
                 //currentGameObject = (GameObject) payload;
                 GameMove gm = (GameMove) payload;
@@ -495,27 +847,54 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     lastCard = null;
                     myMap.setGamecard(playedCard_x, playedCard_y, null);
                 }
+                if(!(hud.getCurrentState().equals(Hud.Hud_State.SCOREBOARD)||hud.getCurrentState().equals(Hud.Hud_State.CHEATING)||hud.getCurrentState().equals(Hud.Hud_State.REPORTING))){
+                    hud.changeHudState(Hud.Hud_State.VIEWING);
+                }
 
-                hud.changeHudState(Hud.Hud_State.VIEWING);
                 currentGameCard = null;
                 hud.setNextCardTexture(null);
                 hud.showInfoText("It's "+ (String)payload +"'s turn!");
+                hud.setMyTurn(false);
+                myTurn = false;
 
             } else if(response.getPayload() instanceof YourTurnBroadcastCommand){
+
                 Log.i("LauncherGame", "Spieler ist nun an der Reihe");
                 at.aau.se2.gamma.core.models.impl.GameCard gm = (at.aau.se2.gamma.core.models.impl.GameCard) payload;
                 GameMapEntry gme = new GameMapEntry(gm, myPlayerID);
                 currentGameCard = new GameCard(GameCardTextures.getInstance().getTextureFromCardID(gm.getCardId()), new Vector2(0,0), gme);
                 hud.setNextCardTexture(currentGameCard.getGameCardTexture());
-                hud.changeHudState(Hud.Hud_State.PLAYING);
+
+                if(hud.getCurrentState().equals(Hud.Hud_State.VIEWING)){
+                    hud.changeHudState(Hud.Hud_State.PLAYING);
+                }
+
                 Log.i("LauncherGame", "Spieler ist nun an der Reihe mit dieser karte:  "+ currentGameCard.getGameMapEntry().getCard().getCardId());
                 hud.showInfoText("It's Your turn!");
+                hud.setMyTurn(true);
+                myTurn = true;
 
                 //at.aau.se2.gamma.core.models.impl.GameMapEntry newCardFromDeck = new GameMapEntry(CardDeck.get((int)(Math.random()*20)), myPlayerID, Orientation.NORTH);
                 //currentGameCard = new GameCard(CardTextures.getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0),270f,newCardFromDeck);
 
                 //hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+            }else if(response.getPayload() instanceof FieldCompletedBroadcastCommand){
+                currentGameObject.setGameStatistic((GameStatistic) payload);
+                hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
+            }else if(response.getPayload() instanceof CheatMoveBroadcastCommand){
+                Log.i("Reported", "GOT RESPONCE FROM SERVER for CHEATING");
+                try {
+                    currentGameObject.getGameMap().executeCheatMove((CheatMove) payload);
+                    myMap.setGameMap(currentGameObject.getGameMap());
+                } catch (CheatMoveImpossibleException e) {
+                    e.printStackTrace();
+                }
+            }else if(response.getPayload() instanceof CheatMoveDetectedBroadcastCommand){
+                Log.i("Reported", "GOT RESPONCE FROM SERVER for CHEATING");
+                currentGameObject.getGameMap().undoCheatMove((LinkedList<CheatMove>) payload);
+                myMap.setGameMap(currentGameObject.getGameMap());
             }
+
         }
 
         @Override

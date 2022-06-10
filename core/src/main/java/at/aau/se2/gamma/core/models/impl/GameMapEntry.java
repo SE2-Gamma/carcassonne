@@ -30,15 +30,16 @@ public class GameMapEntry implements Serializable {
             return false;
         }
 
+
         // check if the placer placed this card
         if(!soldier.getPlayer().getId().equals(this.placedByPlayer.getId())) {
             return false;
         }
 
         // check if the side is on this card
-        if(!card.containsSide(gameCardSide)) {
-            return false;
-        }
+       // if(!card.containsSide(gameCardSide)) {
+            //return false;
+       // }
 
         SoldierPlacement soldierPlacement = new SoldierPlacement(soldier, gameCardSide);
         soldier.setSoldierPlacement(soldierPlacement);

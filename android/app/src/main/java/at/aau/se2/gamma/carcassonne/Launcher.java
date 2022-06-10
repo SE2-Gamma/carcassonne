@@ -16,6 +16,9 @@ public class Launcher extends AndroidApplication {
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+        config.useGyroscope = true;
+        config.useCompass = true;
+        config.useAccelerometer = true;
         Log.i("LauncherGame", "trying to get intent");
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();

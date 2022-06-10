@@ -39,6 +39,8 @@ public class GameCardSideFactory {
     }
 
     public static GameCardSide createMonasteryMidSide() {
-        return new GameCardSide(GameCardSide.Type.MONASTERY, new GameCardSide.Type[]{GameCardSide.Type.GRAS}, false, POINTS_DEFAULT);
+        GameCardSide gameCardSide = new GameCardSide(GameCardSide.Type.MONASTERY, new GameCardSide.Type[]{GameCardSide.Type.GRAS}, false, POINTS_DEFAULT);
+        gameCardSide.setMidOfCard(true);
+        return gameCardSide;
     }
 }

@@ -1,12 +1,15 @@
 package at.aau.se2.gamma.core.models.impl;
 
 import at.aau.se2.gamma.core.exceptions.*;
+import at.aau.se2.gamma.core.factories.GameCardSideFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.logging.Logger;
 
 public class GameMap implements Serializable {
     // default values for the map
@@ -16,30 +19,109 @@ public class GameMap implements Serializable {
     private GameMapEntry[][] mapArray;
     private ConcurrentLinkedDeque<CheatMove> cheatMoves=new ConcurrentLinkedDeque<>();
     public void executeCheatMove(CheatMove cheatMove)throws CheatMoveImpossibleException{
+        System.out.print("//startin to execute cheatmove//");
+        int x=cheatMove.soldier.getX();
+        int y=cheatMove.soldier.getY();
+        //checks if a soldier is on the card
+        System.out.print("//checking if soldier is on card//");
+        System.out.println(x);
+        System.out.println(y);
+        if(mapArray[y][x]==null){
+            System.out.println("for some reason there is no gamemapentry");
+            throw new CheatMoveImpossibleException("dont ask me");
+        }
+        if(mapArray[y][x].getSoldierPlacements().size()==0){
+           // throw new CheatMoveImpossibleException("no soldier on card");
+        }
+        //checks if gamecardside is present on the gamecard
+        /*System.out.print("//cchecks if gamecardside is present on the gamecard//");
+        if(!mapArray[y][x].getCard().containsSide(cheatMove.newPosition.getGameCardSide())){
+            throw new CheatMoveImpossibleException("gamecardside not found on card");
+        }*/
+        //checks if original cheatposition is equal to found soldierposition
+        if(!mapArray[y][x].getSoldierPlacements().get(0).getGameCardSide().equals(cheatMove.originalPosition.getGameCardSide())){
+            System.out.print("//a soldier has been cheated another time");
+           // throw new CheatMoveImpossibleException("original position is not equal to found soldierposition");
+        }
+        System.out.print("//new positiion on soldier//");
+        Soldier copy=new Soldier(cheatMove.getSoldier().getPlayer());
+        copy.setX(cheatMove.soldier.getX());
+        copy.setY(cheatMove.soldier.getY());
+        copy.getActiveCheats().add(cheatMove);
+        SoldierPlacement pcopy=new SoldierPlacement(copy,cheatMove.getNewPosition().getGameCardSide());
+        pcopy.setSoldier(copy);
+        cheatMove.setSoldier(copy);
+      //  cheatMove.newPosition.getSoldier().addCheat(cheatMove);
+
         synchronized (cheatMoves) {
-            //todo: implement
+            //removes first soldierplacement. requires that only one soldier can be placed per gamecard
+            System.out.print("/replaces soldier placement //");
+            mapArray[y][x].getSoldierPlacements().get(0).getSoldier().soldierPlacement=null;
+            mapArray[y][x].getSoldierPlacements().clear();
+            cheatMove.soldier.soldierPlacement = null;
+            //adds new soldierplacement
+            mapArray[y][x].setSoldier(cheatMove.soldier,cheatMove.newPosition.getGameCardSide());
 
             cheatMoves.add(cheatMove);
         }
 
     }
-    public CheatMove detectCheatMove(Soldier soldier) throws  NoSuchCheatActiveException {
-        //todo: check if correct soldier has been selected. at the moment im just checking for playername.
-        synchronized (cheatMoves) {
-            for (CheatMove cheat:cheatMoves
-                 ) {
-                if((cheat.soldier.getPlayer().getName().equals(soldier.getPlayer().getName())&&cheat.active)){
-                    //todo; check if soldier.getSoldierplacement()==cheat.newPosition;
-                    undoCheatMove(cheat);
-                    cheatMoves.remove(cheat);
-                    return cheat;
+    public LinkedList<CheatMove> detectCheatMove(Soldier soldier) throws  NoSuchCheatActiveException {
+       synchronized (cheatMoves) {
+            try {
+                System.out.print("//searching soldier//");
+
+                if(soldier.getActiveCheats().size()==0){
+                    throw new NoSuchCheatActiveException();
                 }
+            } catch (IndexOutOfBoundsException e) {
+                throw new NoSuchCheatActiveException();
+            }catch (NullPointerException e){
+                throw new NoSuchCheatActiveException();
+            }
+           LinkedList<CheatMove>cheatscopy=new LinkedList<>();
+
+         /*  for (CheatMove cheat: soldier.getActiveCheats()
+           ) {
+
+               Soldier copy=new Soldier(cheat.getSoldier().getPlayer());
+               copy.setX(cheat.getSoldier().getX());
+               copy.setY(cheat.getSoldier().getY());
+               copy.soldierPlacement=new SoldierPlacement(copy,cheat.getNewPosition().getGameCardSide());
+               copy.soldierPlacement.setSoldier(copy);
+               CheatMove cheatcopy=new CheatMove(cheat.cheater,copy);
+               cheatcopy.setOriginalPosition(new SoldierPlacement(copy,cheat.getOriginalPosition().getGameCardSide()));
+               cheatcopy.setNewPosition(new SoldierPlacement(copy,cheat.getNewPosition().getGameCardSide()));
+
+               cheatscopy.add(cheatcopy);
+           }*/
+        //   mapArray[soldier.getY()][soldier.getX()].getSoldierPlacements().get(0).getSoldier().getActiveCheats().clear();
+           return mapArray[soldier.getY()][soldier.getX()].getSoldierPlacements().get(0).getSoldier().getActiveCheats();
+
+        }
+
+    }
+    public void undoCheatMove(LinkedList<CheatMove> moves){
+        synchronized (cheatMoves) {
+            for (CheatMove move:moves
+                 ) {
+                cheatMoves.remove(move);
             }
         }
-        throw new NoSuchCheatActiveException();
-    }
-    public void undoCheatMove(CheatMove cheatMove){
-        //todo: implement
+
+        //clears soldierplacements of the gamemapentry and sets it to the very first original position
+
+            mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().get(0).getSoldier().soldierPlacement=null;
+        mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().clear();
+        moves.getFirst().soldier.soldierPlacement=null;
+
+           mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().add(moves.getFirst().originalPosition);
+            mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().get(0).getSoldier().setSoldierPlacement(moves.getFirst().originalPosition);
+      //  moves.remove(moves.getFirst());
+        //moves.clear();
+            //todo: give each cheater the correct penalty (CheatMove.getPlayername <- the cheater
+            // CheatMove.getPenalty <- the correct number of points lost. is independent from detected cheats but number of cheats done.
+            // so if a player has done 4 cheats but the very first is detected he only loses 1 points, but if the last cheat is detected first he loses 2^4 points.
     }
 
     public GameMap() {
@@ -132,10 +214,33 @@ public class GameMap implements Serializable {
         // place the movement
         this.mapArray[position.getY()][position.getX()] = entryCandidate;
 
+        // check if neighbour (diagonal, vertical and horizontal) is a monastery, if that is the case,
+        // check if the monastery is finished, and return an own detection data object
+        for(GameMapEntry[] row: get3x3SubMap(position)) {
+            for(GameMapEntry neighbour: row) {
+                if (neighbour != null
+                        && neighbour.getCard().getSideMid() != null
+                        && neighbour.getCard().getSideMid().getType() == GameCardSide.Type.MONASTERY) {
+                    // check monastery
+                    GameMapEntryPosition monasteryPosition = getPositionFromEntry(neighbour);
+                    if (isFieldFullyCompleted(monasteryPosition)) {
+                        ClosedFieldDetectionData monasteryDetectionData = new ClosedFieldDetectionData();
+                        monasteryDetectionData.addPoints(GameCardSideFactory.POINTS_DEFAULT*9);
+                        monasteryDetectionData.addGameCardSide(neighbour.getCard().getSideMid());
+                        if (gameMapHandler != null) {
+                            gameMapHandler.onClosedField(monasteryDetectionData);
+                        }
+                    }
+                }
+            }
+        }
+
         // check current state, and notify observer if needed
         GameCardSide[] alignedSides = entryCandidate.getAlignedCardSides();
+        ArrayList<Integer> usedIds = new ArrayList<>();
         for(int i = 0; i < alignedSides.length; i++) {
             GameCardSide cardSide = alignedSides[i];
+
             if (cardSide.isClosingSide) {
 
                 // check all connected sides to check if we have a full closed thing here
@@ -147,29 +252,167 @@ public class GameMap implements Serializable {
                         gameMapHandler.onClosedField(detectionData);
                     }
                 }
+            } else {
+                // check if the open side close something
+                // pretend this side is closed, and check if it would lead to a closed field
+                // repeat this step with all other sides with the same open type,
+                // if all pretended closed sides leads to closed fields, then these sides are closing the whole field.
+
+                // break if the field was already used in this else branch for a previous side
+                for(int n: usedIds) {
+                    if(n == i) {
+                        break;
+                    }
+                }
+
+                // check if this side would close a field
+                ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
+                checkClosedState(i, position, detectionData, cardSide);
+
+                // if this one would lead to a closed field, check the next sides on this card
+                if(detectionData.isClosed()) {
+                    ArrayList<ClosedFieldDetectionData> closedFieldDetectionDataArr = new ArrayList<>();
+                    ArrayList<Integer> checkedIds = new ArrayList<>();
+                    checkedIds.add(i);
+                    boolean closed = true;
+
+                    for(int j = i+1; j < alignedSides.length; j++) {
+                        GameCardSide subCardSide = alignedSides[j];
+
+                        // continue for different types or closing sides
+                        if (!subCardSide.getType().equals(cardSide.getType()) || subCardSide.isClosingSide) {
+                            continue;
+                        }
+
+                        // check if this side would close a field
+                        ClosedFieldDetectionData subDetectionData = new ClosedFieldDetectionData();
+                        checkClosedState(j, position, subDetectionData, subCardSide);
+
+                        checkedIds.add(j);
+
+                        if(subDetectionData.isClosed()) {
+                            closedFieldDetectionDataArr.add(subDetectionData);
+                            continue;
+                        }
+
+                        closed = false;
+                    }
+
+                    // add used ids
+                    usedIds.addAll(checkedIds);
+
+                    // side is not closed, if there are only one open side which closes the field
+                    if (closedFieldDetectionDataArr.size() < 1) {
+                        closed = false;
+                    }
+
+                    if (closed) {
+                        // reset the points to 0
+                        detectionData.setPoints(0);
+
+                        // add new gamecard sides with their points to detectionData
+                        for(ClosedFieldDetectionData dat: closedFieldDetectionDataArr) {
+                            for(GameCardSide newGameCardSide: dat.getGameCardSides()) {
+                                // if the gamecard side isn't added to the summarized detectionData
+                                if (!detectionData.getGameCardSides().contains(newGameCardSide)) {
+                                    detectionData.getGameCardSides().add(newGameCardSide);
+                                }
+                            }
+                        }
+
+                        // recalculate points
+                        for(GameCardSide gameCardSide: detectionData.getGameCardSides()) {
+                            detectionData.addPoints(gameCardSide.getPoints() * gameCardSide.getMultiplier());
+                        }
+
+                        // notify listener
+                        if (gameMapHandler != null) {
+                            gameMapHandler.onClosedField(detectionData);
+                        }
+                    }
+                }
             }
         }
     }
 
-    private void checkClosedState(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide) {
-        // calculate position of neighbour card side
+    /**
+     * Get the position of an entry which is present in the array. Otherwise, it returns null.
+     * @param entry
+     * @return GameMapEntryPosition: position of entry if one exists
+     */
+    private GameMapEntryPosition getPositionFromEntry(GameMapEntry entry) {
+        for(int y = 0; y < mapArray.length; y++) {
+            for(int x = 0; x < mapArray[y].length; x++) {
+                GameMapEntry currentEntry = mapArray[y][x];
+                if (currentEntry != null && currentEntry == entry) {
+                    return new GameMapEntryPosition(x, y);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * check if a card is fully completed like if a monastery is complete (each 8 neighbours are set)
+     * @param monasteryEntryPosition
+     * @return
+     */
+    private boolean isFieldFullyCompleted(GameMapEntryPosition monasteryEntryPosition) {
+        GameMapEntry[][] submap = get3x3SubMap(monasteryEntryPosition);
+        for(GameMapEntry[] row: submap) {
+            for(GameMapEntry entry: row) {
+                if (entry == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Get the position of the neighbour, which connects to the cardSide with position
+     * @param orientation of the cardSide
+     * @param position of current card in map array
+     * @return GameMapEntryPosition position of neighbour card
+     */
+    private GameMapEntryPosition getNeighbourPosition(int orientation, GameMapEntryPosition position) {
         GameMapEntryPosition nextPosition = null;
+
         switch(orientation) {
-            case 0: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()-1); break;
+            case 0: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()+1); break;
             case 1: nextPosition = new GameMapEntryPosition(position.getX()+1, position.getY()); break;
-            case 2: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()+1); break;
+            case 2: nextPosition = new GameMapEntryPosition(position.getX(), position.getY()-1); break;
             case 3: nextPosition = new GameMapEntryPosition(position.getX()-1, position.getY()); break;
         }
 
+        return nextPosition;
+    }
+
+    /**
+     Get the neighbour card, which connects to the cardSide with position
+     * @param orientation of the cardSide
+     * @param position of current card in map array
+     * @return GameMapEntry neighbour of card side if one exists, otherwise return null
+     */
+    private GameMapEntry getNeighbour(int orientation, GameMapEntryPosition position) {
+        GameMapEntryPosition nextPosition = getNeighbourPosition(orientation, position);
+
         // check if position is valid
         if (nextPosition == null || nextPosition.getX() < 0 || nextPosition.getX() >= mapArray.length
-        || nextPosition.getY() < 0 || nextPosition.getY() >= mapArray.length) {
-            detectionData.setClosed(false);
-            return;
+                || nextPosition.getY() < 0 || nextPosition.getY() >= mapArray.length) {
+            return null;
         }
 
+        // return card or null
+        return mapArray[nextPosition.getY()][nextPosition.getX()];
+    }
+
+    private void checkClosedState(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide) {
+        // calculate position of neighbour card side
+        GameMapEntryPosition nextPosition = getNeighbourPosition(orientation, position);
+
         // check if we have a card on this position
-        GameMapEntry nextMapEntry = mapArray[nextPosition.getY()][nextPosition.getX()];
+        GameMapEntry nextMapEntry = getNeighbour(orientation, position);
         if (nextMapEntry == null) {
             detectionData.setClosed(false);
             return;
@@ -204,7 +447,18 @@ public class GameMap implements Serializable {
                 GameCardSide cardSide = neighbourAlignedSides[i];
                 // check if the other side isn't closed (so it's connected to our side here), and if the types are the same
                 if (!cardSide.isClosingSide && cardSide.getType() == currentCardSide.getType()) {
-                    checkClosedState(i, nextPosition, detectionData, cardSide);
+                    //check if cardSide is already visited before start a new check, to prevent a circle loop
+                    boolean alreadyVisited = false;
+                    for(GameCardSide cs: detectionData.getGameCardSides()) {
+                        if(cs == cardSide) {
+                            alreadyVisited = true;
+                            break;
+                        }
+                    }
+
+                    if(!alreadyVisited) {
+                        checkClosedState(i, nextPosition, detectionData, cardSide);
+                    }
                 }
             }
         }

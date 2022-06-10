@@ -28,12 +28,33 @@ public class GameCard implements Serializable {
         this.neswSides = new GameCardSide[]{ sideNorth, sideEast, sideSouth, sideWest};
     }
 
+    /**
+     * Add convenience constructor for cards with a containing midSide
+     * @param sideNorth
+     * @param sideEast
+     * @param sideSouth
+     * @param sideWest
+     * @param sideMid
+     * @param specialType
+     * @param cardId
+     */
+    public GameCard(GameCardSide sideNorth, GameCardSide sideEast, GameCardSide sideSouth, GameCardSide sideWest, GameCardSide sideMid, SpecialType specialType,String cardId) {
+        this(sideNorth, sideEast, sideSouth, sideWest, specialType, cardId);
+        this.sideMid = sideMid;
+    }
+
     public boolean containsSide(GameCardSide side) {
         for(GameCardSide cardSide: neswSides) {
             if (cardSide == side) {
                 return true;
             }
         }
+
+        // check if the side is the mid side
+        if (sideMid != null && side == sideMid) {
+            return true;
+        }
+
         return false;
     }
 

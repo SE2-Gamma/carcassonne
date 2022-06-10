@@ -61,4 +61,11 @@ public class SoldierTextures {
     public void resetSolierTextureOrder(){
         playerlist = new ArrayList<>();
     }
+
+    public int getNumberOfAddedPlayers(){
+        return playerlist.size();
+    }
+    public ArrayList<String> getPlayerList(){
+        return playerlist;
+    }
 }

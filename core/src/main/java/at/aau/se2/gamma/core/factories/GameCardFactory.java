@@ -102,7 +102,9 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
-                GameCard.SpecialType.MONASTERY, "B");
+                GameCardSideFactory.createMonasteryMidSide(),
+                GameCard.SpecialType.MONASTERY,
+                "B");
     }
     public static GameCard createCastleCastleCastleCastle() {
         return new GameCard(
@@ -174,7 +176,7 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
     }
     public static GameCard createGrassCcastleStreetStreet() {
         return new GameCard(
-                GameCardSideFactory.createGrasSide(),
+                GameCardSideFactory.createClosedGrasSide(),
                 GameCardSideFactory.createClosedCastleSide(),
                 GameCardSideFactory.createStreetSide(),
                 GameCardSideFactory.createStreetSide(),
@@ -348,7 +350,8 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
-                GameCardSideFactory.createClosedStreetSide(), null, "A");
+                GameCardSideFactory.createClosedStreetSide(),
+                GameCard.SpecialType.MONASTERY, "A");
     }
     public static GameCard B() {
         return new GameCard(
@@ -356,6 +359,7 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
+                GameCardSideFactory.createMonasteryMidSide(),
                 GameCard.SpecialType.MONASTERY, "B");
     }
     public static GameCard C() {

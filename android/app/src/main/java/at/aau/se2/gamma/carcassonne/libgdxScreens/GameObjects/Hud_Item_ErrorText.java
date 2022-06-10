@@ -11,16 +11,20 @@ public class Hud_Item_ErrorText {
     private Label errorLabel;
     private Label.LabelStyle labelstyle;
 
+
     public Hud_Item_ErrorText() {
         table = new Table();
         table.setFillParent(true); //set table to size of stage
-        labelstyle = new Label.LabelStyle(new BitmapFont(), Color.RED);
-
-        table.center();
+        labelstyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+        //table.center();
+        table.bottom();
         errorLabel = new Label("", labelstyle);
         errorLabel.setFontScale(5f);
-
         table.add(errorLabel).expandX().pad(10);
+        table.row();
+        Label emptyLabel = new Label("", labelstyle);
+        emptyLabel.setFontScale(5f);
+        table.add(emptyLabel);
 
 
     }
@@ -28,6 +32,7 @@ public class Hud_Item_ErrorText {
     public void setErrorText(String message) {
         errorLabel.setText(message);
     }
+
 
     public Table getTable() {
         return table;
