@@ -25,6 +25,11 @@ public class GameMapEntry implements Serializable {
     }
 
     public boolean setSoldier(Soldier soldier, GameCardSide gameCardSide) {
+        // check if soldier is not null
+        if (soldier == null) {
+            return false;
+        }
+
         // check if soldier is free
         if (soldier.isCurrentlyPlaced()) {
             return false;
@@ -103,5 +108,9 @@ public class GameMapEntry implements Serializable {
         GameCardSide otherSide = otherEntry.getAlignedCardSides()[onSide.ordinal()];
         System.out.println("My side can connect to: "+mySide.getType().name()+" - "+ otherSide.getType().name());
         return mySide.canConnectTo(otherSide);
+    }
+
+    public void setPlacedByPlayer(Player placedByPlayer) {
+        this.placedByPlayer = placedByPlayer;
     }
 }
