@@ -303,7 +303,7 @@ public class GameMap implements Serializable {
             }
         }
 
-        // TODO: iterate through all fields, and check if a soldier is placed on any side
+        // iterate through all fields, and check if a soldier is placed on any side
         for(int y = 0; y < mapArray.length; y++) {
             GameMapEntry[] row = mapArray[y];
             for(int x = 0; x < row.length; x++) {

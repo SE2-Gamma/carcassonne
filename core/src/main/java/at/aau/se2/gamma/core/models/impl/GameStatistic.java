@@ -30,6 +30,13 @@ public class GameStatistic implements Serializable {
         this.players.remove(player);
     }
 
+    public void applyEndDetectionData(ArrayList<ClosedFieldDetectionData> endData) {
+        for(ClosedFieldDetectionData data: endData) {
+            data.setEndGameData(true);
+            applyClosedFieldDetectionData(data);
+        }
+    }
+
     /**
      * Apply the calculated data from a closed area to the players statistic
      * @param closedFieldDetectionData
@@ -86,7 +93,19 @@ public class GameStatistic implements Serializable {
 
         // add points to the right players
         for(Player player: winningPlayers) {
-            player.addPlayerPoints(closedFieldDetectionData.getPoints());
+            if (closedFieldDetectionData.isEndGameData()) {
+                if (closedFieldDetectionData.isGrasType()) {
+                    player.addPlayerPoints(closedFieldDetectionData.getDetectedCastles().size()*3);
+                } else if (closedFieldDetectionData.isMonasteryType()) {
+                    player.addPlayerPoints(closedFieldDetectionData.getGameCardSides().size());
+                } else {
+                    for(GameCardSide side: closedFieldDetectionData.getGameCardSides()) {
+                        player.addPlayerPoints(side.getMultiplier());
+                    }
+                }
+            } else {
+                player.addPlayerPoints(closedFieldDetectionData.getPoints());
+            }
         }
     }
 }
