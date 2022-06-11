@@ -335,6 +335,65 @@ public class GameMap implements Serializable {
         }
     }
 
+    public ArrayList<ClosedFieldDetectionData> createFinalPointsDetectionData(ArrayList<Player> players) {
+        ArrayList<ClosedFieldDetectionData> finalDetectionData = new ArrayList<>();
+
+        // getSoldiers
+        ArrayList<SoldierPlacement> soldierPlacements = new ArrayList<>();
+        for(Player player: players) {
+            for(Soldier soldier: player.getSoldiers()) {
+                if (soldier.getSoldierPlacement() != null) {
+                    soldierPlacements.add(soldier.getSoldierPlacement());
+                }
+            }
+        }
+
+        // TODO: iterate through all fields, and check if a soldier is placed on any side
+        for(int y = 0; y < mapArray.length; y++) {
+            GameMapEntry[] row = mapArray[y];
+            for(int x = 0; x < row.length; x++) {
+                GameMapEntry entry = row[x];
+                // check if a card is placed
+                if (entry != null) {
+                    GameCard card = entry.getCard();
+                    GameCardSide[] alignedCardSides = entry.getAlignedCardSides();
+
+                    // check if a soldier is present on one card side
+                    for(int direction = 0; direction < alignedCardSides.length; direction++) {
+                        GameCardSide side = alignedCardSides[direction];
+                        // check if the cardSide is related to a soldierPlacement
+                        for(SoldierPlacement soldierPlacement: soldierPlacements) {
+                            if (soldierPlacement.getGameCardSide() == side) {
+                                GameMapEntryPosition position = new GameMapEntryPosition(x, y);
+                                // TODO: calculate points for gras
+                                if (side.getType().equals(GameCardSide.Type.GRAS)) {
+
+                                } else {
+                                    // TODO: calculate points for other unfinished sides
+                                    ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
+                                    // check each open side of this type on this card
+                                    for(int orientationToCheck = 0; orientationToCheck < alignedCardSides.length; orientationToCheck++) {
+                                        GameCardSide sideToCheck = alignedCardSides[orientationToCheck];
+                                        if (sideToCheck.getType().equals(side.getType())) {
+                                            // only the site with the soldier is allowed to be a closing side
+                                            if (!sideToCheck.isClosingSide() || sideToCheck == side) {
+                                                checkClosedState(orientationToCheck, position, detectionData, sideToCheck, true);
+                                            }
+                                        }
+                                    }
+
+                                    finalDetectionData.add(detectionData);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return finalDetectionData;
+    }
+
     /**
      * Get the position of an entry which is present in the array. Otherwise, it returns null.
      * @param entry
@@ -408,6 +467,10 @@ public class GameMap implements Serializable {
     }
 
     private void checkClosedState(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide) {
+        checkClosedState(orientation, position, detectionData, currentCardSide, false);
+    }
+
+    private void checkClosedState(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide, boolean addAlsoOpenSides) {
         // calculate position of neighbour card side
         GameMapEntryPosition nextPosition = getNeighbourPosition(orientation, position);
 
@@ -415,6 +478,11 @@ public class GameMap implements Serializable {
         GameMapEntry nextMapEntry = getNeighbour(orientation, position);
         if (nextMapEntry == null) {
             detectionData.setClosed(false);
+            if (addAlsoOpenSides) {
+                // add the points for this side
+                detectionData.addGameCardSide(currentCardSide);
+                detectionData.addPoints(currentCardSide.getPoints() * currentCardSide.getMultiplier());
+            }
             return;
         }
 
@@ -457,7 +525,7 @@ public class GameMap implements Serializable {
                     }
 
                     if(!alreadyVisited) {
-                        checkClosedState(i, nextPosition, detectionData, cardSide);
+                        checkClosedState(i, nextPosition, detectionData, cardSide, addAlsoOpenSides);
                     }
                 }
             }

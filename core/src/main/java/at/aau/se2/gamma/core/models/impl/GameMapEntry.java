@@ -25,6 +25,11 @@ public class GameMapEntry implements Serializable {
     }
 
     public boolean setSoldier(Soldier soldier, GameCardSide gameCardSide) {
+        // check if soldier is not null
+        if (soldier == null) {
+            return false;
+        }
+
         // check if soldier is free
         if (soldier.isCurrentlyPlaced()) {
             return false;
