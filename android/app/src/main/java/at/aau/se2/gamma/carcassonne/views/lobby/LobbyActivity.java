@@ -2,7 +2,6 @@ package at.aau.se2.gamma.carcassonne.views.lobby;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -21,16 +20,14 @@ import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.GameStartedBroadcastCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.GameTurnBroadCastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.KickAttemptBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerKickedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
-import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerNotReadyBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerReadyBroadcastCommand;
-
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand;
 import at.aau.se2.gamma.core.commands.KickPlayerCommand;
 import at.aau.se2.gamma.core.commands.LeaveLobbyCommand;
 import at.aau.se2.gamma.core.commands.PlayerNotReadyCommand;
@@ -309,35 +306,29 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
     }
 
     public void updatePlayerList() {
-        try{
-            sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
-                @Override
-                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                    Log.d("Server Response", "LobbyActivity updatePlayerList");
-                    LinkedList<String> players = (LinkedList<String>) payload;
-                    for (String player:players
-                    ) {
-                        Log.d("LobbyActivity update", player);
-                    }
-                    playerList.clear();
-                    for(int i = 0; i < players.size(); i++) {
-                        playerList.add(new LobbyPlayerDisplay(players.get(i)));
-                    }
-                    adapter.notifyDataSetChanged();
-                    binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
-                }
-                @Override
-                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                    Log.d("onFailure", "LobbyActivity");
-                    Toast.makeText(LobbyActivity.this, "Error requesting player list", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LobbyActivity.this, MainActivity.class));
-                }
-            });
-        } catch (ClassCastException e) {
-            Toast.makeText(this, "You were kicked", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LobbyActivity.this, MainActivity.class);
-            startActivity(intent);
-        }
 
+        sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
+            @Override
+            public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                Log.d("Server Response", "LobbyActivity updatePlayerList");
+                LinkedList<String> players = (LinkedList<String>) payload;
+                for (String player:players
+                ) {
+                    Log.d("LobbyActivity update", player);
+                }
+                playerList.clear();
+                for(int i = 0; i < players.size(); i++) {
+                    playerList.add(new LobbyPlayerDisplay(players.get(i)));
+                }
+                adapter.notifyDataSetChanged();
+                binding.tvPlayerCount.setText(getResources().getString(R.string.player_count) + " " + playerList.size() + "/5");
+            }
+            @Override
+            public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                Log.d("onFailure", "LobbyActivity");
+                Toast.makeText(LobbyActivity.this, "Error requesting player list", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LobbyActivity.this, MainActivity.class));
+            }
+        });
     }
 }
