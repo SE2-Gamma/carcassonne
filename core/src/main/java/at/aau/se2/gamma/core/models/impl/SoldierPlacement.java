@@ -32,4 +32,8 @@ public class SoldierPlacement implements Serializable {
     public void setSoldier(Soldier soldiercopy) {
         this.soldier=soldiercopy;
     }
+
+    public void setGameCardSide(GameCardSide gameCardSide) {
+        this.gameCardSide = gameCardSide;
+    }
 }

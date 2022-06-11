@@ -109,4 +109,8 @@ public class GameMapEntry implements Serializable {
         System.out.println("My side can connect to: "+mySide.getType().name()+" - "+ otherSide.getType().name());
         return mySide.canConnectTo(otherSide);
     }
+
+    public void setPlacedByPlayer(Player placedByPlayer) {
+        this.placedByPlayer = placedByPlayer;
+    }
 }
