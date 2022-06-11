@@ -97,14 +97,35 @@ public class GameStatistic implements Serializable {
                 if (closedFieldDetectionData.isGrasType()) {
                     player.addPlayerPoints(closedFieldDetectionData.getDetectedCastles().size()*3);
                 } else if (closedFieldDetectionData.isMonasteryType()) {
-                    player.addPlayerPoints(closedFieldDetectionData.getGameCardSides().size());
+                    player.addPlayerPoints(closedFieldDetectionData.getGameCards().size());
                 } else {
-                    for(GameCardSide side: closedFieldDetectionData.getGameCardSides()) {
-                        player.addPlayerPoints(side.getMultiplier());
+                    for(GameCard gameCard: closedFieldDetectionData.getGameCards()) {
+                        int multiplier = 0;
+                        for(GameCardSide side: closedFieldDetectionData.getGameCardSides()) {
+                            for (GameCardSide currentCardSide: gameCard.getNeswmSides()) {
+                                if (currentCardSide == side && side.getMultiplier() > 1) {
+                                    multiplier++;
+                                }
+                            }
+                        }
+                        player.addPlayerPoints(1+multiplier);
                     }
                 }
             } else {
-                player.addPlayerPoints(closedFieldDetectionData.getPoints());
+                for(GameCard gameCard: closedFieldDetectionData.getGameCards()) {
+                    int multiplier = 1;
+                    int points = 0;
+                    for(GameCardSide side: closedFieldDetectionData.getGameCardSides()) {
+                        for (GameCardSide currentCardSide: gameCard.getNeswmSides()) {
+                            if (currentCardSide == side) {
+                                points = side.getPoints();
+                                multiplier *= side.getMultiplier();
+                            }
+                        }
+                    }
+                    player.addPlayerPoints(points*multiplier);
+                }
+                //player.addPlayerPoints(closedFieldDetectionData.getPoints());
             }
         }
     }

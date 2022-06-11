@@ -183,6 +183,7 @@ public class GameMap implements Serializable {
                         ClosedFieldDetectionData monasteryDetectionData = new ClosedFieldDetectionData();
                         monasteryDetectionData.addPoints(GameCardSideFactory.POINTS_DEFAULT*9);
                         monasteryDetectionData.addGameCardSide(neighbour.getCard().getSideMid());
+                        monasteryDetectionData.addGameCard(neighbour.getCard());
                         if (gameMapHandler != null) {
                             gameMapHandler.onClosedField(monasteryDetectionData);
                         }
@@ -273,6 +274,9 @@ public class GameMap implements Serializable {
                                 if (!detectionData.getGameCardSides().contains(newGameCardSide)) {
                                     detectionData.getGameCardSides().add(newGameCardSide);
                                 }
+                            }
+                            for(GameCard gameCard: dat.getGameCards()) {
+                                detectionData.addGameCard(gameCard);
                             }
                         }
 
@@ -376,6 +380,7 @@ public class GameMap implements Serializable {
                                             } else {
                                                 detectionData.addGameCardSide(field.getCard().getSideNorth());
                                             }
+                                            detectionData.addGameCard(field.getCard());
                                         }
                                     }
                                 }
@@ -399,6 +404,7 @@ public class GameMap implements Serializable {
         GameMapEntry nextMapEntry = getNeighbour(orientation, position);
 
         detectionData.addGameCardSide(currentCardSide);
+        detectionData.addGameCard(mapArray[position.getY()][position.getX()].getCard());
         if (nextMapEntry == null) {
             detectionData.setClosed(false);
             return;
@@ -416,6 +422,7 @@ public class GameMap implements Serializable {
 
         // add the points for the opposite side
         detectionData.addGameCardSide(oppositeGameCardSide);
+        detectionData.addGameCard(nextMapEntry.getCard());
 
         // if the side isn't closed, check the other open sides of this type, and the neighbours
         for(int i = 0; i < neighbourAlignedSides.length; i++) {
@@ -551,6 +558,7 @@ public class GameMap implements Serializable {
             if (addAlsoOpenSides) {
                 // add the points for this side
                 detectionData.addGameCardSide(currentCardSide);
+                detectionData.addGameCard(mapArray[position.getY()][position.getX()].getCard());
                 detectionData.addPoints(currentCardSide.getPoints() * currentCardSide.getMultiplier());
             }
             return;
@@ -558,6 +566,7 @@ public class GameMap implements Serializable {
 
         // add the points for this side
         detectionData.addGameCardSide(currentCardSide);
+        detectionData.addGameCard(mapArray[position.getY()][position.getX()].getCard());
         detectionData.addPoints(currentCardSide.getPoints() * currentCardSide.getMultiplier());
 
         // calculate opposite cardside
@@ -572,6 +581,7 @@ public class GameMap implements Serializable {
 
         // add the points for the opposite side
         detectionData.addGameCardSide(oppositeGameCardSide);
+        detectionData.addGameCard(nextMapEntry.getCard());
         detectionData.addPoints(oppositeGameCardSide.getPoints() * oppositeGameCardSide.getMultiplier());
 
         // check if it's closed

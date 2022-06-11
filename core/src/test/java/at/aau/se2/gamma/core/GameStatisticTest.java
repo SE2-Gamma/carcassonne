@@ -207,7 +207,7 @@ public class GameStatisticTest {
         gameStatistic.applyClosedFieldDetectionData(returnedDetectionData[0]);
 
         // only player 1 should get 4 points
-        assertEquals(player1.getPoints(), GameCardSideFactory.POINTS_CASTLE*4);
+        assertEquals(player1.getPoints(), GameCardSideFactory.POINTS_CASTLE*3);
         assertEquals(player2.getPoints(), 0);
     }
 
@@ -284,6 +284,6 @@ public class GameStatisticTest {
         ArrayList<ClosedFieldDetectionData> detectionData = gameMap.createFinalPointsDetectionData(players);
         gameStatistic.applyEndDetectionData(detectionData);
 
-        assertEquals(player1.getPoints(), 13);
+        assertEquals(player1.getPoints(), 11);
     }
 }
