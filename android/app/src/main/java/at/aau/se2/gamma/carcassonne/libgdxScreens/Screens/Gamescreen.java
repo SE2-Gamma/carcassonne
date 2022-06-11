@@ -52,6 +52,7 @@ import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
 import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
 import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
+import at.aau.se2.gamma.core.models.impl.CheatData;
 import at.aau.se2.gamma.core.models.impl.CheatMove;
 import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
@@ -250,6 +251,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 hud.changeHudState(Hud.Hud_State.VIEWING);
                 GameMove gm = new GameMove(myPlayerID, lastCard.getGameMapEntry(), new GameMapEntryPosition(playedCard_x, playedCard_y));
                 gm.getGameMapEntry().getSoldierPlacements().get(0).setSoldier(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier());
+                gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setX(playedCard_x);
+                gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setY(playedCard_y);
                 ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -800,6 +803,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 //nach einen zug
                 //currentGameObject = (GameObject) payload;
                 GameMove gm = (GameMove) payload;
+
                 try {
                     currentGameObject.getGameMap().executeGameMove(gm);
                 } catch (Exception e) {
@@ -852,9 +856,15 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 currentGameObject.setGameStatistic((GameStatistic) payload);
                 hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
             }else if(response.getPayload() instanceof CheatMoveBroadcastCommand){
+                 CheatMove cheatMove=CheatMove.getMoveFromData((CheatData) payload,currentGameObject);
                 Log.i("Reported", "GOT RESPONCE FROM SERVER for CHEATING");
                 try {
-                    currentGameObject.getGameMap().executeCheatMove((CheatMove) payload);
+
+                    Log.e("soldiers", "X of returned soldier: "+ cheatMove .getSoldier().getX() );
+                    Log.e("soldiers", "Y of returned soldier: "+ cheatMove .getSoldier().getY() );
+                    Log.e("soldiers", "side of returned soldier: "+ cheatMove .getSoldier().getSoldierPlacement().getGameCardSide().getType() );
+
+                    currentGameObject.getGameMap().executeCheatMove(cheatMove);
                     myMap.setGameMap(currentGameObject.getGameMap());
                 } catch (CheatMoveImpossibleException e) {
                     e.printStackTrace();

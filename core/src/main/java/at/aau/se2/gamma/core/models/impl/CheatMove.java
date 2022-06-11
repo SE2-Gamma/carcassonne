@@ -3,12 +3,14 @@ package at.aau.se2.gamma.core.models.impl;
 import at.aau.se2.gamma.core.exceptions.CheatMoveImpossibleException;
 
 import java.io.Serializable;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class CheatMove implements Serializable {
     Player cheater;
     boolean active;
     Soldier soldier;
+
     SoldierPlacement originalPosition;
     SoldierPlacement newPosition;
     int penalty; // tbd, is set in clientthread, is 2^numberOfCheats
@@ -49,6 +51,40 @@ public class CheatMove implements Serializable {
 
         this.originalPosition.setGameCardSide(gameCardEntry.getCard().getGameCardSideWithUID(this.originalPosition.getGameCardSide().UID));
         this.newPosition.setGameCardSide(gameCardEntry.getCard().getGameCardSideWithUID(this.newPosition.getGameCardSide().UID));
+    }
+    public CheatData getData(){
+        CheatData data=new CheatData();
+        data.setX(soldier.getX());
+        data.setY(soldier.getY());
+        data.setCheaterID(cheater.getId());
+        data.setNewCardSideUID(this.newPosition.getGameCardSide().UID);
+        data.setOriginalCardSideUID(this.originalPosition.getGameCardSide().UID);
+        return data;
+    }
+   static public CheatMove getMoveFromData (CheatData data, GameObject o){
+        Player cheater=null;
+        for (Player player:o.getGameStatistic().getPlayers()
+             ) {
+            if(data.cheaterID.equals(player.getId())){
+                cheater=player;
+            }
+        }
+        if(cheater==null){
+            throw new NoSuchElementException();
+        }
+
+        Soldier soldier=o.getGameMap().getMapArray()[data.y][data.x].getSoldierPlacements().get(0).getSoldier();
+        soldier.setX(data.x);
+        soldier.setY(data.y);
+       CheatMove cheatmove=new CheatMove(cheater,soldier);
+       GameMapEntry entry= o.getGameMap().getMapArray()[data.y][data.x];
+       GameCardSide oldside=entry.getCard().getGameCardSideWithUID(data.originalCardSideUID);
+       GameCardSide newside=entry.getCard().getGameCardSideWithUID(data.newCardSideUID);
+
+       cheatmove.originalPosition=new SoldierPlacement(soldier,oldside);
+       cheatmove.newPosition=new SoldierPlacement(soldier,newside);
+
+        return cheatmove;
     }
 
     public SoldierPlacement getOriginalPosition() {

@@ -42,7 +42,9 @@ public class GameMove implements Serializable {
             boolean soldierFound = false;
             for(Soldier soldier: this.player.getSoldiers()) {
                 SoldierPlacement soldierPlacement = this.gameMapEntry.getSoldierPlacements().get(0);
-                if (soldier.getId() == soldierPlacement.getSoldier().getId()) {
+                if (soldier.getId() == soldierPlacement.getSoldier().getId()) {;
+                    soldier.setX(this.gameMapEntry.getSoldierPlacements().get(0).getSoldier().getX());
+                    soldier.setY(this.gameMapEntry.getSoldierPlacements().get(0).getSoldier().getY());
                     soldierPlacement.setSoldier(soldier);
                     soldierFound = true;
                 }

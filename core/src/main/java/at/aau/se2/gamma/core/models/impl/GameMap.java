@@ -74,6 +74,7 @@ public class GameMap implements Serializable {
         gameMapEntry.getSoldierPlacements().add(cheatMove.originalPosition);
         soldier.setSoldierPlacement(cheatMove.originalPosition);
 
+
         //todo: give each cheater the correct penalty (CheatMove.getPlayername <- the cheater
         // CheatMove.getPenalty <- the correct number of points lost. is independent from detected cheats but number of cheats done.
         // so if a player has done 4 cheats but the very first is detected he only loses 1 points, but if the last cheat is detected first he loses 2^4 points.

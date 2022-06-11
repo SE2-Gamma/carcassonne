@@ -114,6 +114,7 @@ public class Session extends BaseModel implements Serializable {
 
 
     }
+
     public boolean voteKick(Player player,Player votee) {
         synchronized (kickOffers){
         System.out.print("//session issue kickvote//");
@@ -217,6 +218,7 @@ public class Session extends BaseModel implements Serializable {
 
         // save placement in temp, to add it later.
         if (gameturn.getGameMapEntry().getSoldierPlacements().size() > 0) {
+
             soldierPlacement = gameturn.getGameMapEntry().getSoldierPlacements().get(0);
             gameturn.getGameMapEntry().getSoldierPlacements().clear();
         }
@@ -238,13 +240,14 @@ public class Session extends BaseModel implements Serializable {
 
     }
     public void executeCheat(CheatMove cheatMove) throws CheatMoveImpossibleException {
+
         System.out.print("//checking cheatmove//");
 
-        cheatMove.changeToServerInstance(players, gameObject.getGameMap());
+        cheatMove.changeToServerInstance(players, gameLoop.gameObject.getGameMap());
 
         gameLoop.gameObject.getGameMap().executeCheatMove(cheatMove);
-
-        broadcastAllPlayers(new CheatMoveBroadcastCommand(cheatMove));
+        CheatData data=cheatMove.getData();
+        broadcastAllPlayers(new CheatMoveBroadcastCommand(data));
         System.out.print("// cheatmove broadcasted//");
     }
     public void detectCheat(Soldier soldier) throws NoSuchCheatActiveException {
@@ -275,6 +278,7 @@ public class Session extends BaseModel implements Serializable {
 
 
         broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(new LinkedList<>(cheats)));
+        cheats.clear();
     }
     public void leaveGame(Player player){
         gameLoop.turnOrder.remove(player);

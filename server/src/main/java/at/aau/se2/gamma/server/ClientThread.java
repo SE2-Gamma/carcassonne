@@ -244,6 +244,7 @@ public class ClientThread extends Thread {
         try {
             session.executeCheat(cheatMove);
         } catch (CheatMoveImpossibleException e) {
+            System.err.println(e.getMessage());
            return ResponseCreator.getError(command,"Cheatmove not possible",Codes.ERROR.INVALID_CHEATMOVE);
         }catch(NullPointerException e){
             e.printStackTrace();
