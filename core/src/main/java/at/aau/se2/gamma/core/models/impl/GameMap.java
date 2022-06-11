@@ -322,7 +322,7 @@ public class GameMap implements Serializable {
                                 GameMapEntryPosition position = new GameMapEntryPosition(x, y);
                                 ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
                                 detectionData.setEndGameData(true);
-                                // TODO: calculate points for gras
+                                // calculate points for gras
                                 if (side.getType().equals(GameCardSide.Type.GRAS)) {
                                     // get connected gras sites
 
@@ -337,10 +337,8 @@ public class GameMap implements Serializable {
                                     }
 
                                     finalDetectionData.add(detectionData);
-                                } else if(side.getType().equals(GameCardSide.Type.MONASTERY)) {
-                                    // TODO: calculate points for monasteries
-                                }else {
-                                    // TODO: calculate points for other unfinished sides
+                                } else {
+                                    // calculate points for other unfinished sides
                                     // check each open side of this type on this card
                                     for(int orientationToCheck = 0; orientationToCheck < alignedCardSides.length; orientationToCheck++) {
                                         GameCardSide sideToCheck = alignedCardSides[orientationToCheck];
@@ -354,6 +352,34 @@ public class GameMap implements Serializable {
 
                                     finalDetectionData.add(detectionData);
                                 }
+                            }
+                        }
+                    }
+
+                    // check if a soldier is set on a mandatory
+                    if (card.getSideMid() != null
+                            && card.getSideMid().getType() == GameCardSide.Type.MONASTERY) {
+                        GameCardSide side = card.getSideMid();
+                        for(SoldierPlacement soldierPlacement: soldierPlacements) {
+                            if (soldierPlacement.getGameCardSide() == side) {
+                                GameMapEntry[][] fields = get3x3SubMap(new GameMapEntryPosition(x, y));
+                                ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
+                                detectionData.setMonasteryType(true);
+                                for(GameMapEntry[] fieldsRow: fields) {
+                                    for(GameMapEntry field: fieldsRow) {
+                                        if(field != null) {
+                                            detectionData.addPoints(1);
+
+                                            if (field.getCard().getSideMid() != null) {
+                                                detectionData.addGameCardSide(field.getCard().getSideMid());
+                                            } else {
+                                                detectionData.addGameCardSide(field.getCard().getSideNorth());
+                                            }
+                                        }
+                                    }
+                                }
+
+                                finalDetectionData.add(detectionData);
                             }
                         }
                     }

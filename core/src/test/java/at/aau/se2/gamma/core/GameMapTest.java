@@ -609,4 +609,79 @@ public class GameMapTest {
         assertEquals(detectionData.get(0).getDetectedCastles().size(), 0);
         assertEquals(detectionData.get(1).getDetectedCastles().size(), 2);
     }
+
+    /**
+     *  X    X
+     * X X  X X
+     *  X    G
+     *  X    G    X
+     * X G  GMG  G X
+     *  X    G    X
+     *  X    G    X
+     * X X  X X  X X
+     *  X    X    X
+     *
+     * @throws InvalidPositionGameMapException
+     * @throws SurroundingConflictGameMapException
+     * @throws NoSurroundingCardGameMapException
+     * @throws PositionNotFreeGameMapException
+     */
+    @Test
+    public void testIncompleteMonasteryEndscreen() throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
+        gameMap = new GameMap();
+        final ArrayList<ClosedFieldDetectionData> returnedDetectionData = new ArrayList<>();
+        gameMap.setGameMapHandler(new GameMapHandler() {
+            @Override
+            public void onClosedField(ClosedFieldDetectionData detectionData) {
+                returnedDetectionData.add(detectionData);
+            }
+        });
+        gameMap.placeGameMapEntry(
+                new GameMapEntry(GameCardFactory.createCcastleCcastleGrassGrass(), player1),
+                new GameMapEntryPosition(1,2));
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createStreetGrassGrassStreet(), player1),
+                new GameMapEntryPosition(0,2))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createGrassGrassCcastleCcastle(), player1),
+                new GameMapEntryPosition(0,1))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createCastleCastleCastleCgrass(), player1),
+                new GameMapEntryPosition(0,0))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createGrassGrassCcastleCcastle(), player1),
+                new GameMapEntryPosition(1,0))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleGrassGrass(), player1),
+                new GameMapEntryPosition(2,0))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleGrassGrass(), player1),
+                new GameMapEntryPosition(2,1))
+        );
+        assertEquals(returnedDetectionData.size(), 0);
+        GameMapEntry entry11 = new GameMapEntry(GameCardFactory.createMonasteryGrassGrassGrassGrass(), player1);
+        entry11.setSoldier(player1.getFreeSoldier(), entry11.getCard().getSideMid());
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                entry11,
+                new GameMapEntryPosition(1,1))
+        );
+
+        ArrayList<ClosedFieldDetectionData> detectionData = gameMap.createFinalPointsDetectionData(players);
+
+        assertEquals(detectionData.size(), 1);
+        assertEquals(detectionData.get(0).getGameCardSides().size(), 8);
+        assertTrue(detectionData.get(0).isMonasteryType());
+    }
 }
