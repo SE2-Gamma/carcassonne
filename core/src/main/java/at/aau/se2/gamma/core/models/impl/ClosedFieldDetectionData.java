@@ -7,6 +7,7 @@ public class ClosedFieldDetectionData implements Serializable {
     private boolean isClosed = true;
     private int points = 0;
     private ArrayList<GameCardSide> gameCardSides;
+    private boolean endGameData = false;
 
     public ClosedFieldDetectionData() {
         gameCardSides = new ArrayList<>();
@@ -42,5 +43,13 @@ public class ClosedFieldDetectionData implements Serializable {
 
     public void setGameCardSides(ArrayList<GameCardSide> gameCardSides) {
         this.gameCardSides = gameCardSides;
+    }
+
+    public boolean isEndGameData() {
+        return endGameData;
+    }
+
+    public void setEndGameData(boolean endGameData) {
+        this.endGameData = endGameData;
     }
 }

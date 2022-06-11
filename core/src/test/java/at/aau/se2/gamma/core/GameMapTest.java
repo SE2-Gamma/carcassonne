@@ -18,10 +18,13 @@ public class GameMapTest {
 
     GameMap gameMap;
     Player player1;
+    ArrayList<Player> players;
 
     @BeforeEach
     public void beforeEach() {
         player1 = new Player("1", "player 1");
+        players = new ArrayList<>();
+        player1.addAmountOfSoldiers(5);
         gameMap = new GameMap();
         gameMap.placeGameMapEntry(
                 new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1),
@@ -32,6 +35,7 @@ public class GameMapTest {
         gameMap.placeGameMapEntry(
                 new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.SOUTH),
                 new GameMapEntryPosition(0,1));
+        players.add(player1);
     }
 
     @Test
@@ -545,5 +549,59 @@ public class GameMapTest {
         assertFalse(gameMap.checkCardPlaceability(GameCardFactory.createCastleCastleCastleCastle()));
         assertTrue(gameMap.checkCardPlaceability(GameCardFactory.createCastleCastleGrasStreet()));
 
+    }
+
+    /**
+     *  X    X    X
+     * X S  S S  S X
+     *  S    G    S
+     *  S    G
+     * X S  S S
+     *  X    X
+     *
+     * @throws InvalidPositionGameMapException
+     * @throws SurroundingConflictGameMapException
+     * @throws NoSurroundingCardGameMapException
+     * @throws PositionNotFreeGameMapException
+     */
+    @Test
+    public void testEndOfGame() throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
+        gameMap = new GameMap();
+        final ArrayList<ClosedFieldDetectionData> returnedDetectionData = new ArrayList<>();
+        gameMap.setGameMapHandler(new GameMapHandler() {
+            @Override
+            public void onClosedField(ClosedFieldDetectionData detectionData) {
+                returnedDetectionData.add(detectionData);
+            }
+        });
+        gameMap.placeGameMapEntry(
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(0,0));
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createCgrassStreetCgrassStreet(), player1, Orientation.SOUTH),
+                new GameMapEntryPosition(1,0))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.EAST),
+                new GameMapEntryPosition(0,1))
+        );
+        GameMapEntry entry11 = new GameMapEntry(GameCardFactory.createCgrassStreetCgrassStreet(), player1, Orientation.SOUTH);
+        entry11.setSoldier(player1.getFreeSoldier(), entry11.getCard().getSideWest());
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                entry11,
+                new GameMapEntryPosition(1,1))
+        );
+        gameMap.executeGameMove(new GameMove(
+                player1,
+                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1),
+                new GameMapEntryPosition(2,1))
+        );
+        ArrayList<ClosedFieldDetectionData> detectionData = gameMap.createFinalPointsDetectionData(players);
+
+        assertEquals(detectionData.size(), 1);
+        assertEquals(detectionData.get(0).getGameCardSides().size(), 10);
     }
 }

@@ -8,7 +8,9 @@ import java.util.LinkedList;
  */
 public class Soldier implements Serializable {
 
+    private static int lastId = 1;
     private Player player; // reference to the player, who owns this soldier
+    private int id;
 
     public int getX() {
         return x;
@@ -44,6 +46,7 @@ public class Soldier implements Serializable {
 
     public Soldier(Player player) {
         this.player = player;
+        this.id = lastId++;
     }
 
     public Player getPlayer() {
@@ -78,4 +81,11 @@ public class Soldier implements Serializable {
         return this.soldierPlacement == null;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

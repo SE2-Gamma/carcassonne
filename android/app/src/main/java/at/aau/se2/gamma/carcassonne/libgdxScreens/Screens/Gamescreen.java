@@ -251,11 +251,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 super.clicked(event, x, y);
                 hud.changeHudState(Hud.Hud_State.VIEWING);
                 GameMove gm = new GameMove(myPlayerID, lastCard.getGameMapEntry(), new GameMapEntryPosition(playedCard_x, playedCard_y));
-               Soldier soldiercopy=new Soldier(myPlayerID);
-               soldiercopy.soldierPlacement=new SoldierPlacement(soldiercopy,lastCard.getGameMapEntry().getSoldierPlacements().get(0).getGameCardSide());
-               soldiercopy.setX(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getX());
-               soldiercopy.setY(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getY());
-               gm.getGameMapEntry().getSoldierPlacements().get(0).setSoldier(soldiercopy);
+                gm.getGameMapEntry().getSoldierPlacements().get(0).setSoldier(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier());
                 ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {

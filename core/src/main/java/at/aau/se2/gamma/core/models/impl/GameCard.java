@@ -93,4 +93,18 @@ public class GameCard implements Serializable {
     public void setSideMid(GameCardSide sideMid) {
         this.sideMid = sideMid;
     }
+
+    public GameCardSide getGameCardSideWithUID(int UID) {
+        for(GameCardSide gameCardSide: getNeswSides()) {
+            if (gameCardSide.UID == UID) {
+                return gameCardSide;
+            }
+        }
+
+        if(this.sideMid != null && UID == this.sideMid.UID) {
+            return this.sideMid;
+        }
+
+        return null;
+    }
 }
