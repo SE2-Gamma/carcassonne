@@ -11,9 +11,13 @@ public class GameCardSide implements Serializable {
         STREET,
         MONASTERY
     }
-
+    private static int counter=0;
+    public int UID;
     public boolean isClosingSide;
     public boolean isMidOfCard;
+
+
+
 
     private Type type;
     // possible connections as array, to extend it later with bonus cards, which can connects to more than one other type
@@ -39,6 +43,7 @@ public class GameCardSide implements Serializable {
     }
 
     public GameCardSide(Type type, Type[] possibleConnectionTypes, boolean isClosingSide, int points) {
+        this.UID=counter++;
         this.type = type;
         this.possibleConnectionTypes = possibleConnectionTypes;
         this.isClosingSide = isClosingSide;

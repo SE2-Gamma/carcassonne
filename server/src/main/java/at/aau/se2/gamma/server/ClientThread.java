@@ -68,7 +68,7 @@ public class ClientThread extends Thread {
             while(running) {
 
 
-                BaseCommand command = (BaseCommand) objectInputStream.readObject(); //potential issue. if server sends broadcast message while busy ready here might doublelock
+                BaseCommand command = (BaseCommand) objectInputStream.readUnshared(); //potential issue. if server sends broadcast message while busy ready here might doublelock
 
                 BaseCommand response=handleCommand(command);
 
@@ -77,8 +77,9 @@ public class ClientThread extends Thread {
                 if(!(command instanceof DisconnectCommand)) {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
                     checkingAvailability();
-                    lock();
-                    objectOutputStream.writeObject(response);
+                   lock();
+
+                    objectOutputStream.writeUnshared(response);
                     unlock();
                 }
 
@@ -142,7 +143,7 @@ public class ClientThread extends Thread {
             checkingAvailability();
             lock();
 
-            objectOutputStream.writeObject(message);
+            objectOutputStream.writeUnshared(message);
             unlock();
             System.out.print("//unlocking//");
             System.out.print("//message sent");
@@ -235,9 +236,8 @@ public class ClientThread extends Thread {
         if(!clientState.equals(ClientState.GAME)){
             return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
         }
-        if(session.gameLoop.onTurn.getId().equals(player.getId())){
-            return ResponseCreator.getError(command,"its your turn, you cant cheat now.",Codes.ERROR.NO_CHEAT_ON_TURN);
-        }
+       // if(session.gameLoop.onTurn.getId().equals(player.getId())){
+          //  return ResponseCreator.getError(command,"its your turn, you cant cheat now.",Codes.ERROR.NO_CHEAT_ON_TURN);}
 
         CheatMove cheatMove=(CheatMove) command.getPayload();
         cheatMove.setPenalty((int) Math.pow(2,numberOfCheats));
@@ -245,6 +245,9 @@ public class ClientThread extends Thread {
             session.executeCheat(cheatMove);
         } catch (CheatMoveImpossibleException e) {
            return ResponseCreator.getError(command,"Cheatmove not possible",Codes.ERROR.INVALID_CHEATMOVE);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+            return ResponseCreator.getError(command,"cheatmove error",Codes.ERROR.INVALID_CHEATMOVE);
         }
         numberOfCheats++;
         return ResponseCreator.getSuccess(command,"cheat successfull.");

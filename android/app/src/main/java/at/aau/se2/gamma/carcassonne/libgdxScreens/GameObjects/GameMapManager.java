@@ -78,7 +78,7 @@ public class GameMapManager {
                             GameCardSide cardSides[] = Playingfield[i][j].getGameMapEntry().getAlignedCardSides();
                             for(SoldierPlacement sp : cardSoldiers){
                                 for(int s = 0; s<cardSides.length; s++){
-                                    if(cardSides[s].equals(sp.getGameCardSide())){
+                                    if(cardSides[s].UID==sp.getGameCardSide().UID){
                                         //Texture currentSoldierTexture = solTextures.searchSoldierTexture(Playingfield[i][j].getGameMapEntry().getPlacedByPlayer().getId());
                                         Texture currentSoldierTexture = solTextures.searchSoldierTexture(sp.getSoldier().getPlayer().getId());
                                         switch (s){
@@ -97,6 +97,12 @@ public class GameMapManager {
                                         }
                                     }
                                 }
+
+                                if (sp.getGameCardSide() != null && sp.getGameCardSide().getType().equals(GameCardSide.Type.MONASTERY)) {
+                                    Texture currentSoldierTexture = solTextures.searchSoldierTexture(sp.getSoldier().getPlayer().getId());
+                                    batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x+48, Playingfield[i][j].getPosition().y+48);
+                                }
+
                             }
                         }
                     }
@@ -341,44 +347,64 @@ public class GameMapManager {
     }
 
     public Soldier touchedSoldier(float x, float y){
-        for (int j = 0; j < Playingfield.length; j++) {
-            for (int i = 0; i < Playingfield[j].length; i++) {
-                if (Playingfield[i][j] != null && Playingfield[i][j].getGameCardTexture() != null) {
-                    ArrayList<SoldierPlacement> cardSoldiers = Playingfield[i][j].getGameMapEntry().getSoldierPlacements();
-                    GameCardSide cardSides[] = Playingfield[i][j].getGameMapEntry().getAlignedCardSides();
-                    for (SoldierPlacement sp : cardSoldiers) {
-                        for (int s = 0; s < cardSides.length; s++) {
-                            if (cardSides[s].equals(sp.getGameCardSide())) {
-                                switch (s) {
-                                    case 0:
-                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y + 96, 32, 32, x, y)) {
-                                            return sp.getSoldier();
-                                        }
-                                        //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y + 96);
-                                        break;
-                                    case 1:
-                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 96, Playingfield[i][j].getPosition().y + 48, 32, 32, x, y)) {
-                                            return sp.getSoldier();
-                                        }
-                                        //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 96, Playingfield[i][j].getPosition().y + 48);
-                                        break;
-                                    case 2:
-                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y, 32, 32, x, y)) {
-                                            return sp.getSoldier();
-                                        }
-                                        //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y);
-                                        break;
-                                    case 3:
-                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y + 48, 32, 32, x, y)) {
-                                            return sp.getSoldier();
-                                        }
-                                        //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y + 48);
-                                        break;
+        int CardX = (int)x/144;
+        int CardY = (int)y/144;
+        if(CardX < 0 || CardX > 99 || CardY < 0 || CardY > 99){
+            return null;
+        }
+        if (Playingfield[CardY][CardX] != null && Playingfield[CardY][CardX].getGameCardTexture() != null) {
+            ArrayList<SoldierPlacement> cardSoldiers = Playingfield[CardY][CardX].getGameMapEntry().getSoldierPlacements();
+            GameCardSide cardSides[] = Playingfield[CardY][CardX].getGameMapEntry().getAlignedCardSides();
+            for (SoldierPlacement sp : cardSoldiers) {
+                for (int s = 0; s < cardSides.length; s++) {
+                    if (cardSides[s].UID==(sp.getGameCardSide().UID)) {
+                        switch (s) {
+                            case 0:
+                                if (checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x + 48, Playingfield[CardY][CardX].getPosition().y + 96, 32, 32, x, y)) {
+                                    if(sp.getSoldier().getSoldierPlacement() == null){
+                                        sp.getSoldier().setSoldierPlacement(sp);
+                                    }
+                                    return sp.getSoldier();
                                 }
-
-                            }
+                                //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y + 96);
+                                break;
+                            case 1:
+                                if (checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x + 96, Playingfield[CardY][CardX].getPosition().y + 48, 32, 32, x, y)) {
+                                    if(sp.getSoldier().getSoldierPlacement() == null){
+                                        sp.getSoldier().setSoldierPlacement(sp);
+                                    }
+                                    return sp.getSoldier();
+                                }
+                                //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 96, Playingfield[i][j].getPosition().y + 48);
+                                break;
+                            case 2:
+                                if (checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x + 48, Playingfield[CardY][CardX].getPosition().y, 32, 32, x, y)) {
+                                    if(sp.getSoldier().getSoldierPlacement() == null){
+                                        sp.getSoldier().setSoldierPlacement(sp);
+                                    }
+                                    return sp.getSoldier();
+                                }
+                                //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y);
+                                break;
+                            case 3:
+                                if (checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x, Playingfield[CardY][CardX].getPosition().y + 48, 32, 32, x, y)) {
+                                    if(sp.getSoldier().getSoldierPlacement() == null){
+                                        sp.getSoldier().setSoldierPlacement(sp);
+                                    }
+                                    return sp.getSoldier();
+                                }
+                                //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y + 48);
+                                break;
                         }
+
                     }
+                }
+
+                if (sp.getGameCardSide() != null && sp.getGameCardSide().getType().equals(GameCardSide.Type.MONASTERY) && checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x+48, Playingfield[CardY][CardX].getPosition().y + 48, 32, 32, x, y)) {
+                    if(sp.getSoldier().getSoldierPlacement() == null){
+                        sp.getSoldier().setSoldierPlacement(sp);
+                    }
+                    return sp.getSoldier();
                 }
             }
         }
@@ -387,36 +413,51 @@ public class GameMapManager {
 
     //the thing is i have no idea right now how the cheat move is implemented on the server, so i am just passing everythign i think could be importand
     public CheatMoveSoldierPosition touchedSoldierGetALL(float x, float y){
-        for (int j = 0; j < Playingfield.length; j++) {
-            for (int i = 0; i < Playingfield[j].length; i++) {
-                if (Playingfield[i][j] != null && Playingfield[i][j].getGameCardTexture() != null) {
-                    ArrayList<SoldierPlacement> cardSoldiers = Playingfield[i][j].getGameMapEntry().getSoldierPlacements();
-                    GameCardSide cardSides[] = Playingfield[i][j].getGameMapEntry().getAlignedCardSides();
+        int CardX = (int)x/144;
+        int CardY = (int)y/144;
+        if(CardX < 0 || CardX > 99 || CardY < 0 || CardY > 99){
+            return null;
+        }
+                if (Playingfield[CardY][CardX] != null && Playingfield[CardY][CardX].getGameCardTexture() != null) {
+                    ArrayList<SoldierPlacement> cardSoldiers = Playingfield[CardY][CardX].getGameMapEntry().getSoldierPlacements();
+                    GameCardSide cardSides[] = Playingfield[CardY][CardX].getGameMapEntry().getAlignedCardSides();
                     for (SoldierPlacement sp : cardSoldiers) {
                         for (int s = 0; s < cardSides.length; s++) {
-                            if (cardSides[s].equals(sp.getGameCardSide())) {
+                            if (cardSides[s].UID==(sp.getGameCardSide().UID)) {
                                 switch (s) {
                                     case 0:
-                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y + 96, 32, 32, x, y)) {
-                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[i][j].getPosition().x + 48,Playingfield[i][j].getPosition().y + 96), sp.getSoldier(), Playingfield[i][j]);
+                                        if (checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x + 48, Playingfield[CardY][CardX].getPosition().y + 96, 32, 32, x, y)) {
+                                            if(sp.getSoldier().getSoldierPlacement() == null){
+                                                sp.getSoldier().setSoldierPlacement(sp);
+                                            }
+                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[CardY][CardX].getPosition().x + 48,Playingfield[CardY][CardX].getPosition().y + 96), sp.getSoldier(), Playingfield[CardY][CardX]);
                                         }
                                         //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y + 96);
                                         break;
                                     case 1:
-                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 96, Playingfield[i][j].getPosition().y + 48, 32, 32, x, y)) {
-                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[i][j].getPosition().x + 96,Playingfield[i][j].getPosition().y + 48), sp.getSoldier(), Playingfield[i][j]);
+                                        if (checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x + 96, Playingfield[CardY][CardX].getPosition().y + 48, 32, 32, x, y)) {
+                                            if(sp.getSoldier().getSoldierPlacement() == null){
+                                                sp.getSoldier().setSoldierPlacement(sp);
+                                            }
+                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[CardY][CardX].getPosition().x + 96,Playingfield[CardY][CardX].getPosition().y + 48), sp.getSoldier(), Playingfield[CardY][CardX]);
                                         }
                                         //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 96, Playingfield[i][j].getPosition().y + 48);
                                         break;
                                     case 2:
-                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y, 32, 32, x, y)) {
-                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[i][j].getPosition().x + 48,Playingfield[i][j].getPosition().y), sp.getSoldier(), Playingfield[i][j]);
+                                        if (checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x + 48, Playingfield[CardY][CardX].getPosition().y, 32, 32, x, y)) {
+                                            if(sp.getSoldier().getSoldierPlacement() == null){
+                                                sp.getSoldier().setSoldierPlacement(sp);
+                                            }
+                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[CardY][CardX].getPosition().x + 48,Playingfield[CardY][CardX].getPosition().y), sp.getSoldier(), Playingfield[CardY][CardX]);
                                         }
                                         //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x + 48, Playingfield[i][j].getPosition().y);
                                         break;
                                     case 3:
-                                        if (checkRectangleCollisionWithPoint(Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y + 48, 32, 32, x, y)) {
-                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[i][j].getPosition().x,Playingfield[i][j].getPosition().y +48), sp.getSoldier(), Playingfield[i][j]);
+                                        if (checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x, Playingfield[CardY][CardX].getPosition().y + 48, 32, 32, x, y)) {
+                                            if(sp.getSoldier().getSoldierPlacement() == null){
+                                                sp.getSoldier().setSoldierPlacement(sp);
+                                            }
+                                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[CardY][CardX].getPosition().x,Playingfield[CardY][CardX].getPosition().y +48), sp.getSoldier(), Playingfield[CardY][CardX]);
                                         }
                                         //batch.draw(currentSoldierTexture, Playingfield[i][j].getPosition().x, Playingfield[i][j].getPosition().y + 48);
                                         break;
@@ -424,8 +465,13 @@ public class GameMapManager {
 
                             }
                         }
-                    }
-                }
+
+                        if (sp.getGameCardSide() != null && sp.getGameCardSide().getType().equals(GameCardSide.Type.MONASTERY) && checkRectangleCollisionWithPoint(Playingfield[CardY][CardX].getPosition().x+48, Playingfield[CardY][CardX].getPosition().y + 48, 32, 32, x, y)) {
+                            if(sp.getSoldier().getSoldierPlacement() == null){
+                                sp.getSoldier().setSoldierPlacement(sp);
+                            }
+                            return new CheatMoveSoldierPosition(new Vector2(Playingfield[CardY][CardX].getPosition().x+48,Playingfield[CardY][CardX].getPosition().y +48), sp.getSoldier(), Playingfield[CardY][CardX]);
+                        }
             }
         }
         return null;

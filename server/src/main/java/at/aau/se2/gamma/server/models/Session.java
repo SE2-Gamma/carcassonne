@@ -185,16 +185,14 @@ public class Session extends BaseModel implements Serializable {
 
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
 
-        gameObject.getGameMap().setGameMapHandler(new GameMapHandler() {
-             @Override
-             public void onClosedField(ClosedFieldDetectionData detectionData) {
-                 gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
-                 broadcastAllPlayers(new FieldCompletedBroadcastCommand(gameObject.getGameStatistic()));
+        gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
+            System.out.print("//field completed, sending broadcast command");
+            gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
+            broadcastAllPlayers(new FieldCompletedBroadcastCommand(gameObject.getGameStatistic()));
 
-             }
-         });
+        });
          try {
-             Thread.sleep(1000);
+             Thread.sleep(3000);
          } catch (InterruptedException e) {
              e.printStackTrace();
          }
@@ -226,6 +224,7 @@ public class Session extends BaseModel implements Serializable {
     public void executeCheat(CheatMove cheatMove) throws CheatMoveImpossibleException {
         System.out.print("//checking cheatmove//");
         gameLoop.gameObject.getGameMap().executeCheatMove(cheatMove);
+
         broadcastAllPlayers(new CheatMoveBroadcastCommand(cheatMove));
         System.out.print("// cheatmove broadcasted//");
     }
@@ -240,6 +239,9 @@ public class Session extends BaseModel implements Serializable {
 
         System.out.print("//cheat undone//");
         System.out.print(cheats);
+
+
+
         broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(new LinkedList<>(cheats)));
     }
     public void leaveGame(Player player){
@@ -327,9 +329,10 @@ public boolean interruptable=false;
             gameLoop.interrupt();
             broadcastAllPlayers(new GameCompletedBroadcastCommand("game ended"));
             System.out.print("//all players have been notified. //");
+            Server.SessionHandler.removeSession(session);
         }
 
-        static void printTurnOrder(LinkedList<Player>list){
+         void printTurnOrder(LinkedList<Player>list){
             int counter=1;
             for (Player player:list
                  ) {
@@ -337,7 +340,7 @@ public boolean interruptable=false;
                 counter++;
             }
         }
-        static void shuffle(LinkedList<Player>list)
+         void shuffle(LinkedList<Player>list)
         {
             Player[] arr=new Player[list.size()];
             list.toArray(arr);
