@@ -1,15 +1,8 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects;
 
-import android.util.Log;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-
-import org.w3c.dom.Text;
-
-import at.aau.se2.gamma.carcassonne.libgdxScreens.Screens.Gamescreen;
-import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 import at.aau.se2.gamma.core.models.impl.Orientation;
 

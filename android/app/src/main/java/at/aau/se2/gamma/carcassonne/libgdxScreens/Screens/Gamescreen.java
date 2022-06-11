@@ -1,36 +1,27 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.Screens;
 
 import android.util.Log;
-import android.view.View;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
-
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.CheatMoveSoldierPosition;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCardTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
-import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.SoldierTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.UISkin;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Utility.InputCalculations;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
@@ -47,11 +38,6 @@ import at.aau.se2.gamma.core.commands.CheatCommand;
 import at.aau.se2.gamma.core.commands.DetectCheatCommand;
 import at.aau.se2.gamma.core.commands.GameTurnCommand;
 import at.aau.se2.gamma.core.exceptions.CheatMoveImpossibleException;
-import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
-import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
-import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
-import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
-import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.CheatMove;
 import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
@@ -59,7 +45,6 @@ import at.aau.se2.gamma.core.models.impl.GameMapEntryPosition;
 import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.GameObject;
 import at.aau.se2.gamma.core.models.impl.GameStatistic;
-import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Soldier;
 import at.aau.se2.gamma.core.models.impl.SoldierPlacement;
@@ -80,7 +65,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
     GestureDetector gestureDetecor;
 
-    ShapeRenderer shaprenderer;
     Vector2 camPos;
 
     //fonts
@@ -89,25 +73,15 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
     //Variables for gestures
     Vector2 camPanGesture;
-    //zooming
-    float distance1;
-    float distance2;
-    float distancefingersStart;
-    float distancefingersEnd;
 
     //Gamemap
     GameMapManager myMap;
-    Texture currentCard;
-    Texture playedCard;
     int playedCard_x;
     int playedCard_y;
 
     //storing currently GameCard.
     GameCard currentGameCard;
     GameCard lastCard;
-
-    //Card Deck, Just for testing stored locally
-    LinkedList<at.aau.se2.gamma.core.models.impl.GameCard> CardDeck = GameCardFactory.getDeck(1);
 
     //dataFromServer
     GameObject currentGameObject;
@@ -128,6 +102,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
 
     public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject){
+
         touchedSoldier = null;
         currentCheatMove = null;
         selectedCheatingSoldier = null;
@@ -150,8 +125,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         hud = new Hud(batch, this);
         hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
 
-        shaprenderer = new ShapeRenderer();
-
         //0 mit 49 später ersätzen
         camPos = new Vector2(49f*144f+(128f/2f),49f*144f+(128f/2f));
         playercam.position.set(camPos.x,camPos.y,1);
@@ -170,25 +143,12 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         errorTextur = new Texture("testTexture.jpg");
 
         //setting up playable area / map
-        myMap = new GameMapManager(playercam, gameviewport, batch, currentGameObject.getGameMap(), true);
+        myMap = new GameMapManager(playercam, gameviewport, batch, currentGameObject.getGameMap(), true, currentGameObject.getGameStatistic().getPlayers());
 
         playedCard_x = 0;
         playedCard_y = 0;
 
-        //for showcase of functionality, placed starter card.GameCardFactory.D()
-
-        at.aau.se2.gamma.core.models.impl.GameMapEntry starterEntry = new GameMapEntry(GameCardFactory.D(), null, Orientation.NORTH);
-        //myMap.setGamecard(49,49, new GameCard(CardTextures.getTextureFromCardID(starterEntry.getCard().getCardId()), new Vector2(49f*144f,49f*144f), 270f, starterEntry));
-
-        //set currentCard
-
-        //at.aau.se2.gamma.core.models.impl.GameMapEntry newCardFromDeck = new GameMapEntry(CardDeck.get((int)(Math.random()*20)), myPlayerID, Orientation.NORTH);
-        //currentGameCard = new GameCard(CardTextures.getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0),270f,newCardFromDeck);
-
-        //hud.setNextCardTexture(currentGameCard.getGameCardTexture());
-
         hud.changeHudState(Hud.Hud_State.VIEWING);
-
 
         InputMultiplexer im = new InputMultiplexer(hud.getStage(), gestureDetecor);
         Gdx.input.setInputProcessor(im);
@@ -441,14 +401,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         batch.end();
 
-
-        //used to draw simple shapes
-        //shaprenderer.setProjectionMatrix(playercam.combined);
-        //shaprenderer.begin(ShapeRenderer.ShapeType.Filled);
-        //shaprenderer.setColor(Color.CYAN);
-        //shaprenderer.rect(5.0f, 5.0f, 200.0f, 200.0f);
-        //shaprenderer.end();
-
         //String.format("fps:%.2f | x pos: %f |",(float)(1/delta), playercam.position.x)
         hud.drawStage();
 
@@ -507,8 +459,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     public void dispose() {
         myfont.dispose();
         batch.dispose();
-        CardTextures.disposeTexutres();
-        shaprenderer.dispose();
+        CardTextures.disposeTextures();
         hud.dispose();
         myMap.dispose();
         UISkin.disposeSkin();

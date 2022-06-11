@@ -43,7 +43,6 @@ public class Hud {
     private Gamescreen myGamescreen;
     private Stage stage;
     private Viewport viewport;
-    private SpriteBatch sb;
 
     private Hud_Item_BottomText hudTopItem;
     private Hud_Item_CardPreview hudCardPreview;
@@ -74,7 +73,6 @@ public class Hud {
         myGamescreen = gs;
         this.currentState = Hud_State.VIEWING;
 
-        this.sb = sb;
         viewport = new ScreenViewport();
         stage = new Stage(viewport, sb);
 
