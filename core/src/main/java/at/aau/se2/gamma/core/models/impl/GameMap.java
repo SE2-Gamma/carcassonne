@@ -22,81 +22,36 @@ public class GameMap implements Serializable {
         System.out.print("//startin to execute cheatmove//");
         int x=cheatMove.soldier.getX();
         int y=cheatMove.soldier.getY();
+        GameMapEntry gameMapEntry = mapArray[y][x];
         //checks if a soldier is on the card
         System.out.print("//checking if soldier is on card//");
-        System.out.println(x);
-        System.out.println(y);
-        if(mapArray[y][x]==null){
-            System.out.println("for some reason there is no gamemapentry");
-            throw new CheatMoveImpossibleException("dont ask me");
-        }
-        if(mapArray[y][x].getSoldierPlacements().size()==0){
-           // throw new CheatMoveImpossibleException("no soldier on card");
-        }
-        //checks if gamecardside is present on the gamecard
-        /*System.out.print("//cchecks if gamecardside is present on the gamecard//");
-        if(!mapArray[y][x].getCard().containsSide(cheatMove.newPosition.getGameCardSide())){
-            throw new CheatMoveImpossibleException("gamecardside not found on card");
-        }*/
-        //checks if original cheatposition is equal to found soldierposition
-        if(!mapArray[y][x].getSoldierPlacements().get(0).getGameCardSide().equals(cheatMove.originalPosition.getGameCardSide())){
-            System.out.print("//a soldier has been cheated another time");
-           // throw new CheatMoveImpossibleException("original position is not equal to found soldierposition");
-        }
-        System.out.print("//new positiion on soldier//");
-        Soldier copy=new Soldier(cheatMove.getSoldier().getPlayer());
-        copy.setX(cheatMove.soldier.getX());
-        copy.setY(cheatMove.soldier.getY());
-        copy.getActiveCheats().add(cheatMove);
-        SoldierPlacement pcopy=new SoldierPlacement(copy,cheatMove.getNewPosition().getGameCardSide());
-        pcopy.setSoldier(copy);
-        cheatMove.setSoldier(copy);
-      //  cheatMove.newPosition.getSoldier().addCheat(cheatMove);
 
+        if(gameMapEntry == null){
+            throw new CheatMoveImpossibleException("Invalid entry");
+        }
+
+        System.out.print("//new positiion on soldier//");
         synchronized (cheatMoves) {
             //removes first soldierplacement. requires that only one soldier can be placed per gamecard
             System.out.print("/replaces soldier placement //");
-            mapArray[y][x].getSoldierPlacements().get(0).getSoldier().soldierPlacement=null;
-            mapArray[y][x].getSoldierPlacements().clear();
             cheatMove.soldier.soldierPlacement = null;
+            gameMapEntry.getSoldierPlacements().clear();
             //adds new soldierplacement
-            mapArray[y][x].setSoldier(cheatMove.soldier,cheatMove.newPosition.getGameCardSide());
+            gameMapEntry.setSoldier(cheatMove.soldier,cheatMove.newPosition.getGameCardSide());
 
             cheatMoves.add(cheatMove);
+            cheatMove.getSoldier().getActiveCheats().add(cheatMove);
         }
-
     }
     public LinkedList<CheatMove> detectCheatMove(Soldier soldier) throws  NoSuchCheatActiveException {
        synchronized (cheatMoves) {
-            try {
-                System.out.print("//searching soldier//");
+           System.out.print("//searching soldier//");
 
-                if(soldier.getActiveCheats().size()==0){
-                    throw new NoSuchCheatActiveException();
-                }
-            } catch (IndexOutOfBoundsException e) {
-                throw new NoSuchCheatActiveException();
-            }catch (NullPointerException e){
-                throw new NoSuchCheatActiveException();
-            }
-           LinkedList<CheatMove>cheatscopy=new LinkedList<>();
+           if(soldier.getActiveCheats().size()==0){
+               throw new NoSuchCheatActiveException();
+           }
 
-         /*  for (CheatMove cheat: soldier.getActiveCheats()
-           ) {
-
-               Soldier copy=new Soldier(cheat.getSoldier().getPlayer());
-               copy.setX(cheat.getSoldier().getX());
-               copy.setY(cheat.getSoldier().getY());
-               copy.soldierPlacement=new SoldierPlacement(copy,cheat.getNewPosition().getGameCardSide());
-               copy.soldierPlacement.setSoldier(copy);
-               CheatMove cheatcopy=new CheatMove(cheat.cheater,copy);
-               cheatcopy.setOriginalPosition(new SoldierPlacement(copy,cheat.getOriginalPosition().getGameCardSide()));
-               cheatcopy.setNewPosition(new SoldierPlacement(copy,cheat.getNewPosition().getGameCardSide()));
-
-               cheatscopy.add(cheatcopy);
-           }*/
-        //   mapArray[soldier.getY()][soldier.getX()].getSoldierPlacements().get(0).getSoldier().getActiveCheats().clear();
-           return mapArray[soldier.getY()][soldier.getX()].getSoldierPlacements().get(0).getSoldier().getActiveCheats();
+           return soldier.getActiveCheats();
 
         }
 
@@ -109,19 +64,19 @@ public class GameMap implements Serializable {
             }
         }
 
-        //clears soldierplacements of the gamemapentry and sets it to the very first original position
+        //clears soldier placements of the gameMapEntry and sets it to the very first original position
+        CheatMove cheatMove = moves.getFirst();
+        Soldier soldier = cheatMove.getSoldier();
+        GameMapEntry gameMapEntry = mapArray[soldier.getY()][soldier.getX()];
+        soldier.soldierPlacement=null;
+        gameMapEntry.getSoldierPlacements().clear();
 
-            mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().get(0).getSoldier().soldierPlacement=null;
-        mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().clear();
-        moves.getFirst().soldier.soldierPlacement=null;
+        gameMapEntry.getSoldierPlacements().add(cheatMove.originalPosition);
+        soldier.setSoldierPlacement(cheatMove.originalPosition);
 
-           mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().add(moves.getFirst().originalPosition);
-            mapArray[moves.getFirst().soldier.getY()][moves.getFirst().soldier.getX()].getSoldierPlacements().get(0).getSoldier().setSoldierPlacement(moves.getFirst().originalPosition);
-      //  moves.remove(moves.getFirst());
-        //moves.clear();
-            //todo: give each cheater the correct penalty (CheatMove.getPlayername <- the cheater
-            // CheatMove.getPenalty <- the correct number of points lost. is independent from detected cheats but number of cheats done.
-            // so if a player has done 4 cheats but the very first is detected he only loses 1 points, but if the last cheat is detected first he loses 2^4 points.
+        //todo: give each cheater the correct penalty (CheatMove.getPlayername <- the cheater
+        // CheatMove.getPenalty <- the correct number of points lost. is independent from detected cheats but number of cheats done.
+        // so if a player has done 4 cheats but the very first is detected he only loses 1 points, but if the last cheat is detected first he loses 2^4 points.
     }
 
     public GameMap() {
@@ -335,6 +290,68 @@ public class GameMap implements Serializable {
         }
     }
 
+    public ArrayList<ClosedFieldDetectionData> createFinalPointsDetectionData(ArrayList<Player> players) {
+        ArrayList<ClosedFieldDetectionData> finalDetectionData = new ArrayList<>();
+
+        // getSoldiers
+        ArrayList<SoldierPlacement> soldierPlacements = new ArrayList<>();
+        for(Player player: players) {
+            for(Soldier soldier: player.getSoldiers()) {
+                if (soldier.getSoldierPlacement() != null) {
+                    soldierPlacements.add(soldier.getSoldierPlacement());
+                }
+            }
+        }
+
+        // TODO: iterate through all fields, and check if a soldier is placed on any side
+        for(int y = 0; y < mapArray.length; y++) {
+            GameMapEntry[] row = mapArray[y];
+            for(int x = 0; x < row.length; x++) {
+                GameMapEntry entry = row[x];
+                // check if a card is placed
+                if (entry != null) {
+                    GameCard card = entry.getCard();
+                    GameCardSide[] alignedCardSides = entry.getAlignedCardSides();
+
+                    // check if a soldier is present on one card side
+                    for(int direction = 0; direction < alignedCardSides.length; direction++) {
+                        GameCardSide side = alignedCardSides[direction];
+                        // check if the cardSide is related to a soldierPlacement
+                        for(SoldierPlacement soldierPlacement: soldierPlacements) {
+                            if (soldierPlacement.getGameCardSide() == side) {
+                                GameMapEntryPosition position = new GameMapEntryPosition(x, y);
+                                ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
+                                detectionData.setEndGameData(true);
+                                // TODO: calculate points for gras
+                                if (side.getType().equals(GameCardSide.Type.GRAS)) {
+
+                                } else if(side.getType().equals(GameCardSide.Type.MONASTERY)) {
+                                    // TODO: calculate points for monasteries
+                                }else {
+                                    // TODO: calculate points for other unfinished sides
+                                    // check each open side of this type on this card
+                                    for(int orientationToCheck = 0; orientationToCheck < alignedCardSides.length; orientationToCheck++) {
+                                        GameCardSide sideToCheck = alignedCardSides[orientationToCheck];
+                                        if (sideToCheck.getType().equals(side.getType())) {
+                                            // only the site with the soldier is allowed to be a closing side
+                                            if (!sideToCheck.isClosingSide() || sideToCheck == side) {
+                                                checkClosedState(orientationToCheck, position, detectionData, sideToCheck, true);
+                                            }
+                                        }
+                                    }
+
+                                    finalDetectionData.add(detectionData);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return finalDetectionData;
+    }
+
     /**
      * Get the position of an entry which is present in the array. Otherwise, it returns null.
      * @param entry
@@ -408,6 +425,10 @@ public class GameMap implements Serializable {
     }
 
     private void checkClosedState(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide) {
+        checkClosedState(orientation, position, detectionData, currentCardSide, false);
+    }
+
+    private void checkClosedState(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide, boolean addAlsoOpenSides) {
         // calculate position of neighbour card side
         GameMapEntryPosition nextPosition = getNeighbourPosition(orientation, position);
 
@@ -415,6 +436,11 @@ public class GameMap implements Serializable {
         GameMapEntry nextMapEntry = getNeighbour(orientation, position);
         if (nextMapEntry == null) {
             detectionData.setClosed(false);
+            if (addAlsoOpenSides) {
+                // add the points for this side
+                detectionData.addGameCardSide(currentCardSide);
+                detectionData.addPoints(currentCardSide.getPoints() * currentCardSide.getMultiplier());
+            }
             return;
         }
 
@@ -457,7 +483,7 @@ public class GameMap implements Serializable {
                     }
 
                     if(!alreadyVisited) {
-                        checkClosedState(i, nextPosition, detectionData, cardSide);
+                        checkClosedState(i, nextPosition, detectionData, cardSide, addAlsoOpenSides);
                     }
                 }
             }
