@@ -34,6 +34,7 @@ import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.SoldierTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.UISkin;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Utility.InputCalculations;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
+import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveBroadcastCommand;
@@ -211,7 +212,9 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     hud.changeHudState(Hud.Hud_State.PLACING_SOLDIER);
                 }else {
                     hud.changeHudState(Hud.Hud_State.VIEWING);
+
                     GameMove gm = new GameMove(myPlayerID, lastCard.getGameMapEntry(), new GameMapEntryPosition(playedCard_x, playedCard_y));
+
                     ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -253,6 +256,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 gm.getGameMapEntry().getSoldierPlacements().get(0).setSoldier(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier());
                 gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setX(playedCard_x);
                 gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setY(playedCard_y);
+                gm.x=(gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getX());
+                gm.y=(gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getY());
                 ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -470,7 +475,8 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     Log.d("sensor", "shake detected w/ speed: " + speed);
                     hud.showErrorText(""+speed);
                     //do things after smartphone was shaken
-                    ServerThread.instance.sendCommand(new CheatCommand(currentCheatMove), new ServerThread.RequestResponseHandler() {
+
+                    ServerThread.instance.sendCommand(new CheatCommand(currentCheatMove.getData()), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                             String responseString = (String) payload;
@@ -803,7 +809,11 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 //nach einen zug
                 //currentGameObject = (GameObject) payload;
                 GameMove gm = (GameMove) payload;
-
+                try {
+                    gm.applySoldierData(gm.x,gm.y);
+                } catch (IndexOutOfBoundsException e) {
+                   Logger.debug("no soldier placed");
+                }
                 try {
                     currentGameObject.getGameMap().executeGameMove(gm);
                 } catch (Exception e) {

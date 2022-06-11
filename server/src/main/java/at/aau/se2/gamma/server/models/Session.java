@@ -19,7 +19,7 @@ public class Session extends BaseModel implements Serializable {
     Deck deck;
     String id;
     int maxPlayers=5;
-    int amountOfSoldiers=8;
+    int amountOfSoldiers=3;
     final LinkedList<KickOffer>kickOffers=new LinkedList<>();
    // public LinkedList<Player> players = new LinkedList<>();
     public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
@@ -212,7 +212,11 @@ public class Session extends BaseModel implements Serializable {
     public int timeout=60000;
     public void executeGameMove(GameMove gameturn) throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
         System.out.print("//checking incoming turn!//");
-
+        try {
+            gameturn.applySoldierData(gameturn.x, gameturn.y);
+        } catch (Exception e) {
+            System.out.print("//no soldier placed//");
+        }
         gameturn.changeToServerInstance(players, gameLoop.gameObject.getGameMap());
         SoldierPlacement soldierPlacement = null;
 
@@ -229,18 +233,24 @@ public class Session extends BaseModel implements Serializable {
         // set soldier placement
         if (soldierPlacement != null) {
             gameturn.getGameMapEntry().setSoldier(soldierPlacement.getSoldier(), soldierPlacement.getGameCardSide());
+            gameturn.x=(gameturn.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getX());
+            gameturn.y=(gameturn.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getY());
         }
 
         System.out.print("//turn has been succesfull!//");
         while (!interruptable) { //if the gameloop is in another state than waiting for a turn we busywait for it to finish (only relevant if you enter a turn 1 ms after your turnstart)
             System.out.print(".");
         }
+
+
+
         broadcastAllPlayers(new GameTurnBroadCastCommand(gameturn));
          gameLoop.interrupt();//interrupt waiting gameloop
 
     }
-    public void executeCheat(CheatMove cheatMove) throws CheatMoveImpossibleException {
-
+    public void executeCheat(CheatData cheatData,int penalty) throws CheatMoveImpossibleException {
+        CheatMove cheatMove=CheatMove.getMoveFromData(cheatData,gameLoop.gameObject);
+        cheatMove.setPenalty(penalty);
         System.out.print("//checking cheatmove//");
 
         cheatMove.changeToServerInstance(players, gameLoop.gameObject.getGameMap());

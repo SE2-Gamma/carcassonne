@@ -10,11 +10,22 @@ public class GameMove implements Serializable {
     private Player player;
     private GameMapEntry gameMapEntry;
     private GameMapEntryPosition gameMapEntryPosition;
+    public int x;
+    public int y;
 
     public GameMove() {
 
     }
-
+    public int X(){
+       return gameMapEntry.getSoldierPlacements().get(0).getSoldier().getX();
+    }
+    public int Y(){
+        return gameMapEntry.getSoldierPlacements().get(0).getSoldier().getY();
+    }
+    public void applySoldierData(int x, int y){
+        gameMapEntry.getSoldierPlacements().get(0).getSoldier().setX(x);
+        gameMapEntry.getSoldierPlacements().get(0).getSoldier().setY(y);
+    }
     public GameMove(Player player, GameMapEntry gameMapEntry, GameMapEntryPosition gameMapEntryPosition) {
         this.player = player;
         this.gameMapEntry = gameMapEntry;
