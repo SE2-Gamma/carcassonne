@@ -324,7 +324,19 @@ public class GameMap implements Serializable {
                                 detectionData.setEndGameData(true);
                                 // TODO: calculate points for gras
                                 if (side.getType().equals(GameCardSide.Type.GRAS)) {
+                                    // get connected gras sites
 
+                                    for(int orientationToCheck = 0; orientationToCheck < alignedCardSides.length; orientationToCheck++) {
+                                        GameCardSide sideToCheck = alignedCardSides[orientationToCheck];
+                                        if (sideToCheck.getType().equals(side.getType())) {
+                                            // only the site with the soldier is allowed to be a closing side
+                                            if (!sideToCheck.isClosingSide() || sideToCheck == side) {
+                                                checkGrasFields(orientationToCheck, position, detectionData, sideToCheck);
+                                            }
+                                        }
+                                    }
+
+                                    finalDetectionData.add(detectionData);
                                 } else if(side.getType().equals(GameCardSide.Type.MONASTERY)) {
                                     // TODO: calculate points for monasteries
                                 }else {
@@ -350,6 +362,79 @@ public class GameMap implements Serializable {
         }
 
         return finalDetectionData;
+    }
+
+    private void checkGrasFields(int orientation, GameMapEntryPosition position, ClosedFieldDetectionData detectionData, GameCardSide currentCardSide) {
+        // calculate position of neighbours card side
+        GameMapEntryPosition nextPosition = getNeighbourPosition(orientation, position);
+
+        // check if we have a card on this position
+        GameMapEntry nextMapEntry = getNeighbour(orientation, position);
+
+        detectionData.addGameCardSide(currentCardSide);
+        if (nextMapEntry == null) {
+            detectionData.setClosed(false);
+            return;
+        }
+
+        // calculate opposite cardside
+        GameCardSide[] neighbourAlignedSides = nextMapEntry.getAlignedCardSides();
+        int oppositeOrientation = 2;
+        switch(orientation) {
+            case 1: oppositeOrientation = 3; break;
+            case 2: oppositeOrientation = 0; break;
+            case 3: oppositeOrientation = 1; break;
+        }
+        GameCardSide oppositeGameCardSide = neighbourAlignedSides[oppositeOrientation];
+
+        // add the points for the opposite side
+        detectionData.addGameCardSide(oppositeGameCardSide);
+
+        // if the side isn't closed, check the other open sides of this type, and the neighbours
+        for(int i = 0; i < neighbourAlignedSides.length; i++) {
+            // if the current neighbour is closed, prevent the opposite site check
+            if (oppositeGameCardSide.isClosingSide && Math.abs(oppositeOrientation-i) != 2) {
+                continue;
+            }
+
+            if (i != oppositeOrientation) {
+                GameCardSide cardSide = neighbourAlignedSides[i];
+                // check if the other side isn't closed (so it's connected to our side here), and if the types are the same
+                if (!cardSide.isClosingSide && cardSide.getType() == currentCardSide.getType()) {
+                    //check if cardSide is already visited before start a new check, to prevent a circle loop
+                    boolean alreadyVisited = false;
+                    for(GameCardSide cs: detectionData.getGameCardSides()) {
+                        if(cs == cardSide) {
+                            alreadyVisited = true;
+                            break;
+                        }
+                    }
+
+                    if(!alreadyVisited) {
+                       checkGrasFields(i, nextPosition, detectionData, cardSide);
+                    }
+                } else if (cardSide.getType() == GameCardSide.Type.CASTLE) { // check if cardside is castle
+                    // check if card side isn't at opposite direction.
+                    if (Math.abs(oppositeOrientation-i) != 2) {
+                        ArrayList<GameCardSide> scannedCastles = detectionData.getScannedCastles();
+                        // check if castle was already scanned
+                        if (!scannedCastles.contains(cardSide)) {
+                            // check if castle is closed
+                            ClosedFieldDetectionData castleDetection = new ClosedFieldDetectionData();
+                            checkClosedState(i, nextPosition, castleDetection, cardSide, true);
+
+                            // add castles to visited fields
+                            scannedCastles.addAll(castleDetection.getGameCardSides());
+
+                            // add detection to detectionData
+                            if (castleDetection.isClosed()) {
+                                detectionData.getDetectedCastles().add(castleDetection);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**

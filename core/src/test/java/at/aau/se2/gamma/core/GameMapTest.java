@@ -552,13 +552,18 @@ public class GameMapTest {
     }
 
     /**
+     *  X    C    X
+     * X X  G G  G X
+     *  X    C    G
+     *  X    C    G
+     * X X  G G  G X
+     *  X    C    G
+     *  X    C    G
+     * X X  S S  S X
      *  X    X    X
-     * X S  S S  S X
-     *  S    G    S
-     *  S    G
-     * X S  S S
-     *  X    X
-     *
+     *  X    G    X
+     * X X  G G  G X
+     *  X    X    X
      * @throws InvalidPositionGameMapException
      * @throws SurroundingConflictGameMapException
      * @throws NoSurroundingCardGameMapException
@@ -575,33 +580,33 @@ public class GameMapTest {
             }
         });
         gameMap.placeGameMapEntry(
-                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.SOUTH),
-                new GameMapEntryPosition(0,0));
+                new GameMapEntry(GameCardFactory.createGrassCcastleGrassCcastle(), player1, Orientation.EAST),
+                new GameMapEntryPosition(2,2));
+        GameMapEntry entry23 = new GameMapEntry(GameCardFactory.createGrassStreetCcastleStreet(), player1);
         gameMap.executeGameMove(new GameMove(
                 player1,
-                new GameMapEntry(GameCardFactory.createCgrassStreetCgrassStreet(), player1, Orientation.SOUTH),
-                new GameMapEntryPosition(1,0))
+                entry23,
+                new GameMapEntryPosition(2,3))
         );
+        GameMapEntry entry32 = new GameMapEntry(GameCardFactory.createStreetGrassGrassStreet(), player1, Orientation.SOUTH);
+        entry32.setSoldier(player1.getFreeSoldier(), entry32.getCard().getSideEast());
         gameMap.executeGameMove(new GameMove(
                 player1,
-                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.EAST),
-                new GameMapEntryPosition(0,1))
+                entry32,
+                new GameMapEntryPosition(3,2))
         );
-        GameMapEntry entry11 = new GameMapEntry(GameCardFactory.createCgrassStreetCgrassStreet(), player1, Orientation.SOUTH);
-        entry11.setSoldier(player1.getFreeSoldier(), entry11.getCard().getSideWest());
+        GameMapEntry entry21 = new GameMapEntry(GameCardFactory.createGrassStreetCcastleStreet(), player1, Orientation.SOUTH);
+        entry21.setSoldier(player1.getFreeSoldier(), entry21.getCard().getSideNorth());
         gameMap.executeGameMove(new GameMove(
                 player1,
-                entry11,
-                new GameMapEntryPosition(1,1))
-        );
-        gameMap.executeGameMove(new GameMove(
-                player1,
-                new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1),
+                entry21,
                 new GameMapEntryPosition(2,1))
         );
+
         ArrayList<ClosedFieldDetectionData> detectionData = gameMap.createFinalPointsDetectionData(players);
 
-        assertEquals(detectionData.size(), 1);
-        assertEquals(detectionData.get(0).getGameCardSides().size(), 10);
+        assertEquals(detectionData.size(), 2);
+        assertEquals(detectionData.get(0).getDetectedCastles().size(), 0);
+        assertEquals(detectionData.get(1).getDetectedCastles().size(), 2);
     }
 }

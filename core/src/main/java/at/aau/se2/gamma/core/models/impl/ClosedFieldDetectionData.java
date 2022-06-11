@@ -7,10 +7,14 @@ public class ClosedFieldDetectionData implements Serializable {
     private boolean isClosed = true;
     private int points = 0;
     private ArrayList<GameCardSide> gameCardSides;
+    private ArrayList<GameCardSide> scannedCastles; // only needed for end calculation for gras fields
+    private ArrayList<ClosedFieldDetectionData> detectedCastles; // only needed for end calculation for gras fields
     private boolean endGameData = false;
 
     public ClosedFieldDetectionData() {
         gameCardSides = new ArrayList<>();
+        scannedCastles = new ArrayList<>();
+        detectedCastles = new ArrayList<>();
     }
 
     public boolean isClosed() {
@@ -51,5 +55,21 @@ public class ClosedFieldDetectionData implements Serializable {
 
     public void setEndGameData(boolean endGameData) {
         this.endGameData = endGameData;
+    }
+
+    public ArrayList<GameCardSide> getScannedCastles() {
+        return scannedCastles;
+    }
+
+    public void setScannedCastles(ArrayList<GameCardSide> scannedCastles) {
+        this.scannedCastles = scannedCastles;
+    }
+
+    public ArrayList<ClosedFieldDetectionData> getDetectedCastles() {
+        return detectedCastles;
+    }
+
+    public void setDetectedCastles(ArrayList<ClosedFieldDetectionData> detectedCastles) {
+        this.detectedCastles = detectedCastles;
     }
 }
