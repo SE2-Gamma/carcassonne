@@ -365,12 +365,15 @@ public class GameMap implements Serializable {
                         for(SoldierPlacement soldierPlacement: soldierPlacements) {
                             if (soldierPlacement.getGameCardSide() == side) {
                                 GameMapEntryPosition position = new GameMapEntryPosition(x, y);
+                                ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
+                                detectionData.setEndGameData(true);
                                 // TODO: calculate points for gras
                                 if (side.getType().equals(GameCardSide.Type.GRAS)) {
 
-                                } else {
+                                } else if(side.getType().equals(GameCardSide.Type.MONASTERY)) {
+                                    // TODO: calculate points for monasteries
+                                }else {
                                     // TODO: calculate points for other unfinished sides
-                                    ClosedFieldDetectionData detectionData = new ClosedFieldDetectionData();
                                     // check each open side of this type on this card
                                     for(int orientationToCheck = 0; orientationToCheck < alignedCardSides.length; orientationToCheck++) {
                                         GameCardSide sideToCheck = alignedCardSides[orientationToCheck];
