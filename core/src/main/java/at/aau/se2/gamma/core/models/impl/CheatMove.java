@@ -19,7 +19,7 @@ public class CheatMove implements Serializable {
         boolean playerFound = false;
 
         for(Player player: players) {
-            if (this.getCheater().getId().equals(player.getId())) {
+            if (this.soldier.getPlayer().getId().equals(player.getId())) {
                 this.setCheater(player);
                 playerFound = true;
             }

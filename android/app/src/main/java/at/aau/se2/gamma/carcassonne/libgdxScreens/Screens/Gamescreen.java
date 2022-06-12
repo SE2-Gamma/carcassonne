@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.CheatMoveSoldierPosition;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
@@ -64,6 +65,7 @@ import at.aau.se2.gamma.core.models.impl.GameStatistic;
 import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Soldier;
+import at.aau.se2.gamma.core.models.impl.SoldierData;
 import at.aau.se2.gamma.core.models.impl.SoldierPlacement;
 
 public class Gamescreen extends ScreenAdapter implements GestureDetector.GestureListener {
@@ -256,8 +258,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 gm.getGameMapEntry().getSoldierPlacements().get(0).setSoldier(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier());
                 gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setX(playedCard_x);
                 gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setY(playedCard_y);
-                gm.x=(gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getX());
-                gm.y=(gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getY());
+                gm.setSoldierData(new SoldierData(gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier()));
                 ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -630,7 +631,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                             super.clicked(event, x, y);
                             hud.changeHudState(Hud.Hud_State.REPORTING);
                             Log.i("REPORT", touchedSoldier.getX()+"|"+touchedSoldier.getY());
-                            ServerThread.instance.sendCommand(new DetectCheatCommand(touchedSoldier), new ServerThread.RequestResponseHandler() {
+                            ServerThread.instance.sendCommand(new DetectCheatCommand(touchedSoldier.getData()), new ServerThread.RequestResponseHandler() {
                                 @Override
                                 public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                                     String responseString = (String) payload;
@@ -809,10 +810,22 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 //nach einen zug
                 //currentGameObject = (GameObject) payload;
                 GameMove gm = (GameMove) payload;
+                gm.setSoldierData(gm.getSoldierData());
                 try {
-                    gm.applySoldierData(gm.x,gm.y);
-                } catch (IndexOutOfBoundsException e) {
-                   Logger.debug("no soldier placed");
+                    Logger.debug("returned soldier X"+gm.getSoldierData().getSoldierID());
+                    Logger.debug("returned soldier X"+gm.getSoldierData().getX());
+                    Logger.debug("returned soldier X"+gm.getSoldierData().getY());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                gm.changeToServerInstance(new ConcurrentLinkedDeque<>(currentGameObject.getGameStatistic().getPlayers()), currentGameObject.getGameMap(),gm.getSoldierData());
+                try {
+                    Logger.debug("returned soldier X"+gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getId());
+                    Logger.debug("returned soldier X"+gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getX());
+                    Logger.debug("returned soldier X"+gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getY());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 try {
                     currentGameObject.getGameMap().executeGameMove(gm);
@@ -870,9 +883,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 Log.i("Reported", "GOT RESPONCE FROM SERVER for CHEATING");
                 try {
 
-                    Log.e("soldiers", "X of returned soldier: "+ cheatMove .getSoldier().getX() );
-                    Log.e("soldiers", "Y of returned soldier: "+ cheatMove .getSoldier().getY() );
-                    Log.e("soldiers", "side of returned soldier: "+ cheatMove .getSoldier().getSoldierPlacement().getGameCardSide().getType() );
 
                     currentGameObject.getGameMap().executeCheatMove(cheatMove);
                     myMap.setGameMap(currentGameObject.getGameMap());
@@ -881,7 +891,14 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 }
             }else if(response.getPayload() instanceof CheatMoveDetectedBroadcastCommand){
                 Log.i("Reported", "GOT RESPONCE FROM SERVER for CHEATING");
-                currentGameObject.getGameMap().undoCheatMove((LinkedList<CheatMove>) payload);
+                LinkedList<CheatData>cheatData=(LinkedList<CheatData>) payload;
+                LinkedList<CheatMove>moves=new LinkedList<>();
+                for (int i = 0; i <cheatData.size(); i++) {
+                    moves.add(CheatMove.getMoveFromData(cheatData.get(i),currentGameObject));
+
+                }
+
+                currentGameObject.getGameMap().undoCheatMove(moves);
                 myMap.setGameMap(currentGameObject.getGameMap());
             }
 

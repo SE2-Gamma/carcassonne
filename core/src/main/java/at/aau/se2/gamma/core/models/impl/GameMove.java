@@ -5,27 +5,27 @@ import at.aau.se2.gamma.core.exceptions.CheatMoveImpossibleException;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.logging.Logger;
 
 public class GameMove implements Serializable {
     private Player player;
     private GameMapEntry gameMapEntry;
     private GameMapEntryPosition gameMapEntryPosition;
-    public int x;
-    public int y;
+
+    public SoldierData getSoldierData() {
+        return soldierData;
+    }
+
+    public void setSoldierData(SoldierData soldierData) {
+        this.soldierData = soldierData;
+    }
+
+    private SoldierData soldierData;
 
     public GameMove() {
 
     }
-    public int X(){
-       return gameMapEntry.getSoldierPlacements().get(0).getSoldier().getX();
-    }
-    public int Y(){
-        return gameMapEntry.getSoldierPlacements().get(0).getSoldier().getY();
-    }
-    public void applySoldierData(int x, int y){
-        gameMapEntry.getSoldierPlacements().get(0).getSoldier().setX(x);
-        gameMapEntry.getSoldierPlacements().get(0).getSoldier().setY(y);
-    }
+
     public GameMove(Player player, GameMapEntry gameMapEntry, GameMapEntryPosition gameMapEntryPosition) {
         this.player = player;
         this.gameMapEntry = gameMapEntry;
@@ -64,6 +64,38 @@ public class GameMove implements Serializable {
                 throw new NoSuchElementException();
             }
         }
+    }
+    public void changeToServerInstance(ConcurrentLinkedDeque<Player> players, GameMap gameMap,SoldierData soldierData) throws NoSuchElementException {
+        boolean playerFound = false;
+
+        for(Player player: players) {
+            if (this.player.getId().equals(player.getId())) {
+                this.player = player;
+                playerFound = true;
+            }
+        }
+
+        if (!playerFound) {
+            throw new NoSuchElementException();
+        }
+
+        this.gameMapEntry.setPlacedByPlayer(player);
+
+        // map soldier placement if needed
+
+
+            for(Soldier soldier: this.player.getSoldiers()) {
+                SoldierPlacement soldierPlacement = this.gameMapEntry.getSoldierPlacements().get(0);
+                if (soldier.getId() == soldierPlacement.getSoldier().getId()) {;
+                    soldier.setX(soldierData.x);
+                    soldier.setY(soldierData.y);
+                    soldierPlacement.setSoldier(soldier);
+
+                    System.err.println("HEEREEEEEEEEEEEEEEEE");
+                }
+            }
+
+
     }
 
     public Player getPlayer() {

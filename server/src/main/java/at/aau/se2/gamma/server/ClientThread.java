@@ -220,7 +220,9 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command,"youre not ingame", Codes.ERROR.NOT_IN_GAME);
         }
         try {
-            session.detectCheat((Soldier) command.getPayload());
+
+
+            session.detectCheat((SoldierData) command.getPayload());
         } catch (NoSuchCheatActiveException e) {
             return ResponseCreator.getSuccess(command,"No such Cheat active.");
         }

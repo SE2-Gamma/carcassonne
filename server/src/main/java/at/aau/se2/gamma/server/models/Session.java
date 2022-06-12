@@ -212,11 +212,7 @@ public class Session extends BaseModel implements Serializable {
     public int timeout=60000;
     public void executeGameMove(GameMove gameturn) throws InvalidPositionGameMapException, SurroundingConflictGameMapException, NoSurroundingCardGameMapException, PositionNotFreeGameMapException {
         System.out.print("//checking incoming turn!//");
-        try {
-            gameturn.applySoldierData(gameturn.x, gameturn.y);
-        } catch (Exception e) {
-            System.out.print("//no soldier placed//");
-        }
+        gameturn.setSoldierData(gameturn.getSoldierData());
         gameturn.changeToServerInstance(players, gameLoop.gameObject.getGameMap());
         SoldierPlacement soldierPlacement = null;
 
@@ -224,6 +220,8 @@ public class Session extends BaseModel implements Serializable {
         if (gameturn.getGameMapEntry().getSoldierPlacements().size() > 0) {
 
             soldierPlacement = gameturn.getGameMapEntry().getSoldierPlacements().get(0);
+            System.out.println();
+            System.out.println("//placing soldier at X: "+soldierPlacement.getSoldier().getX()+", Y:  "+soldierPlacement.getSoldier().getY()+"//");
             gameturn.getGameMapEntry().getSoldierPlacements().clear();
         }
 
@@ -233,8 +231,7 @@ public class Session extends BaseModel implements Serializable {
         // set soldier placement
         if (soldierPlacement != null) {
             gameturn.getGameMapEntry().setSoldier(soldierPlacement.getSoldier(), soldierPlacement.getGameCardSide());
-            gameturn.x=(gameturn.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getX());
-            gameturn.y=(gameturn.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getY());
+            gameturn.setSoldierData(new SoldierData(soldierPlacement.getSoldier()));
         }
 
         System.out.print("//turn has been succesfull!//");
@@ -249,8 +246,10 @@ public class Session extends BaseModel implements Serializable {
 
     }
     public void executeCheat(CheatData cheatData,int penalty) throws CheatMoveImpossibleException {
+        System.out.println("data position: xy "+cheatData.getX()+" "+cheatData.getY());
         CheatMove cheatMove=CheatMove.getMoveFromData(cheatData,gameLoop.gameObject);
         cheatMove.setPenalty(penalty);
+        System.out.println("cheating soldier at position x: "+cheatMove.getSoldier().getX()+"  Y: "+cheatMove.getSoldier().getY());
         System.out.print("//checking cheatmove//");
 
         cheatMove.changeToServerInstance(players, gameLoop.gameObject.getGameMap());
@@ -260,34 +259,23 @@ public class Session extends BaseModel implements Serializable {
         broadcastAllPlayers(new CheatMoveBroadcastCommand(data));
         System.out.print("// cheatmove broadcasted//");
     }
-    public void detectCheat(Soldier soldier) throws NoSuchCheatActiveException {
+    public void detectCheat(SoldierData data) throws NoSuchCheatActiveException {
+        Soldier soldier=gameLoop.gameObject.getGameStatistic().getSoldierBySoldierData(data);
         System.out.print("//trying to detect a cheat.//");
 
-        Soldier coreSoldier = null;
-        for (Player player: players) {
-            for(Soldier playerSoldier: player.getSoldiers()) {
-                if (playerSoldier.getId() == soldier.getId()) {
-                    coreSoldier = playerSoldier;
-                }
-            }
-        }
-
-        if (coreSoldier == null) {
-            throw new NoSuchElementException();
-        }
-
-        LinkedList<CheatMove> cheats=gameLoop.gameObject.getGameMap().detectCheatMove(coreSoldier);
+        LinkedList<CheatMove> cheats=gameLoop.gameObject.getGameMap().detectCheatMove(soldier);
         System.out.print("//cheat detected//");
         System.out.print(cheats);
         //todo: give penalties
         gameLoop.gameObject.getGameMap().undoCheatMove(cheats);
-
+        LinkedList<CheatData>cheatData=new LinkedList<>();
+        for (CheatMove move:cheats
+             ) {
+         cheatData.add(move.getData());
+        }
         System.out.print("//cheat undone//");
-        System.out.print(cheats);
 
-
-
-        broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(new LinkedList<>(cheats)));
+        broadcastAllPlayers(new CheatMoveDetectedBroadcastCommand(new LinkedList<>(cheatData)));
         cheats.clear();
     }
     public void leaveGame(Player player){

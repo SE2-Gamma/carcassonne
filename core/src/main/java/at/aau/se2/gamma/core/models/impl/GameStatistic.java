@@ -2,6 +2,7 @@ package at.aau.se2.gamma.core.models.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * Game statistics handles the statistics for one game.
@@ -29,6 +30,24 @@ public class GameStatistic implements Serializable {
     public void removePlayer(Player player) {
         this.players.remove(player);
     }
+
+    public Soldier getSoldierBySoldierData(SoldierData data) {
+        Soldier soldier = null;
+        for (Player player : players
+        ) {
+            for (Soldier playersoldier : player.getSoldiers()
+            ) {
+                if (data.getSoldierID() == playersoldier.getId()) {
+                    soldier = playersoldier;
+                }
+            }
+        }
+        if (soldier == null) {
+            throw new NoSuchElementException();
+        }
+        return soldier;
+    }
+
 
     /**
      * Apply the calculated data from a closed area to the players statistic
