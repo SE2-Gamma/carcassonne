@@ -1,6 +1,8 @@
 package at.aau.se2.gamma.carcassonne;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
@@ -9,7 +11,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.not;
 
@@ -36,14 +37,14 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.DisconnectCommand;
 
-public class CreateSessionActivityTest {
+public class SelectNameActivityTest {
 
     @Rule
     public ActivityScenarioRule<SelectNameActivity> activityRule = new ActivityScenarioRule<>(SelectNameActivity.class);
 
     @Before
     public void setUp() throws Exception {
-        /*
+/*
         //use this delay to start the server after starting the test if you get classNotFoundException
         Logger.debug("Server starten!");
         try {
@@ -51,30 +52,7 @@ public class CreateSessionActivityTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        */
-
-        String etText = getTextOfEditText(onView(withId(R.id.pt_UserName)));
-
-        //enter a Name if empty
-        if(etText == "" || etText == null){
-            onView(withId(R.id.pt_UserName)).perform(typeText("Test-User"), ViewActions.closeSoftKeyboard());
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //navigate to MainActivity
-        onView(withId(R.id.btn_NameSelectEnter)).perform(forceClick());
-
-        //wait for server response
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+*/
     }
 
     @After
@@ -100,13 +78,27 @@ public class CreateSessionActivityTest {
             });
 
         } catch (NoServerInstanceException e) {
-            Logger.error(e.getMessage());
+            Logger.error(""+e.getMessage());
         }
     }
 
     @Test
-    public void test_navigate_MainActivity() {
-        //check MainActivity
+    public void test_with_input() {
+
+        //enter a Name
+        setTextOfEditText(onView(withId(R.id.pt_UserName)), "Test-User");
+
+        //navigate to MainActivity
+        onView(withId(R.id.btn_NameSelectEnter)).perform(forceClick());
+
+        //wait for server response
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //check navigation to MainActivity
         onView(withId(R.id.btn_navigate_create_session)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_navigate_join_session)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_BackToLobby)).check(matches(not(isDisplayed())));
@@ -116,58 +108,22 @@ public class CreateSessionActivityTest {
     }
 
     @Test
-    public void test_navigate_CreateSessionActivity() {
-        //navigate to CreateSessionActivity
-        onView(withId(R.id.btn_navigate_create_session)).perform(forceClick());
-
-        //check CreateSessionActivity
-        onView(withId(R.id.textView_instruction_sessionname)).check(matches(isDisplayed()));
-        onView(withId(R.id.editText_sessionname)).check(matches(isDisplayed()));
-        onView(withId(R.id.button_create_session)).check(matches(isDisplayed()));
-        onView(withId(R.id.textView_error)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.progressBar_JoinSessionActivity)).check(matches(not(isDisplayed())));
-    }
-
-    @Test
-    public void test_with_input() {
-        onView(withId(R.id.btn_navigate_create_session)).perform(forceClick());
-
-        //enter Sessionname
-        onView(withId(R.id.editText_sessionname)).perform(typeText("Test-Session"), ViewActions.closeSoftKeyboard());
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //click create session button
-        onView(withId(R.id.button_create_session)).perform(forceClick());
-        //onView(withId(R.id.textView_error)).check(matches(withText("Session created!")));
-
-        //wait for server response
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //check if lobby is displayed
-        onView(withId(R.id.tv_lobby_name)).check(matches(isDisplayed()));
-        onView(withId(R.id.tv_player_count)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_LeaveLobby)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_ready)).check(matches(isDisplayed()));
-        onView(withId(R.id.rv_lobby)).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void test_without_input() {
-        onView(withId(R.id.btn_navigate_create_session)).perform(forceClick());
 
-        //click create session button
-        onView(withId(R.id.button_create_session)).perform(forceClick());
+        String etText = getTextOfEditText(onView(withId(R.id.pt_UserName)));
+        Logger.debug("without_input_EditText: " + etText);
 
-        //check if textView_error is displayed with correct text
-        onView(withId(R.id.textView_error)).check(matches(withText("Choose a name for your game!")));
+        //clear Name
+        if (etText != "" || etText != null) {
+            setTextOfEditText(onView(withId(R.id.pt_UserName)), "");
+        }
+
+        //click select name button
+        onView(withId(R.id.btn_NameSelectEnter)).perform(forceClick());
+
+        //check if tv_Error is displayed with correct text
+        onView(withId(R.id.tv_Error)).check(matches(isDisplayed()));
+        onView(withId(R.id.tv_Error)).check(matches(withText("Bitte gib einen Namen ein!")));
     }
 
     public static ViewAction forceClick() {
@@ -215,6 +171,31 @@ public class CreateSessionActivityTest {
 
         } catch (Exception e) {
             return e.toString();
+        }
+    }
+
+    public static void setTextOfEditText(ViewInteraction vi, String text) {
+        try {
+            vi.perform(new ViewAction() {
+                @Override
+                public Matcher<View> getConstraints() {
+                    return isAssignableFrom(EditText.class);
+                }
+
+                @Override
+                public String getDescription() {
+                    return "set text";
+                }
+
+                @Override
+                public void perform(UiController uiController, View view) {
+                    EditText editText = (EditText) view;
+                    editText.setText(text);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
