@@ -35,7 +35,7 @@
         android:layout_marginBottom="8dp"
         android:text="@string/player_count"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_start_game"
+        app:layout_constraintEnd_toStartOf="@+id/btn_ready"
         app:layout_constraintStart_toEndOf="@+id/btn_LeaveLobby"
         app:layout_constraintTop_toBottomOf="@+id/rv_lobby" />
 
@@ -50,7 +50,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btn_start_game"
+        android:id="@+id/btn_ready"
         style="@style/PrimaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

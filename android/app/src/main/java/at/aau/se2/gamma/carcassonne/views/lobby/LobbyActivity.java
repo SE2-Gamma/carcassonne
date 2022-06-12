@@ -2,6 +2,7 @@ package at.aau.se2.gamma.carcassonne.views.lobby;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -19,13 +20,23 @@ import at.aau.se2.gamma.carcassonne.exceptions.NoServerInstanceException;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.GameStartedBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.GameTurnBroadCastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.KickAttemptBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerKickedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerNotReadyBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerReadyBroadcastCommand;
+
 import at.aau.se2.gamma.core.commands.KickPlayerCommand;
 import at.aau.se2.gamma.core.commands.LeaveLobbyCommand;
+import at.aau.se2.gamma.core.commands.PlayerNotReadyCommand;
+import at.aau.se2.gamma.core.commands.PlayerReadyCommand;
 import at.aau.se2.gamma.core.commands.RequestUserListCommand;
+import at.aau.se2.gamma.core.models.impl.GameObject;
 import at.aau.se2.gamma.core.utils.KickOffer;
 
 public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.RecyclerViewListener {
@@ -45,6 +56,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         Bundle extras = intent.getExtras();
         String gameKey = extras.getString("GameKey");
         String userName = extras.getString("UserName");
+        String userID = extras.getString("UserID");
         //Get Player List from Server
         sendServerCommand(new RequestUserListCommand(null), new ServerThread.RequestResponseHandler() {
             @Override
@@ -119,7 +131,58 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                             intent.putExtra("UserName", userName);
                             startActivity(intent);
                         }
+
+                    } else if(response.getPayload() instanceof GameStartedBroadcastCommand){
+                        GameObject gameobject = (GameObject) payload;
+                        startActivity(new Intent(LobbyActivity.this, Launcher.class).putExtra("GameKey", gameKey).putExtra("UserName", userName).putExtra("GameObject", gameobject).putExtra("UserID", userID));
+                    }else if(response.getPayload() instanceof PlayerXsTurnBroadcastCommand){
+                        //wenn jemand anderes am zug ist
+                        Log.i("LauncherGame", "jemand anderes ist nun an der Reihe, aber noch in lobby Empfangen");
+                    } else if(response.getPayload() instanceof YourTurnBroadcastCommand){
+                        Log.i("LauncherGame", "Spieler ist nun an der Reihe, aber noch in lobby Empfangen");
+
+
+                    }else if(response.getPayload() instanceof PlayerReadyBroadcastCommand){
+
+                        String readyPlayer = (String) payload;
+
+                        for (LobbyPlayerDisplay player:playerList) {
+                            if(player.playerName.equals(readyPlayer)){
+
+                                Log.d("Broadcast","Player "+player.playerName+" signals he is ready");
+                                player.setPlayerState(true);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyItemChanged(playerList.indexOf(player));
+                                    }
+                                });
+                            }
+                        }
+                    }else if(response.getPayload() instanceof PlayerNotReadyBroadcastCommand){
+
+                        String notReadyPlayer = (String) payload;
+
+                        for (LobbyPlayerDisplay player:playerList) {
+                            if(player.playerName.equals(notReadyPlayer)){
+
+                                Log.d("Broadcast","Player "+player.playerName+" signals he is not ready");
+                                player.setPlayerState(false);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyItemChanged(playerList.indexOf(player));
+                                    }
+                                });
+                            }
+                        }
+
                     }
+
+                    startIfPlayersReady();
+
                 }
 
                 @Override
@@ -131,11 +194,64 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
             e.printStackTrace();
         }
 
-        binding.btnStartGame.setOnClickListener(new View.OnClickListener() {
+        //TODO delete
+        binding.btnReady.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LobbyActivity.this, "Game started", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LobbyActivity.this, Launcher.class));
+                //old things to start libgdx view with the button
+                //Toast.makeText(LobbyActivity.this, "Game started", Toast.LENGTH_SHORT).show();
+                //startActivity(new Intent(LobbyActivity.this, Launcher.class).putExtra("GameKey", gameKey).putExtra("UserName", userName));
+
+                for (LobbyPlayerDisplay player:playerList) {
+
+                    if(player.playerName.equals(userName)&&!player.playerState){
+                        sendServerCommand(new PlayerReadyCommand(null), new ServerThread.RequestResponseHandler() {
+                            @Override
+                            public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                                Log.d("PInput","Player set ready");
+                                player.setPlayerState(true);
+                                startIfPlayersReady();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyItemChanged(playerList.indexOf(player));
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                                Log.d("PInput","Couldnt set ready");
+                            }
+
+                        });
+                        break;
+                    }else if(player.playerName.equals(userName)){
+                        sendServerCommand(new PlayerNotReadyCommand(null), new ServerThread.RequestResponseHandler() {
+                            @Override
+                            public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                                Log.d("PInput","Player set not ready");
+                                player.setPlayerState(false);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyItemChanged(playerList.indexOf(player));
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                                Log.d("PInput","Couldnt set not ready");
+                            }
+                        });
+                        break;
+                    }
+
+                }
+
             }
         });
 
@@ -221,5 +337,24 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
             startActivity(intent);
         }
 
+    }
+    private void startIfPlayersReady(){
+        boolean playersReady = true;
+
+        for (LobbyPlayerDisplay player:playerList) {
+
+            Log.d("PState",player.playerName);
+            Log.d("PState",player.playerState.toString());
+
+            if(!player.playerState){
+                playersReady=false;
+            }
+
+        }
+        Log.d("Players Debug",(playersReady)?"Players are ready":"Players are not ready");
+
+        //if(playersReady){
+            //startActivity(new Intent(LobbyActivity.this, Launcher.class));
+        //}
     }
 }

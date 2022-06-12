@@ -1,28 +1,16 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects;
 
-import android.graphics.fonts.Font;
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -36,26 +24,32 @@ public class Hud {
         PLAYING,
         ACCEPT_ACTION,
         CHEATING,
-        REPORTING
+        REPORTING,
+        PLACING_SOLDIER,
+        ACCEPT_PLACING_SOLDIER,
+        SCOREBOARD
     }
 
 
     private Gamescreen myGamescreen;
     private Stage stage;
     private Viewport viewport;
-    private String olddegubText = "";
     private SpriteBatch sb;
 
     private Hud_Item_TopText hudTopItem;
     private Hud_Item_CardPreview hudCardPreview;
     private Hud_Item_AcceptDeclineButtons accept_decline_buttons;
     private Hud_Item_ErrorText hud_errortext;
+    private Hud_Item_AcceptDeclineButtons accept_decline_buttons_soldiers;
+    private Hud_Item_ZeroSoldiersButton hud_ZeroSoldier_buttons;
 
-    private Skin skin;
     private Hud_State currentState;
+
+    private boolean debugging;
 
 
     public Hud(SpriteBatch sb, Gamescreen gs) {
+        debugging = false;
         myGamescreen = gs;
         this.currentState = Hud_State.VIEWING;
 
@@ -69,22 +63,15 @@ public class Hud {
         hudCardPreview = new Hud_Item_CardPreview();
         accept_decline_buttons = new Hud_Item_AcceptDeclineButtons();
         hud_errortext = new Hud_Item_ErrorText();
+        hud_ZeroSoldier_buttons = new Hud_Item_ZeroSoldiersButton();
+        accept_decline_buttons_soldiers = new Hud_Item_AcceptDeclineButtons();
 
         changeHudState(Hud_State.PLAYING);
 
+
     }
 
-    public void drawStage(String debugText) {
-
-        if (!debugText.equals(olddegubText)) {
-            //stage.clear();
-            //table.clear();
-            olddegubText = debugText;
-            hudTopItem.setStatusTextFirstRow(olddegubText);
-
-        }
-        hudTopItem.setStatusTextSecondRow("" + hudCardPreview.getCounter() + " | rotation " + hudCardPreview.getRotation());
-
+    public void drawStage() {
         stage.act();
         stage.draw();
     }
@@ -96,7 +83,6 @@ public class Hud {
             case PLAYING:
                 stage.clear();
 
-                stage.addActor(hudTopItem.getTable());
                 stage.addActor(hudCardPreview.getTable());
 
                 break;
@@ -104,24 +90,40 @@ public class Hud {
                 stage.clear();
                 break;
             case CHEATING:
+                stage.clear();
                 break;
             case REPORTING:
+                stage.clear();
                 break;
             case ACCEPT_ACTION:
                 stage.clear();
                 stage.addActor(accept_decline_buttons.getButtonTable());
                 break;
-        }
+            case PLACING_SOLDIER:
+                stage.clear();
+                stage.addActor(hud_ZeroSoldier_buttons.getButtonTable());
+                break;
+            case ACCEPT_PLACING_SOLDIER:
+                stage.clear();
+                stage.addActor(accept_decline_buttons_soldiers.getButtonTable());
+                break;
+            case SCOREBOARD:
+                stage.clear();
+                break;
 
+        }
+        stage.addActor(hudTopItem.getTable());
         stage.addActor(hud_errortext.getTable());
 
-        //button ui test
 
-        skin = new Skin(Gdx.files.internal("data/uiskin.json"));
-        final TextButton button = new TextButton("VIEWING", skin, "default");
-        final TextButton button2 = new TextButton("PLAYING", skin, "default");
-        final TextButton button3 = new TextButton("Acc./Dec.", skin, "default");
-        final TextButton button4 = new TextButton("ErrorTest", skin, "default");
+        if(debugging){
+
+
+        //button ui test
+        final TextButton button = new TextButton("VIEWING", UISkin.getSkin(), "default");
+        final TextButton button2 = new TextButton("PLAYING", UISkin.getSkin(), "default");
+        final TextButton button3 = new TextButton("Acc./Dec.", UISkin.getSkin(), "default");
+        final TextButton button4 = new TextButton("ErrorTest", UISkin.getSkin(), "default");
 
 
         //button.setWidth(1000f);
@@ -191,7 +193,7 @@ public class Hud {
 
             }
         });
-
+        }
 
     }
 
@@ -233,11 +235,40 @@ public class Hud {
         return accept_decline_buttons.getDeclineButton();
     }
 
+    public TextButton getAcceptButton_Soldiers() {
+        return accept_decline_buttons_soldiers.getAcceptButton();
+    }
+
+    public TextButton getDeclineButton_Soldiers() {
+        return accept_decline_buttons_soldiers.getDeclineButton();
+    }
+
+    public TextButton getNoSoldierButton() {
+        return hud_ZeroSoldier_buttons.getButton();
+    }
+
     public Hud_State getCurrentState() {
         return currentState;
     }
 
-    public void showErrorText() {
+    public void showErrorText(String text) {
+        hud_errortext.setErrorText(text);
+        hud_errortext.getTable().addAction(Actions.sequence(Actions.delay(3f), Actions.fadeOut(0.5f),Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                hud_errortext.setErrorText("");
+            }
+        }), Actions.alpha(1)));
+    }
+
+    public void showInfoText(String text){
+            hudTopItem.setStatusTextFirstRow(text);
+            hudTopItem.getTable().addAction(Actions.sequence(Actions.delay(3f), Actions.fadeOut(0.5f),Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                hudTopItem.setStatusTextFirstRow("");
+            }
+        }), Actions.alpha(1)));
 
     }
 }
