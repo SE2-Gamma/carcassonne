@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="LobbyTests" tests="12" skipped="0" failures="0" errors="0" timestamp="2022-05-27T20:02:20" hostname="LEONSPC" time="3.76">
+  <properties/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="0.266"/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="1.244"/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="0.214"/>
+  <testcase name="unexcpectedlyDisconnectFromLobby()" classname="LobbyTests" time="0.277"/>
+  <testcase name="testGameMapEntryWhitelist()" classname="LobbyTests" time="0.209"/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="0.221"/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="0.223"/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="0.22"/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="0.211"/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="0.226"/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="0.213"/>
+  <testcase name="repetition 1 of 1" classname="LobbyTests" time="0.221"/>
+  <system-out><![CDATA[192.168.56.1
+server running
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 0//  active players:1
+//1. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////2. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testrequestuserlist//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 586
+
+relieving lock
+new Player accepted
+ // uniqueID set: 1//  active players:2
+//9. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////10. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testrequestuserlist2//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 586
+
+relieving lock
+//17. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: testrequestuserlist//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//18. use of whitelist////at.aau.se2.gamma.core.commands.InitialJoinCommand resolved////startingstate: INITIAl////session found//  // players currently in lobby: [testrequestuserlist, testrequestuserlist2]////currentState: LOBBY////checking availability//Size of responseCommand in Bytes: 675//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 675//available,locking
+relieving lock
+//unlocking////message sentat.aau.se2.gamma.core.commands.InitialJoinCommand handeled.
+Size of responseCommand in Bytes: 604
+
+relieving lock
+//21. use of whitelist////at.aau.se2.gamma.core.commands.RequestUserListCommand resolved// //current state: LOBBY//  // players requested: [testrequestuserlist, testrequestuserlist2]//// current state: LOBBY// at.aau.se2.gamma.core.commands.RequestUserListCommand handeled.
+Size of responseCommand in Bytes: 671
+
+relieving lock
+//25. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testrequestuserlist2////removing player testrequestuserlist2//notifying testrequestuserlist2 he has been removed//checking availability//Size of responseCommand in Bytes: 678//available,locking
+relieving lock
+//unlocking////message sent//notifying all  testrequestuserlist2  has been removed//notified: testrequestuserlist//checking availability//Size of responseCommand in Bytes: 678//available,locking
+relieving lock
+//3. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////4. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////5. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////6. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////7. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////8. use of whitelist////java.lang.Enum resolved////11. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////12. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////13. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////14. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////15. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////16. use of whitelist////java.lang.Enum resolved////19. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////20. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////22. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////23. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////24. use of whitelist////java.util.LinkedList resolved//[]
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 678//available,locking
+relieving lock
+//unlocking////message sent//player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+//26. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testrequestuserlist////removing player testrequestuserlist//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 2//  active players:1
+//27. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////28. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: playerready//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 586
+
+relieving lock
+//35. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: playerready//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//36. use of whitelist////at.aau.se2.gamma.core.commands.PlayerReadyCommand resolved////playerreadytells he is ready////playerready is ready.////broadcasting////all players are ready. starting game////checking availability//Size of responseCommand in Bytes: 13811//available,locking
+relieving lock
+//unlocking////message sent//setting deck////deck set and shuffled.////N////M////W////U////E////P////T////Q////V////J////K////B////U////M////F////J////B////V////L////W////V////E////P////B////R////E////H////D////L////U////V////X////A////V////S////D////U////I////U////L////I////U////F////V////H////K////O////D////R////R////S////B////V////U////W////V////N////N////K////A////W////G////E////J////V////E////H////U////P////C////O////decksize: 71//
+//------------------Game playerready started--------------------------//
+
+at.aau.se2.gamma.core.commands.PlayerReadyCommand handeled.
+Size of responseCommand in Bytes: 600
+
+relieving lock
+// 1.: playerready ////a new iteration has started////its playerready's turn!//
+//card N drawn. remaining cards:70//N has been drawn////checking availability//Size of responseCommand in Bytes: 1629//available,locking
+relieving lock
+//55. use of whitelist////at.aau.se2.gamma.core.commands.GetClientStateCommand resolved////current State: GAME//at.aau.se2.gamma.core.commands.GetClientStateCommand handeled.
+Size of responseCommand in Bytes: 650
+
+relieving lock
+//29. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////30. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////31. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////32. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////33. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////34. use of whitelist////java.lang.Enum resolved////37. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.GameStartedBroadcastCommand resolved////38. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////39. use of whitelist////at.aau.se2.gamma.core.models.impl.GameObject resolved////40. use of whitelist////at.aau.se2.gamma.core.models.impl.GameMap resolved////41. use of whitelist////java.util.concurrent.ConcurrentLinkedDeque resolved////42. use of whitelist////[[Lat.aau.se2.gamma.core.models.impl.GameMapEntry; resolved////43. use of whitelist////[Lat.aau.se2.gamma.core.models.impl.GameMapEntry; resolved////44. use of whitelist////at.aau.se2.gamma.core.models.impl.GameMapEntry resolved////45. use of whitelist////at.aau.se2.gamma.core.models.impl.GameCard resolved////46. use of whitelist////[Lat.aau.se2.gamma.core.models.impl.GameCardSide; resolved////47. use of whitelist////at.aau.se2.gamma.core.models.impl.GameCardSide resolved////48. use of whitelist////[Lat.aau.se2.gamma.core.models.impl.GameCardSide$Type; resolved////49. use of whitelist////at.aau.se2.gamma.core.models.impl.GameCardSide$Type resolved////50. use of whitelist////at.aau.se2.gamma.core.models.impl.Orientation resolved////51. use of whitelist////at.aau.se2.gamma.core.models.impl.Player resolved////52. use of whitelist////at.aau.se2.gamma.core.models.impl.BaseModel resolved////53. use of whitelist////java.util.ArrayList resolved////54. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand resolved////56. use of whitelist////at.aau.se2.gamma.core.states.ClientState resolved//[]
+//57. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player playerready////stopping game////all players have been notified. //at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 3//  active players:1
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 4//  active players:2
+//58. use of whitelist////at.aau.se2.gamma.core.commands.GetClientStateCommand resolved////59. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////current State: INITIAl//at.aau.se2.gamma.core.commands.GetClientStateCommand handeled.
+Size of responseCommand in Bytes: 653
+
+relieving lock
+//60. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////61. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////62. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////63. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////64. use of whitelist////at.aau.se2.gamma.core.states.ClientState resolved////65. use of whitelist////java.lang.Enum resolved////66. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved//[]
+//67. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////player not yet instantiated////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 5//  active players:1
+//68. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////69. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: unexpectedlydisconnectfromlobby//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 586
+
+relieving lock
+new Player accepted
+ // uniqueID set: 6//  active players:2
+//76. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////77. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: unexdisc//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 586
+
+relieving lock
+//84. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: disconnectunexpectedly//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//85. use of whitelist////at.aau.se2.gamma.core.commands.InitialJoinCommand resolved////startingstate: INITIAl////session found//  // players currently in lobby: [unexpectedlydisconnectfromlobby, unexdisc]////currentState: LOBBY////checking availability//Size of responseCommand in Bytes: 663//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 663//available,locking
+relieving lock
+//unlocking////message sentat.aau.se2.gamma.core.commands.InitialJoinCommand handeled.
+Size of responseCommand in Bytes: 604
+
+relieving lock
+unexdisc disconnected unexpectedly.
+//checking availability//Size of responseCommand in Bytes: 666//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 666//available,locking
+relieving lock
+unexdisc's streams closed.
+//89. use of whitelist////at.aau.se2.gamma.core.commands.RequestUserListCommand resolved// //current state: LOBBY//  // players requested: [unexpectedlydisconnectfromlobby]//// current state: LOBBY// at.aau.se2.gamma.core.commands.RequestUserListCommand handeled.
+Size of responseCommand in Bytes: 660
+
+relieving lock
+//70. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////71. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////72. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////73. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////74. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////75. use of whitelist////java.lang.Enum resolved////78. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////79. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////80. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////81. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////82. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////83. use of whitelist////java.lang.Enum resolved//[Game Created, unexdisc, unexdisc, [unexpectedlydisconnectfromlobby]]
+//91. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player unexpectedlydisconnectfromlobby////removing player unexpectedlydisconnectfromlobby//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 7//  active players:1
+at.aau.se2.gamma.core.models.impl.GameMapEntry
+at.aau.se2.gamma.core.models.impl.GameCard$SpecialType
+//92. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////93. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: GameMapEntryTest//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 586
+
+relieving lock
+//94. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////95. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////96. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////97. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////98. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////99. use of whitelist////java.lang.Enum resolved//empty gameobject finished
+[]
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 8//  active players:1
+//100. use of whitelist////at.aau.se2.gamma.core.commands.GameTurnCommand resolved////101. use of whitelist////at.aau.se2.gamma.core.models.impl.GameObject resolved////102. use of whitelist////at.aau.se2.gamma.core.models.impl.GameMap resolved////103. use of whitelist////java.util.concurrent.ConcurrentLinkedDeque resolved////104. use of whitelist////[[Lat.aau.se2.gamma.core.models.impl.GameMapEntry; resolved////105. use of whitelist////[Lat.aau.se2.gamma.core.models.impl.GameMapEntry; resolved////106. use of whitelist////java.util.ArrayList resolved//at.aau.se2.gamma.core.commands.GameTurnCommand handeled.
+Size of responseCommand in Bytes: 729
+
+relieving lock
+//107. use of whitelist////at.aau.se2.gamma.core.models.impl.GameMapEntry resolved////108. use of whitelist////at.aau.se2.gamma.core.models.impl.GameCard resolved////109. use of whitelist////[Lat.aau.se2.gamma.core.models.impl.GameCardSide; resolved////110. use of whitelist////at.aau.se2.gamma.core.models.impl.GameCardSide resolved////111. use of whitelist////[Lat.aau.se2.gamma.core.models.impl.GameCardSide$Type; resolved////112. use of whitelist////at.aau.se2.gamma.core.models.impl.GameCardSide$Type resolved////113. use of whitelist////java.lang.Enum resolved////114. use of whitelist////at.aau.se2.gamma.core.models.impl.Orientation resolved////115. use of whitelist////at.aau.se2.gamma.core.models.impl.Player resolved////116. use of whitelist////at.aau.se2.gamma.core.models.impl.BaseModel resolved//at.aau.se2.gamma.core.commands.GameTurnCommand handeled.
+Size of responseCommand in Bytes: 729
+
+relieving lock
+//117. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player GameMapEntryTest////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+//118. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////119. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: leavelobby//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 586
+
+relieving lock
+new Player accepted
+ // uniqueID set: 9//  active players:2
+//126. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////127. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: leavelobby1//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 586
+
+relieving lock
+//134. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: leavelobby//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//135. use of whitelist////at.aau.se2.gamma.core.commands.InitialJoinCommand resolved////startingstate: INITIAl////session found//  // players currently in lobby: [leavelobby, leavelobby1]////currentState: LOBBY////checking availability//Size of responseCommand in Bytes: 666//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 666//available,locking
+relieving lock
+//unlocking////message sentat.aau.se2.gamma.core.commands.InitialJoinCommand handeled.
+Size of responseCommand in Bytes: 604
+
+relieving lock
+//136. use of whitelist////at.aau.se2.gamma.core.commands.LeaveLobbyCommand resolved////current State: LOBBY////Trying to leave lobby with ID leavelobby////removing player leavelobby1//notifying leavelobby1 he has been removed//checking availability//Size of responseCommand in Bytes: 669//available,locking
+relieving lock
+//unlocking////message sent//notifying all  leavelobby1  has been removed//notified: leavelobby//checking availability//Size of responseCommand in Bytes: 669//available,locking
+relieving lock
+//unlocking////message sentat.aau.se2.gamma.core.commands.LeaveLobbyCommand handeled.
+Size of responseCommand in Bytes: 608
+
+relieving lock
+//140. use of whitelist////at.aau.se2.gamma.core.commands.RequestUserListCommand resolved// //current state: LOBBY//  // players requested: [leavelobby]//// current state: LOBBY// at.aau.se2.gamma.core.commands.RequestUserListCommand handeled.
+Size of responseCommand in Bytes: 639
+
+relieving lock
+//142. use of whitelist////at.aau.se2.gamma.core.commands.LeaveLobbyCommand resolved////current State: LOBBY////Trying to leave lobby with ID leavelobby////removing player leavelobby//notifying leavelobby he has been removed//checking availability//Size of responseCommand in Bytes: 668//available,locking
+relieving lock
+//120. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////121. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////122. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////123. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////124. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////125. use of whitelist////java.lang.Enum resolved////128. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////129. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////130. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////131. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////132. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////133. use of whitelist////java.lang.Enum resolved////137. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////138. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////139. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand resolved////141. use of whitelist////java.util.LinkedList resolved//[]
+//143. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player leavelobby1////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+//unlocking////message sent//notifying all  leavelobby  has been removedno player left in session + leavelobby //
+//Session leavelobby removed////Sessionleavelobby deleted//at.aau.se2.gamma.core.commands.LeaveLobbyCommand handeled.
+Size of responseCommand in Bytes: 608
+
+relieving lock
+//144. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player leavelobby////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 10//  active players:1
+//145. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////146. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testinitialjoin//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+new Player accepted
+ // uniqueID set: 11//  active players:2
+//153. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////154. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testinitialjoin2//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+//161. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: testinitialjoin//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//162. use of whitelist////at.aau.se2.gamma.core.commands.InitialJoinCommand resolved////startingstate: INITIAl////session found//  // players currently in lobby: [testinitialjoin, testinitialjoin2]////currentState: LOBBY////checking availability//Size of responseCommand in Bytes: 671//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 671//available,locking
+relieving lock
+//unlocking////message sentat.aau.se2.gamma.core.commands.InitialJoinCommand handeled.
+Size of responseCommand in Bytes: 604
+
+relieving lock
+//167. use of whitelist////at.aau.se2.gamma.core.commands.GetClientStateCommand resolved////current State: LOBBY//at.aau.se2.gamma.core.commands.GetClientStateCommand handeled.
+Size of responseCommand in Bytes: 651
+
+relieving lock
+//169. use of whitelist////at.aau.se2.gamma.core.commands.GetClientStateCommand resolved////current State: LOBBY//at.aau.se2.gamma.core.commands.GetClientStateCommand handeled.
+Size of responseCommand in Bytes: 651
+
+relieving lock
+//171. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testinitialjoin2////removing player testinitialjoin2//notifying testinitialjoin2 he has been removed//checking availability//Size of responseCommand in Bytes: 674//available,locking
+relieving lock
+//147. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////148. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////149. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////150. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////151. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////152. use of whitelist////java.lang.Enum resolved////155. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////156. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////157. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////158. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////159. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////160. use of whitelist////java.lang.Enum resolved////163. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////164. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////165. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////166. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////168. use of whitelist////at.aau.se2.gamma.core.states.ClientState resolved////170. use of whitelist////at.aau.se2.gamma.core.states.ClientState resolved//[]
+//unlocking////message sent//notifying all  testinitialjoin2  has been removed//notified: testinitialjoin//checking availability//Size of responseCommand in Bytes: 674//available,locking
+relieving lock
+//172. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testinitialjoin////removing player testinitialjoin//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+//unlocking////message sent//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 12//  active players:1
+//173. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////174. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: leavinglastlobby//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+new Player accepted
+ // uniqueID set: 13//  active players:2
+//181. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////182. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: leavinglastlobby2//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+//189. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: leavinglastlobby//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//190. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl//session found//at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 748
+
+relieving lock
+//194. use of whitelist////at.aau.se2.gamma.core.commands.LeaveLobbyCommand resolved////current State: LOBBY////Trying to leave lobby with ID leavinglastlobby////removing player leavinglastlobby//notifying leavinglastlobby he has been removed//checking availability//Size of responseCommand in Bytes: 674//available,locking
+relieving lock
+//unlocking////message sent//notifying all  leavinglastlobby  has been removedno player left in session + leavinglastlobby //
+//Session leavinglastlobby removed////Sessionleavinglastlobby deleted//at.aau.se2.gamma.core.commands.LeaveLobbyCommand handeled.
+Size of responseCommand in Bytes: 608
+
+relieving lock
+  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: leavinglastlobby//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//195. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player leavinglastlobby2////removing player leavinglastlobby2//notifying leavinglastlobby2 he has been removed//checking availability//Size of responseCommand in Bytes: 675//available,locking
+relieving lock
+//unlocking////message sent//notifying all  leavinglastlobby2  has been removedno player left in session + leavinglastlobby //
+//175. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////176. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////177. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////178. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////179. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////180. use of whitelist////java.lang.Enum resolved////183. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////184. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////185. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////186. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////187. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////188. use of whitelist////java.lang.Enum resolved////191. use of whitelist////at.aau.se2.gamma.core.commands.error.ErrorCommand resolved////192. use of whitelist////java.util.LinkedList resolved////193. use of whitelist////at.aau.se2.gamma.core.commands.error.Codes$ERROR resolved//[]
+//Session leavinglastlobby removed////Sessionleavinglastlobby deleted////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+//196. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player leavinglastlobby////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 14//  active players:1
+//197. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////198. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: storm//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+//205. use of whitelist////at.aau.se2.gamma.core.commands.GetClientStateCommand resolved////current State: INITIAl//at.aau.se2.gamma.core.commands.GetClientStateCommand handeled.
+Size of responseCommand in Bytes: 653
+
+relieving lock
+//199. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////200. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////201. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////202. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////203. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////204. use of whitelist////java.lang.Enum resolved////206. use of whitelist////at.aau.se2.gamma.core.states.ClientState resolved//[]
+//207. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player storm////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 15//  active players:1
+//208. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////209. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testkick1//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+new Player accepted
+ // uniqueID set: 16//  active players:2
+//216. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////217. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testkick2//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+new Player accepted
+ // uniqueID set: 17//  active players:3
+//224. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////225. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testkick3//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+new Player accepted
+ // uniqueID set: 18//  active players:4
+//232. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////233. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testkick4//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+new Player accepted
+ // uniqueID set: 19//  active players:5
+//240. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////241. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testkick5//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+//248. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: testkick//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//249. use of whitelist////at.aau.se2.gamma.core.commands.InitialJoinCommand resolved////startingstate: INITIAl////session found//  // players currently in lobby: [testkick1, testkick2]////currentState: LOBBY////checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sentat.aau.se2.gamma.core.commands.InitialJoinCommand handeled.
+Size of responseCommand in Bytes: 604
+
+relieving lock
+//252. use of whitelist////at.aau.se2.gamma.core.commands.InitialJoinCommand resolved////startingstate: INITIAl////session found//  // players currently in lobby: [testkick1, testkick2, testkick3]////currentState: LOBBY////checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sentat.aau.se2.gamma.core.commands.InitialJoinCommand handeled.
+Size of responseCommand in Bytes: 604
+
+relieving lock
+//255. use of whitelist////at.aau.se2.gamma.core.commands.InitialJoinCommand resolved////startingstate: INITIAl////session found//  // players currently in lobby: [testkick1, testkick2, testkick3, testkick4]////currentState: LOBBY////checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sentat.aau.se2.gamma.core.commands.InitialJoinCommand handeled.
+Size of responseCommand in Bytes: 604
+
+relieving lock
+//258. use of whitelist////at.aau.se2.gamma.core.commands.InitialJoinCommand resolved////startingstate: INITIAl////session found//  // players currently in lobby: [testkick1, testkick2, testkick3, testkick4, testkick5]////currentState: LOBBY////checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 664//available,locking
+relieving lock
+//unlocking////message sentat.aau.se2.gamma.core.commands.InitialJoinCommand handeled.
+Size of responseCommand in Bytes: 604
+
+relieving lock
+//263. use of whitelist////at.aau.se2.gamma.core.commands.RequestUserListCommand resolved// //current state: LOBBY//  // players requested: [testkick1, testkick2, testkick3, testkick4, testkick5]//// current state: LOBBY// at.aau.se2.gamma.core.commands.RequestUserListCommand handeled.
+Size of responseCommand in Bytes: 686
+
+relieving lock
+//210. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////211. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////212. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////213. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////214. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////215. use of whitelist////java.lang.Enum resolved////218. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////219. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////220. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////221. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////222. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////223. use of whitelist////java.lang.Enum resolved////226. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////227. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////228. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////229. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////230. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////231. use of whitelist////java.lang.Enum resolved////234. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////235. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////236. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////237. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////238. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////239. use of whitelist////java.lang.Enum resolved////242. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////243. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////244. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////245. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////246. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////247. use of whitelist////java.lang.Enum resolved////250. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////251. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////253. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////254. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////256. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////257. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////259. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////260. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////261. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCommand resolved////262. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand resolved////264. use of whitelist////java.util.LinkedList resolved//starting kick attempt
+//265. use of whitelist////at.aau.se2.gamma.core.commands.KickPlayerCommand resolved////attempting to kick////finding player////player found////session issue kickvote////session finding player////session player found////session finding preexisting kickoffer////preixisting kickoffers:[]////session creating kickvote////voting to kick player testkick5//1 out of 2 to kick////checking availability//Size of responseCommand in Bytes: 1187//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1187//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1187//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1187//available,locking
+relieving lock
+//unlocking////message sent//not enough votes to kick//
+at.aau.se2.gamma.core.commands.KickPlayerCommand handeled.
+Size of responseCommand in Bytes: 596
+
+relieving lock
+//267. use of whitelist////at.aau.se2.gamma.core.commands.KickPlayerCommand resolved////attempting to kick////finding player////player found////session issue kickvote////session finding player////session player found////session finding preexisting kickoffer////preixisting kickoffers:[at.aau.se2.gamma.core.utils.KickOffer@5d0aa97]////session found a kickoffer////found a kickoffer////voting to kick player testkick5//2 out of 2 to kick////checking availability//Size of responseCommand in Bytes: 1210//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1210//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1210//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1210//available,locking
+relieving lock
+//unlocking////message sent//not enough votes to kick//
+at.aau.se2.gamma.core.commands.KickPlayerCommand handeled.
+Size of responseCommand in Bytes: 596
+
+relieving lock
+//266. use of whitelist////at.aau.se2.gamma.core.commands.KickPlayerCommand resolved////attempting to kick////finding player////player found////session issue kickvote////session finding player////session player found////session finding preexisting kickoffer////preixisting kickoffers:[at.aau.se2.gamma.core.utils.KickOffer@5d0aa97]////session found a kickoffer////found a kickoffer////voting to kick player testkick5//3 out of 2 to kick////checking availability//Size of responseCommand in Bytes: 1234//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1234//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1234//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1234//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 1234//available,locking
+relieving lock
+//unlocking////message sent//removing player testkick5//notifying testkick5 he has been removed//checking availability//Size of responseCommand in Bytes: 667//available,locking
+relieving lock
+//unlocking////message sent//notifying all  testkick5  has been removed//notified: testkick1//notified: testkick2//notified: testkick3//notified: testkick4//checking availability//Size of responseCommand in Bytes: 667//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 667//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 667//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 667//available,locking
+relieving lock
+ //current state: LOBBY//  // players requested: [testkick1, testkick2, testkick3, testkick4]//// current state: LOBBY// at.aau.se2.gamma.core.commands.RequestUserListCommand handeled.
+//unlocking////message sent//player kicked//
+at.aau.se2.gamma.core.commands.KickPlayerCommand handeled.
+Size of responseCommand in Bytes: 674
+
+relieving lock
+Size of responseCommand in Bytes: 596
+
+relieving lock
+//268. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.KickAttemptBroadcastCommand resolved////269. use of whitelist////at.aau.se2.gamma.core.utils.KickOffer resolved////270. use of whitelist////at.aau.se2.gamma.core.models.impl.Player resolved////271. use of whitelist////at.aau.se2.gamma.core.models.impl.BaseModel resolved////272. use of whitelist////java.util.concurrent.atomic.AtomicInteger resolved////273. use of whitelist////java.lang.Number resolved////274. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerKickedBroadcastCommand resolved////275. use of whitelist////at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand resolved//[testkick1, testkick2, testkick3, testkick4]
+//276. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testkick2////removing player testkick2//notifying testkick2 he has been removed//checking availability//Size of responseCommand in Bytes: 667//available,locking
+relieving lock
+//unlocking////message sent//notifying all  testkick2  has been removed//notified: testkick1//notified: testkick3//notified: testkick4//checking availability//Size of responseCommand in Bytes: 667//available,locking
+relieving lock
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 667//available,locking
+relieving lock
+[]
+//unlocking////message sent//checking availability//Size of responseCommand in Bytes: 667//available,locking
+//279. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testkick5////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+relieving lock
+stopped
+//277. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testkick3////removing player testkick3//notifying testkick3 he has been removed//checking availability//Size of responseCommand in Bytes: 667//available,locking
+//278. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testkick4////removing player testkick4//notifying testkick4 he has been removed//checking availability//Size of responseCommand in Bytes: 667//available,locking.
+relieving lock
+relieving lock
+//280. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testkick1////removing player testkick1//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+//unlocking////message sent//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+//unlocking////message sent//notifying all  testkick4  has been removed//notified: testkick1//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+//unlocking////message sent//notifying all  testkick3  has been removed//notified: testkick1//notified: testkick4//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+stopped
+stopped
+testkick3's streams closed.
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 20//  active players:1
+//281. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////282. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testclientstate//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+//289. use of whitelist////at.aau.se2.gamma.core.commands.GetClientStateCommand resolved////current State: INITIAl//at.aau.se2.gamma.core.commands.GetClientStateCommand handeled.
+Size of responseCommand in Bytes: 653
+
+relieving lock
+//291. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: testclientstate//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//current State: LOBBY//at.aau.se2.gamma.core.commands.GetClientStateCommand handeled.
+Size of responseCommand in Bytes: 651
+
+relieving lock
+//283. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////284. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////285. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////286. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////287. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////288. use of whitelist////java.lang.Enum resolved////290. use of whitelist////at.aau.se2.gamma.core.states.ClientState resolved//[]
+//292. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testclientstate////removing player testclientstate//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+TEST: creating a testplayer
+new Player accepted
+ // uniqueID set: 21//  active players:1
+//293. use of whitelist////at.aau.se2.gamma.core.commands.InitialSetNameCommand resolved////294. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved// //current state: INITIAl//  //set name: testcreatelobby//
+// serverplayer set////player added to archive//// current state: INITIAl// at.aau.se2.gamma.core.commands.InitialSetNameCommand handeled.
+Size of responseCommand in Bytes: 587
+
+relieving lock
+//301. use of whitelist////at.aau.se2.gamma.core.commands.CreateGameCommand resolved//  current state: INITIAl   //Session created// //current state: LOBBY// //SessionID: testcreatelobby//  at.aau.se2.gamma.core.commands.CreateGameCommand handeled.
+Size of responseCommand in Bytes: 597
+
+relieving lock
+//295. use of whitelist////at.aau.se2.gamma.core.commands.ServerResponseCommand resolved////296. use of whitelist////at.aau.se2.gamma.core.commands.BaseCommand resolved////297. use of whitelist////at.aau.se2.gamma.core.ServerResponse resolved////298. use of whitelist////at.aau.se2.gamma.core.commands.PayloadResponseCommand resolved////299. use of whitelist////at.aau.se2.gamma.core.ServerResponse$StatusCode resolved////300. use of whitelist////java.lang.Enum resolved//[]
+//302. use of whitelist////at.aau.se2.gamma.core.commands.DisconnectCommand resolved////todo: disconnect player testcreatelobby////removing player testcreatelobby//Player already disconnected////player successfully removed//at.aau.se2.gamma.core.commands.DisconnectCommand handeled.
+stopped
+serversocket closed intentionally
+]]></system-out>
+  <system-err><![CDATA[//-----------------------------------------Disconnect initiated added to responses--------------------------------------------/
+-------------------------------------------------------------------testing----------------------------
+-------------------------------------------------------------------testing----------------------------
+youre not ingame
+youre not ingame
+-------------------------------------------------------------------testing----------------------------
+-------------------------------------------------------------------testing----------------------------
+Spiel bereits vorhanden
+Server bereits vorhanden
+-------------------------------------------------------------------testing----------------------------
+-------------------------------------------------------------------testing----------------------------
+-------------------------------------------------------------------testing----------------------------
+-------------------------------------------------------------------testing----------------------------
+]]></system-err>
+</testsuite>
