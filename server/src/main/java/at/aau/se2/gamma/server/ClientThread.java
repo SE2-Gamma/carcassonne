@@ -262,7 +262,7 @@ public class ClientThread extends Thread {
         } catch (NoSuchElementException e) {
             return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
         }
-        clientState=ClientState.INITIAl;
+        clientState = ClientState.INITIAl;
         return ResponseCreator.getSuccess(command,"Game Successfully left.");
         //todo:
         //check if ingame

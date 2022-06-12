@@ -31,6 +31,13 @@ public class GameStatistic implements Serializable {
         this.players.remove(player);
     }
 
+    public void applyEndDetectionData(ArrayList<ClosedFieldDetectionData> endData) {
+        for(ClosedFieldDetectionData data: endData) {
+            data.setEndGameData(true);
+            applyClosedFieldDetectionData(data);
+        }
+    }
+
     public Soldier getSoldierBySoldierData(SoldierData data) {
         Soldier soldier = null;
         for (Player player : players
@@ -105,7 +112,40 @@ public class GameStatistic implements Serializable {
 
         // add points to the right players
         for(Player player: winningPlayers) {
-            player.addPlayerPoints(closedFieldDetectionData.getPoints());
+            if (closedFieldDetectionData.isEndGameData()) {
+                if (closedFieldDetectionData.isGrasType()) {
+                    player.addPlayerPoints(closedFieldDetectionData.getDetectedCastles().size()*3);
+                } else if (closedFieldDetectionData.isMonasteryType()) {
+                    player.addPlayerPoints(closedFieldDetectionData.getGameCards().size());
+                } else {
+                    for(GameCard gameCard: closedFieldDetectionData.getGameCards()) {
+                        int multiplier = 0;
+                        for(GameCardSide side: closedFieldDetectionData.getGameCardSides()) {
+                            for (GameCardSide currentCardSide: gameCard.getNeswmSides()) {
+                                if (currentCardSide == side && side.getMultiplier() > 1) {
+                                    multiplier++;
+                                }
+                            }
+                        }
+                        player.addPlayerPoints(1+multiplier);
+                    }
+                }
+            } else {
+                for(GameCard gameCard: closedFieldDetectionData.getGameCards()) {
+                    int multiplier = 1;
+                    int points = 0;
+                    for(GameCardSide side: closedFieldDetectionData.getGameCardSides()) {
+                        for (GameCardSide currentCardSide: gameCard.getNeswmSides()) {
+                            if (currentCardSide == side) {
+                                points = side.getPoints();
+                                multiplier *= side.getMultiplier();
+                            }
+                        }
+                    }
+                    player.addPlayerPoints(points*multiplier);
+                }
+                //player.addPlayerPoints(closedFieldDetectionData.getPoints());
+            }
         }
     }
 }

@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
@@ -59,9 +61,9 @@ public class LibgdxHudTest {
             gc = new GameCard(myTexture,position, Mockito.mock(GameMapEntry.class));
 
             firstMap = new GameMap();
-            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap, true);
+            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap, true, new ArrayList<>());
 
-            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap, true);
+            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap, true, new ArrayList<>());
             Mockito.doNothing().when(sb).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
 
             //Viewport myViewport = Mockito.mock(ScreenViewport.class);

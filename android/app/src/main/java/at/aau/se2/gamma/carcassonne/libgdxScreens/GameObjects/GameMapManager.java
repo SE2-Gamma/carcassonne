@@ -35,7 +35,7 @@ public class GameMapManager {
     private boolean drawSoldiers;
 
 
-    public GameMapManager(OrthographicCamera playercam, Viewport gameviewport, SpriteBatch batch, GameMap initialGameMap, boolean drawSoldiers) {
+    public GameMapManager(OrthographicCamera playercam, Viewport gameviewport, SpriteBatch batch, GameMap initialGameMap, boolean drawSoldiers, ArrayList<Player> playerlist) {
         this.drawSoldiers = drawSoldiers;
         //Texture errorTexture = new Texture("testTexture.jpg");
         this.playercam = playercam;
@@ -47,7 +47,7 @@ public class GameMapManager {
         currentGameMap = initialGameMap;
         //for Unit Tests, because i have no idea how to Mock all the opengl calls
         if(drawSoldiers){
-            solTextures = new SoldierTextures();
+            solTextures = new SoldierTextures(playerlist);
         }
         setGameMap(currentGameMap);
 
@@ -302,30 +302,7 @@ public class GameMapManager {
     }
 
     public void setGameMap(GameMap newGameMap){
-       if(drawSoldiers){
-           ArrayList<String> playerlist = new ArrayList<>();
-           for (int j = 0; j < Playingfield.length; j++) {
-               for (int i = 0; i < Playingfield[j].length; i++) {
-                   if(Playingfield[j][i] != null && Playingfield[j][i].getGameMapEntry().getPlacedByPlayer() != null){
-                       if(!playerlist.contains(Playingfield[j][i].getGameMapEntry().getPlacedByPlayer().getId())){
-                           playerlist.add(Playingfield[j][i].getGameMapEntry().getPlacedByPlayer().getId());
-                       }
-                   }
-               }
-           }
-           boolean reset = false;
-           for(String p : playerlist){
-               if(!solTextures.getPlayerList().contains(p)){
-                   reset = true;
-               }
-           }
 
-           if(playerlist.size() != solTextures.getNumberOfAddedPlayers() || reset){
-
-               solTextures.resetSolierTextureOrder();
-           }
-
-       }
         currentGameMap = newGameMap;
         GameCardTextures CardTextures = null;
         if(drawSoldiers){
@@ -486,7 +463,7 @@ public class GameMapManager {
         //batch.dispose();
         // shaperender.dispose();
         if(drawSoldiers){
-            solTextures.disposeTexutres();
+            solTextures.disposeTextures();
         }
 
     }
