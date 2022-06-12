@@ -1,6 +1,7 @@
 package at.aau.se2.gamma.core;
 
 import java.io.*;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
     public SecureObjectInputStream(InputStream in) throws IOException {
         super(in);
     }
+
     static LinkedList<String>allowedClasses=new LinkedList<>();
     private static boolean instantiated=false;
     static void initialise(){
@@ -117,6 +119,8 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(GameMapHandler.class.getName());
             allowedClasses.add(GameStatistic.class.getName());
             allowedClasses.add(GameState.class.getName());
+            allowedClasses.add(CheatData.class.getName());
+            allowedClasses.add(SoldierData.class.getName());
 
 
             allowedClasses.add(java.lang.StackTraceElement.class.getName());
@@ -152,6 +156,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
 
     static AtomicInteger counter=new AtomicInteger(0);
 
+
     @Override
     protected Class<?> resolveClass(ObjectStreamClass osc) throws IOException, ClassNotFoundException {
         // Only deserialize instances of AllowedClass
@@ -168,6 +173,5 @@ public class SecureObjectInputStream extends ObjectInputStream {
 
        System.err.println(osc.getName()+" not resolved");
        throw new ClassNotFoundException("Illegal Class sent: "+osc.getName());
-
     }
 }

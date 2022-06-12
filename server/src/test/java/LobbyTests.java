@@ -27,7 +27,7 @@ public class LobbyTests {
     private ObjectOutputStream objectOutputStream;
     private SecureObjectInputStream objectInputStream;
     Socket socket;
-    static final int numberofruns=50
+    static final int numberofruns=1
             ;
     public  LinkedList<Object>returncommands=new LinkedList<>();
     ResponseConsumer responseConsumer=null;

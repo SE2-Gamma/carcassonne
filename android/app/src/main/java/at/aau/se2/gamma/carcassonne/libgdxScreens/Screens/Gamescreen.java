@@ -24,7 +24,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
+import at.aau.se2.gamma.carcassonne.AndroidInterface;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.CheatMoveSoldierPosition;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCardTextures;
@@ -34,6 +36,7 @@ import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.SoldierTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.UISkin;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Utility.InputCalculations;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
+import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveBroadcastCommand;
@@ -46,12 +49,14 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand
 import at.aau.se2.gamma.core.commands.CheatCommand;
 import at.aau.se2.gamma.core.commands.DetectCheatCommand;
 import at.aau.se2.gamma.core.commands.GameTurnCommand;
+import at.aau.se2.gamma.core.commands.LeaveGameCommand;
 import at.aau.se2.gamma.core.exceptions.CheatMoveImpossibleException;
 import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
 import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
 import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
 import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
+import at.aau.se2.gamma.core.models.impl.CheatData;
 import at.aau.se2.gamma.core.models.impl.CheatMove;
 import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMapEntry;
@@ -62,6 +67,7 @@ import at.aau.se2.gamma.core.models.impl.GameStatistic;
 import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Soldier;
+import at.aau.se2.gamma.core.models.impl.SoldierData;
 import at.aau.se2.gamma.core.models.impl.SoldierPlacement;
 
 public class Gamescreen extends ScreenAdapter implements GestureDetector.GestureListener {
@@ -126,11 +132,18 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     private Soldier touchedSoldier;
 
 
+    AndroidInterface androidInterface;
+    String userName;
+    String userID;
 
-    public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject){
+    public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
         touchedSoldier = null;
         currentCheatMove = null;
         selectedCheatingSoldier = null;
+        this.androidInterface = androidInterface;
+        this.userName = userName;
+        this.userID = UserID;
+
         currentGameObject = initialGameObject;
         for(Player p : currentGameObject.getGameStatistic().getPlayers()){
             if(p.getId().equals(UserID) && p.getName().equals(userName)){
@@ -164,13 +177,13 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         camPanGesture = new Vector2();
 
         //loading all gameCard Textures
-        CardTextures.getInstance();
+        CardTextures = CardTextures.getInstance();
 
         //error Texture for Testing
         errorTextur = new Texture("testTexture.jpg");
 
         //setting up playable area / map
-        myMap = new GameMapManager(playercam, gameviewport, batch, currentGameObject.getGameMap(), true);
+        myMap = new GameMapManager(playercam, gameviewport, batch, currentGameObject.getGameMap(), true, currentGameObject.getGameStatistic().getPlayers());
 
         playedCard_x = 0;
         playedCard_y = 0;
@@ -210,7 +223,9 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     hud.changeHudState(Hud.Hud_State.PLACING_SOLDIER);
                 }else {
                     hud.changeHudState(Hud.Hud_State.VIEWING);
+
                     GameMove gm = new GameMove(myPlayerID, lastCard.getGameMapEntry(), new GameMapEntryPosition(playedCard_x, playedCard_y));
+
                     ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
                         @Override
                         public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -250,6 +265,9 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 hud.changeHudState(Hud.Hud_State.VIEWING);
                 GameMove gm = new GameMove(myPlayerID, lastCard.getGameMapEntry(), new GameMapEntryPosition(playedCard_x, playedCard_y));
                 gm.getGameMapEntry().getSoldierPlacements().get(0).setSoldier(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier());
+                gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setX(playedCard_x);
+                gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setY(playedCard_y);
+                gm.setSoldierData(gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getData());
                 ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -316,11 +334,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
             }
         });
-
-
-        //temp zeugs für testing
-        //camPos = new Vector2(0f*144f,0f*144f);
-        //myMap.setGamecard(3,1, new GameCard(getTextureFromCardID(starterCard.getCardId()), new Vector2(3f*144f,1f*144f), starterCard));
 
         ServerThread.instance.setBroadcastHandler(myBroadCastHandler);
 
@@ -467,14 +480,14 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     Log.d("sensor", "shake detected w/ speed: " + speed);
                     hud.showErrorText(""+speed);
                     //do things after smartphone was shaken
-                    ServerThread.instance.sendCommand(new CheatCommand(currentCheatMove), new ServerThread.RequestResponseHandler() {
-                        @Override
-                        public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                            String responseString = (String) payload;
-                            Log.i("LauncherGame", responseString);
-                            //if(!responseString.equals("sucessfull")){
-                                hud.showErrorText(responseString);
-                            //}
+                    ServerThread.instance.sendCommand(new CheatCommand(currentCheatMove.getData()), new ServerThread.RequestResponseHandler() {
+                                @Override
+                                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                                    String responseString = (String) payload;
+                                    Log.i("LauncherGame", responseString);
+                                    //if(!responseString.equals("sucessfull")){
+                                    hud.showErrorText(responseString);
+                                    //}
 
                         }
 
@@ -495,7 +508,30 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 hud.showErrorText("BRUHHH NO Gyroscope YIKES");
             }
         }
+
+        Gdx.input.setCatchBackKey(true);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            Log.d("GameScreen: Render", "isKeyPressed");
+            ServerThread.instance.sendCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
+                @Override
+                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                    dispose();
+                    androidInterface.makeToast("You left the game!");
+                    Log.d("UserName", userName);
+                    Log.d("UserID", userID);
+                    androidInterface.startMainActivity();
+                }
+
+                @Override
+                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                    Log.d("LeaveGameCommand", "onFailure");
+                    androidInterface.makeToast("Something went wrong!");
+                }
+            });
+        }
     }
+
 
     @Override
     public void resize(int width, int height) {
@@ -507,8 +543,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     public void dispose() {
         myfont.dispose();
         batch.dispose();
-        CardTextures.disposeTexutres();
-        shaprenderer.dispose();
+        CardTextures.disposeTextures();
         hud.dispose();
         myMap.dispose();
         UISkin.disposeSkin();
@@ -621,7 +656,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                             super.clicked(event, x, y);
                             hud.changeHudState(Hud.Hud_State.REPORTING);
                             Log.i("REPORT", touchedSoldier.getX()+"|"+touchedSoldier.getY());
-                            ServerThread.instance.sendCommand(new DetectCheatCommand(touchedSoldier), new ServerThread.RequestResponseHandler() {
+                            ServerThread.instance.sendCommand(new DetectCheatCommand(touchedSoldier.getData()), new ServerThread.RequestResponseHandler() {
                                 @Override
                                 public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                                     String responseString = (String) payload;
@@ -800,6 +835,15 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 //nach einen zug
                 //currentGameObject = (GameObject) payload;
                 GameMove gm = (GameMove) payload;
+                gm.setSoldierData(gm.getSoldierData());
+                if(gm.getSoldierData()==null){
+                    gm.changeToServerInstance(new ConcurrentLinkedDeque<>(currentGameObject.getGameStatistic().getPlayers()), currentGameObject.getGameMap());
+
+                }else{
+                    gm.changeToServerInstance(new ConcurrentLinkedDeque<>(currentGameObject.getGameStatistic().getPlayers()), currentGameObject.getGameMap(),gm.getSoldierData());
+
+                }
+
                 try {
                     currentGameObject.getGameMap().executeGameMove(gm);
                 } catch (Exception e) {
@@ -832,7 +876,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 Log.i("LauncherGame", "Spieler ist nun an der Reihe");
                 at.aau.se2.gamma.core.models.impl.GameCard gm = (at.aau.se2.gamma.core.models.impl.GameCard) payload;
                 GameMapEntry gme = new GameMapEntry(gm, myPlayerID);
-                currentGameCard = new GameCard(GameCardTextures.getInstance().getTextureFromCardID(gm.getCardId()), new Vector2(0,0), gme);
+                currentGameCard = new GameCard(CardTextures.getTextureFromCardID(gm.getCardId()), new Vector2(0,0), gme);
                 hud.setNextCardTexture(currentGameCard.getGameCardTexture());
 
                 if(hud.getCurrentState().equals(Hud.Hud_State.VIEWING)){
@@ -844,24 +888,31 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 hud.setMyTurn(true);
                 myTurn = true;
 
-                //at.aau.se2.gamma.core.models.impl.GameMapEntry newCardFromDeck = new GameMapEntry(CardDeck.get((int)(Math.random()*20)), myPlayerID, Orientation.NORTH);
-                //currentGameCard = new GameCard(CardTextures.getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0),270f,newCardFromDeck);
-
                 //hud.setNextCardTexture(currentGameCard.getGameCardTexture());
             }else if(response.getPayload() instanceof FieldCompletedBroadcastCommand){
                 currentGameObject.setGameStatistic((GameStatistic) payload);
                 hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
             }else if(response.getPayload() instanceof CheatMoveBroadcastCommand){
+                 CheatMove cheatMove=CheatMove.getMoveFromData((CheatData) payload,currentGameObject);
                 Log.i("Reported", "GOT RESPONCE FROM SERVER for CHEATING");
                 try {
-                    currentGameObject.getGameMap().executeCheatMove((CheatMove) payload);
+
+
+                    currentGameObject.getGameMap().executeCheatMove(cheatMove);
                     myMap.setGameMap(currentGameObject.getGameMap());
                 } catch (CheatMoveImpossibleException e) {
                     e.printStackTrace();
                 }
             }else if(response.getPayload() instanceof CheatMoveDetectedBroadcastCommand){
                 Log.i("Reported", "GOT RESPONCE FROM SERVER for CHEATING");
-                currentGameObject.getGameMap().undoCheatMove((LinkedList<CheatMove>) payload);
+                LinkedList<CheatData>cheatData=(LinkedList<CheatData>) payload;
+                LinkedList<CheatMove>moves=new LinkedList<>();
+                for (int i = 0; i <cheatData.size(); i++) {
+                    moves.add(CheatMove.getMoveFromData(cheatData.get(i),currentGameObject));
+
+                }
+
+                currentGameObject.getGameMap().undoCheatMove(moves);
                 myMap.setGameMap(currentGameObject.getGameMap());
             }
 

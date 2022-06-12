@@ -1,5 +1,6 @@
 import at.aau.se2.gamma.core.SecureObjectInputStream;
 import at.aau.se2.gamma.core.commands.DisconnectCommand;
+import at.aau.se2.gamma.core.models.impl.GameObject;
 import at.aau.se2.gamma.core.utils.ServerResponseDecrypter;
 
 import java.io.EOFException;
@@ -50,7 +51,15 @@ public class TestSocket {
     public void setID(String id) {
         this.id=id;
     }
-
+    public GameObject getGameObject(){
+        for (Object o:returncommands
+        ) {
+            if(o instanceof GameObject){
+                return (GameObject) o;
+            }
+        }
+        return null;
+    }
     public class ResponseConsumer extends Thread{
 
         boolean running=true;

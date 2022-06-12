@@ -21,6 +21,7 @@ public class ResponseCreator {
 
     }
     static public ServerResponseCommand getSuccess(BaseCommand command, Object payload){
+        System.out.print("//success! payload: "+payload.toString()+"//");
         return new ServerResponseCommand(ServerResponse.success(new PayloadResponseCommand(payload)), command.getRequestId());
     }
 

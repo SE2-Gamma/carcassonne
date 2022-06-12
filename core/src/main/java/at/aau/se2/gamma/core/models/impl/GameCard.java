@@ -86,6 +86,10 @@ public class GameCard implements Serializable {
         return neswSides;
     }
 
+    public GameCardSide[] getNeswmSides() {
+        return new GameCardSide[]{sideNorth, sideEast, sideSouth, sideWest, sideMid};
+    }
+
     public GameCardSide getSideMid() {
         return sideMid;
     }

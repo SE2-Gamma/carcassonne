@@ -43,7 +43,6 @@ public class Hud {
     private Gamescreen myGamescreen;
     private Stage stage;
     private Viewport viewport;
-    private SpriteBatch sb;
 
     private Hud_Item_BottomText hudTopItem;
     private Hud_Item_CardPreview hudCardPreview;
@@ -54,18 +53,12 @@ public class Hud {
     private Hud_Item_AcceptDeclineButtons accept_decline_buttons_report;
     private Hud_Item_ZeroSoldiersButton decline_soldier_cheat;
     private Hud_Item_Scoreboard hud_scoreboard;
-
-    private TextButton stat_button;
-    private TextButton play_button;
-    private TextButton report_button;
-    private TextButton cheat_button;
+    private Hud_Item_MenuButtons hud_menuButtons;
 
     private Hud_State currentState;
     private boolean myTurn;
 
     private boolean debugging;
-    private Hud_State lastPlayingState;
-    private ButtonGroup<TextButton> buttonGroupTextButtons;
 
 
     public Hud(SpriteBatch sb, Gamescreen gs) {
@@ -74,7 +67,6 @@ public class Hud {
         myGamescreen = gs;
         this.currentState = Hud_State.VIEWING;
 
-        this.sb = sb;
         viewport = new ScreenViewport();
         stage = new Stage(viewport, sb);
 
@@ -88,72 +80,14 @@ public class Hud {
         accept_decline_buttons_soldiers = new Hud_Item_AcceptDeclineButtons();
         accept_decline_buttons_report = new Hud_Item_AcceptDeclineButtons("Report selected soldier", "Decline");
         hud_scoreboard = new Hud_Item_Scoreboard();
+        hud_menuButtons = new Hud_Item_MenuButtons();
+        decline_soldier_cheat = new Hud_Item_ZeroSoldiersButton("Decline Cheat");
 
         changeHudState(Hud_State.PLAYING);
 
-        //adding left Menu Buttons
-        stat_button = new TextButton("STATS", UISkin.getSkin(), "toggle");
-        play_button = new TextButton("PLAY", UISkin.getSkin(), "toggle");
-        report_button = new TextButton("REPORT", UISkin.getSkin(), "toggle");
-        cheat_button = new TextButton("CHEAT", UISkin.getSkin(), "toggle");
-
-        stat_button.getLabel().setFontScale(5f);
-        play_button.getLabel().setFontScale(5f);
-        report_button.getLabel().setFontScale(5f);
-        cheat_button.getLabel().setFontScale(5f);
-
-        buttonGroupTextButtons = new ButtonGroup<>();
-        buttonGroupTextButtons.add(stat_button);
-        buttonGroupTextButtons.add(play_button);
-        buttonGroupTextButtons.add(report_button);
-        buttonGroupTextButtons.add(cheat_button);
-        buttonGroupTextButtons.setMinCheckCount(1);
-        buttonGroupTextButtons.setMaxCheckCount(1);
-        buttonGroupTextButtons.setChecked("PLAY");
-        buttonGroupTextButtons.setUncheckLast(true); //If true, when the maximum number of buttons are checked and an additional button is checked, the last button to be checked is unchecked so that the maximum is not exceeded.
-
-        stat_button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                buttonGroupTextButtons.setChecked("STATS");
-            }
-        });
-
-        report_button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                buttonGroupTextButtons.setChecked("REPORT");
-            }
-        });
-        cheat_button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                buttonGroupTextButtons.setChecked("CHEAT");
-                //if(currentState.equals(Hud_State.PLAYING) || currentState.equals(Hud_State.VIEWING) || currentState.equals(Hud_State.ACCEPT_ACTION)|| currentState.equals(Hud_State.ACCEPT_PLACING_SOLDIER) || currentState.equals(Hud_State.PLACING_SOLDIER)){
-                //  lastPlayingState = currentState;
-                // }
-                // changeHudState(Hud_State.CHEATING);
-
-            }
-        });
-        play_button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                buttonGroupTextButtons.setChecked("PLAY");
-                // if(!(currentState.equals(Hud_State.PLAYING) || currentState.equals(Hud_State.VIEWING) || currentState.equals(Hud_State.ACCEPT_ACTION)|| currentState.equals(Hud_State.ACCEPT_PLACING_SOLDIER) || currentState.equals(Hud_State.PLACING_SOLDIER))){
-                //  if(myTurn) changeHudState(Hud_State.PLAYING);
-                // else changeHudState(Hud_State.VIEWING);
-                // }
 
 
-            }
-        });
 
-        decline_soldier_cheat = new Hud_Item_ZeroSoldiersButton("Decline Cheat");
 
     }
 
@@ -292,22 +226,10 @@ public class Hud {
         });
         }
 
-        Table HudMenuButtonTable = new Table();
-        HudMenuButtonTable.setFillParent(true);
-        HudMenuButtonTable.align(Align.left | Align.top);
-
-        HudMenuButtonTable.add(stat_button).pad(10);
-        HudMenuButtonTable.add(play_button).pad(10);
-        HudMenuButtonTable.add(report_button).pad(10);
-        HudMenuButtonTable.add(cheat_button).pad(10);
-
-        stage.addActor(HudMenuButtonTable);
+        stage.addActor(hud_menuButtons.getHudMenuButtonTable());
 
     }
 
-    public ButtonGroup getButtonGroup(){
-        return buttonGroupTextButtons;
-    }
 
     public void setNextCardTexture(Texture cardTexture) {
         hudCardPreview.setCardPreviewTexutre(cardTexture);
@@ -355,17 +277,16 @@ public class Hud {
     }
 
     public TextButton getPlay_button() {
-        return play_button;
+        return hud_menuButtons.getPlay_button();
     }
     public TextButton getReport_button() {
-        return report_button;
+        return hud_menuButtons.getReport_button();
     }
     public TextButton getStat_button() {
-        return stat_button;
+        return hud_menuButtons.getStat_button();
     }
-
     public TextButton getCheat_button() {
-        return cheat_button;
+        return hud_menuButtons.getCheat_button();
     }
 
 
