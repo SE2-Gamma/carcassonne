@@ -92,6 +92,7 @@ public class SelectNameActivity extends BaseActivity {
                     binding.pbSelectNameActivity.setVisibility(View.INVISIBLE);
                     binding.tvError.setText("Bitte gib einen Namen ein!");
                     binding.tvError.setVisibility(View.VISIBLE);
+                    binding.btnNameSelectEnter.setEnabled(true);
                 }
             }
         });
