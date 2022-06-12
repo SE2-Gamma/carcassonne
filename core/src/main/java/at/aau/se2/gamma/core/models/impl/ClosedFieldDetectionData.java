@@ -7,10 +7,18 @@ public class ClosedFieldDetectionData implements Serializable {
     private boolean isClosed = true;
     private int points = 0;
     private ArrayList<GameCardSide> gameCardSides;
+    private ArrayList<GameCard> gameCards;
+    private ArrayList<GameCardSide> scannedCastles; // only needed for end calculation for gras fields
+    private ArrayList<ClosedFieldDetectionData> detectedCastles; // only needed for end calculation for gras fields
     private boolean endGameData = false;
+    private boolean monasteryType = false;
+    private boolean grasType = false;
 
     public ClosedFieldDetectionData() {
         gameCardSides = new ArrayList<>();
+        scannedCastles = new ArrayList<>();
+        detectedCastles = new ArrayList<>();
+        gameCards = new ArrayList<>();
     }
 
     public boolean isClosed() {
@@ -37,6 +45,12 @@ public class ClosedFieldDetectionData implements Serializable {
         this.gameCardSides.add(gameCardSide);
     }
 
+    public void addGameCard(GameCard gameCard) {
+        if (!this.gameCards.contains(gameCard)) {
+            this.gameCards.add(gameCard);
+        }
+    }
+
     public ArrayList<GameCardSide> getGameCardSides() {
         return gameCardSides;
     }
@@ -51,5 +65,45 @@ public class ClosedFieldDetectionData implements Serializable {
 
     public void setEndGameData(boolean endGameData) {
         this.endGameData = endGameData;
+    }
+
+    public ArrayList<GameCardSide> getScannedCastles() {
+        return scannedCastles;
+    }
+
+    public void setScannedCastles(ArrayList<GameCardSide> scannedCastles) {
+        this.scannedCastles = scannedCastles;
+    }
+
+    public ArrayList<ClosedFieldDetectionData> getDetectedCastles() {
+        return detectedCastles;
+    }
+
+    public void setDetectedCastles(ArrayList<ClosedFieldDetectionData> detectedCastles) {
+        this.detectedCastles = detectedCastles;
+    }
+
+    public boolean isMonasteryType() {
+        return monasteryType;
+    }
+
+    public void setMonasteryType(boolean monasteryType) {
+        this.monasteryType = monasteryType;
+    }
+
+    public boolean isGrasType() {
+        return grasType;
+    }
+
+    public void setGrasType(boolean grasType) {
+        this.grasType = grasType;
+    }
+
+    public ArrayList<GameCard> getGameCards() {
+        return gameCards;
+    }
+
+    public void setGameCards(ArrayList<GameCard> gameCards) {
+        this.gameCards = gameCards;
     }
 }

@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.LinkedList;
+import at.aau.se2.gamma.carcassonne.AndroidInterface;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.CheatMoveSoldierPosition;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCardTextures;
@@ -37,6 +38,7 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand
 import at.aau.se2.gamma.core.commands.CheatCommand;
 import at.aau.se2.gamma.core.commands.DetectCheatCommand;
 import at.aau.se2.gamma.core.commands.GameTurnCommand;
+import at.aau.se2.gamma.core.commands.LeaveGameCommand;
 import at.aau.se2.gamma.core.exceptions.CheatMoveImpossibleException;
 import at.aau.se2.gamma.core.models.impl.CheatMove;
 import at.aau.se2.gamma.core.models.impl.GameCardSide;
@@ -100,12 +102,18 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     private Soldier touchedSoldier;
 
 
+    AndroidInterface androidInterface;
+    String userName;
+    String userID;
 
-    public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject){
-
+    public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
         touchedSoldier = null;
         currentCheatMove = null;
         selectedCheatingSoldier = null;
+        this.androidInterface = androidInterface;
+        this.userName = userName;
+        this.userID = UserID;
+
         currentGameObject = initialGameObject;
         for(Player p : currentGameObject.getGameStatistic().getPlayers()){
             if(p.getId().equals(UserID) && p.getName().equals(userName)){
@@ -420,21 +428,21 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     hud.showErrorText(""+speed);
                     //do things after smartphone was shaken
                     ServerThread.instance.sendCommand(new CheatCommand(currentCheatMove), new ServerThread.RequestResponseHandler() {
-                        @Override
-                        public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                            String responseString = (String) payload;
-                            Log.i("LauncherGame", responseString);
-                            //if(!responseString.equals("sucessfull")){
-                                hud.showErrorText(responseString);
-                            //}
+                                @Override
+                                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                                    String responseString = (String) payload;
+                                    Log.i("LauncherGame", responseString);
+                                    //if(!responseString.equals("sucessfull")){
+                                    hud.showErrorText(responseString);
+                                    //}
 
-                        }
+                                }
 
-                        @Override
-                        public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                                @Override
+                                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
 
-                        }
-                    });
+                                }
+                            });
 
                     hud.changeHudState(Hud.Hud_State.CHEATING);
 
@@ -447,7 +455,30 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 hud.showErrorText("BRUHHH NO Gyroscope YIKES");
             }
         }
+
+        Gdx.input.setCatchBackKey(true);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            Log.d("GameScreen: Render", "isKeyPressed");
+            ServerThread.instance.sendCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
+                @Override
+                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                    dispose();
+                    androidInterface.makeToast("You left the game!");
+                    Log.d("UserName", userName);
+                    Log.d("UserID", userID);
+                    androidInterface.startMainActivity();
+                }
+
+                @Override
+                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                    Log.d("LeaveGameCommand", "onFailure");
+                    androidInterface.makeToast("Something went wrong!");
+                }
+            });
+        }
     }
+
 
     @Override
     public void resize(int width, int height) {
