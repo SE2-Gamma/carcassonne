@@ -8,10 +8,7 @@ import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerJoinedBroadcastCom
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerLeftLobbyBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.exceptions.*;
-import at.aau.se2.gamma.core.models.impl.CheatMove;
-import at.aau.se2.gamma.core.models.impl.GameMove;
-import at.aau.se2.gamma.core.models.impl.Player;
-import at.aau.se2.gamma.core.models.impl.Soldier;
+import at.aau.se2.gamma.core.models.impl.*;
 import at.aau.se2.gamma.core.states.ClientState;
 import at.aau.se2.gamma.server.models.ServerPlayer;
 import at.aau.se2.gamma.server.models.Session;
@@ -78,7 +75,8 @@ public class ClientThread extends Thread {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
                     checkingAvailability();
                    lock();
-
+                    objectOutputStream.flush();
+                    objectOutputStream.reset();
                     objectOutputStream.writeUnshared(response);
                     unlock();
                 }
@@ -142,7 +140,8 @@ public class ClientThread extends Thread {
             System.out.print("//available,locking");
             checkingAvailability();
             lock();
-
+            objectOutputStream.flush();
+            objectOutputStream.reset();
             objectOutputStream.writeUnshared(message);
             unlock();
             System.out.print("//unlocking//");
@@ -223,9 +222,13 @@ public class ClientThread extends Thread {
             return ResponseCreator.getError(command,"youre not ingame", Codes.ERROR.NOT_IN_GAME);
         }
         try {
-            session.detectCheat((Soldier) command.getPayload());
+
+
+            session.detectCheat((SoldierData) command.getPayload());
         } catch (NoSuchCheatActiveException e) {
             return ResponseCreator.getSuccess(command,"No such Cheat active.");
+        }catch (NoSuchElementException e){
+            return ResponseCreator.getSuccess(command,"No Soldier found");
         }
         return ResponseCreator.getSuccess(command,"Cheat detection successfull.");
 
@@ -239,11 +242,12 @@ public class ClientThread extends Thread {
        // if(session.gameLoop.onTurn.getId().equals(player.getId())){
           //  return ResponseCreator.getError(command,"its your turn, you cant cheat now.",Codes.ERROR.NO_CHEAT_ON_TURN);}
 
-        CheatMove cheatMove=(CheatMove) command.getPayload();
-        cheatMove.setPenalty((int) Math.pow(2,numberOfCheats));
+        CheatData cheatMove=(CheatData) command.getPayload();
+
         try {
-            session.executeCheat(cheatMove);
+            session.executeCheat(cheatMove,((int) Math.pow(2,numberOfCheats)));
         } catch (CheatMoveImpossibleException e) {
+            System.err.println(e.getMessage());
            return ResponseCreator.getError(command,"Cheatmove not possible",Codes.ERROR.INVALID_CHEATMOVE);
         }catch(NullPointerException e){
             e.printStackTrace();
@@ -262,6 +266,7 @@ public class ClientThread extends Thread {
         } catch (NoSuchElementException e) {
             return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
         }
+
         clientState = ClientState.INITIAl;
         return ResponseCreator.getSuccess(command,"Game Successfully left.");
         //todo:

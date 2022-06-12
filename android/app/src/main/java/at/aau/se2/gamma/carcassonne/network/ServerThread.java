@@ -116,7 +116,8 @@ public class ServerThread extends Thread {
         }
 
        try {
-           
+            objectOutputStream.flush();
+            objectOutputStream.reset();
             objectOutputStream.writeUnshared(command);
         } catch (IOException e) {
             e.printStackTrace();

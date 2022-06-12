@@ -25,6 +25,11 @@ public class GameMapManager {
     private ShapeRenderer shaperender;
     private GameCard[][] Playingfield;
     private int MapSize;
+
+    public GameMap getCurrentGameMap() {
+        return currentGameMap;
+    }
+
     private GameMap currentGameMap;
     private SoldierTextures solTextures;
     private boolean drawSoldiers;

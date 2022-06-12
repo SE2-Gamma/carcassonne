@@ -5,11 +5,13 @@ public class GlobalVariables {
         return adress;
     }
 
+
     public static void setAdress(String adress) {
         GlobalVariables.adress = adress;
     }
 
-    static String adress="192.168.0.69";
+    static String adress="172.19.192.1";
+
 
     public static String getDefaultname() {
         return defaultname;

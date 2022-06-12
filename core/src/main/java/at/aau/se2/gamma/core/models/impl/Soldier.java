@@ -43,7 +43,9 @@ public class Soldier implements Serializable {
 
     public SoldierPlacement soldierPlacement; // current placement
 
-
+    public SoldierData getData(){
+        return new SoldierData(this);
+    }
     public Soldier(Player player) {
         this.player = player;
         this.id = lastId++;

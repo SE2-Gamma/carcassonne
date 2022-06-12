@@ -5,11 +5,22 @@ import at.aau.se2.gamma.core.exceptions.CheatMoveImpossibleException;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.logging.Logger;
 
 public class GameMove implements Serializable {
     private Player player;
     private GameMapEntry gameMapEntry;
     private GameMapEntryPosition gameMapEntryPosition;
+
+    public SoldierData getSoldierData() {
+        return soldierData;
+    }
+
+    public void setSoldierData(SoldierData soldierData) {
+        this.soldierData = soldierData;
+    }
+
+    private SoldierData soldierData;
 
     public GameMove() {
 
@@ -42,7 +53,9 @@ public class GameMove implements Serializable {
             boolean soldierFound = false;
             for(Soldier soldier: this.player.getSoldiers()) {
                 SoldierPlacement soldierPlacement = this.gameMapEntry.getSoldierPlacements().get(0);
-                if (soldier.getId() == soldierPlacement.getSoldier().getId()) {
+                if (soldier.getId() == soldierPlacement.getSoldier().getId()) {;
+                    soldier.setX(this.gameMapEntry.getSoldierPlacements().get(0).getSoldier().getX());
+                    soldier.setY(this.gameMapEntry.getSoldierPlacements().get(0).getSoldier().getY());
                     soldierPlacement.setSoldier(soldier);
                     soldierFound = true;
                 }
@@ -51,6 +64,41 @@ public class GameMove implements Serializable {
                 throw new NoSuchElementException();
             }
         }
+    }
+    public void changeToServerInstance(ConcurrentLinkedDeque<Player> players, GameMap gameMap,SoldierData soldierData) throws NoSuchElementException {
+        boolean playerFound = false;
+
+        for(Player player: players) {
+            if (this.player.getId().equals(player.getId())) {
+                this.player = player;
+                playerFound = true;
+            }
+        }
+
+        if (!playerFound) {
+            throw new NoSuchElementException();
+        }
+
+        this.gameMapEntry.setPlacedByPlayer(player);
+
+        // map soldier placement if needed
+
+
+            for(Soldier soldier: this.player.getSoldiers()) {
+                SoldierPlacement soldierPlacement = this.gameMapEntry.getSoldierPlacements().get(0);
+                if (soldier.getId() == soldierPlacement.getSoldier().getId()) {;
+                    soldier.setX(soldierData.x);
+                    soldier.setY(soldierData.y);
+
+                    gameMapEntry.setSoldier(soldier,this.gameMapEntry.getCard().getGameCardSideWithUID(soldierData.getGameCardSideUID()));
+
+                    soldierPlacement.setSoldier(soldier);
+
+                    System.err.println("HEEREEEEEEEEEEEEEEEE");
+                }
+            }
+
+
     }
 
     public Player getPlayer() {

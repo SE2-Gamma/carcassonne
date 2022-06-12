@@ -168,7 +168,7 @@ public class GameTests {
             waitForResponse();
             playertwo.objectOutputStream.writeObject(new PlayerReadyCommand(null));
             waitForResponse();
-            waitForResponse(2000);
+            waitForResponse(4000);
             playertwo.objectOutputStream.writeObject(new LeaveGameCommand(null));
             waitForResponse();
             playertwo.objectOutputStream.writeObject(new GetClientStateCommand(null));
@@ -302,15 +302,32 @@ public class GameTests {
         sendName("cheatOnMyTurn");
         sendCommand(new CreateGameCommand("cheatOnMyTurn"));
         sendCommand(new PlayerReadyCommand(null));
-        waitForResponse(4000);
-        sendCommand(new CheatCommand(new CheatMove(testplayer, new Soldier(testplayer))));
+        waitForResponse(5000);
+        sendCommand(new CheatCommand(new CheatData()));
         LinkedList<Object> error = (LinkedList<Object>) returncommands.getLast();
         Codes.ERROR response = (Codes.ERROR) error.getLast();
         assertEquals(Codes.ERROR.INVALID_CHEATMOVE, response);
 
     }
-
-    @RepeatedTest(10)
+    public GameObject getGameObject(){
+        for (Object o:returncommands
+             ) {
+            if(o instanceof GameObject){
+                return (GameObject) o;
+            }
+        }
+        throw new NoSuchElementException();
+    }
+    public Soldier getFreeSoldier(String id,GameStatistic statistic){
+        for (Player player:statistic.getPlayers()
+             ) {
+            if(player.getId().equals(id)){
+              return  player.getFreeSoldier();
+            }
+        }
+        throw new NoSuchElementException();
+    }
+    @RepeatedTest(1)
     public void cheat() {
         sendName("cheat");
         TestSocket playertwo = createanotherSocket("cheat2");
@@ -326,33 +343,39 @@ public class GameTests {
 
 
         if (gamestarted instanceof GameCard) {
+            GameStatistic statistic=getGameObject().getGameStatistic();
 
             GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), testplayer, Orientation.SOUTH);
-            Soldier soldier=new Soldier(testplayer);
+            Soldier soldier=getFreeSoldier(testplayer.getId(), statistic);
             soldier.setX(49);
             soldier.setY(50);
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(testplayer, entry, new GameMapEntryPosition(49,50));
+            gameMove.setSoldierData(soldier.getData());
             sendCommand(new GameTurnCommand(gameMove));
             CheatMove cheatMove= new CheatMove(testplayer,soldier);
             cheatMove.setOriginalPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[0]));
             cheatMove.setNewPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[1]));
-            sendCommand(new CheatCommand(cheatMove));
+            sendCommand(new CheatCommand(cheatMove.getData()));
+            waitForResponse(500);
             assertTrue(returncommands.contains("cheat successfull."));
 
         } else {
             Player two= new Player(playertwo.id,"cheat2");
+            GameStatistic statistic=getGameObject().getGameStatistic();
             GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), two, Orientation.SOUTH);
-            Soldier soldier=new Soldier(two);
+            Soldier soldier=getFreeSoldier(playertwo.id, statistic);
             soldier.setX(49);
             soldier.setY(50);
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(two, entry, new GameMapEntryPosition(49,50));
+            gameMove.setSoldierData(soldier.getData());
             sendCommand(new GameTurnCommand(gameMove),playertwo.objectOutputStream);
             CheatMove cheatMove= new CheatMove(two,soldier);
             cheatMove.setOriginalPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[0]));
             cheatMove.setNewPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[1]));
-            sendCommand(new CheatCommand(cheatMove),playertwo.objectOutputStream);
+            sendCommand(new CheatCommand(cheatMove.getData()),playertwo.objectOutputStream);
+            waitForResponse(500);
             assertTrue(playertwo.returncommands.contains("cheat successfull."));
         }
 
@@ -361,13 +384,13 @@ public class GameTests {
     @Test
     public void detectCheat(){
         boolean player1cheated=false;
-        sendName("detectcheat");
+        sendName("detechtcheat");
         TestSocket playertwo = createanotherSocket("detectcheat2");
-        sendCommand(new CreateGameCommand("detectcheat"));
-        sendCommand(new InitialJoinCommand("detectcheat"), playertwo.objectOutputStream);
+        sendCommand(new CreateGameCommand("testcheat"));
+        sendCommand(new InitialJoinCommand("testcheat"), playertwo.objectOutputStream);
         sendCommand(new PlayerReadyCommand(null));
         sendCommand(new PlayerReadyCommand(null), playertwo.objectOutputStream);
-
+        Soldier soldier=null;
 
 
         waitForResponse(4000);
@@ -375,54 +398,54 @@ public class GameTests {
 
 
         if (gamestarted instanceof GameCard) {
+            player1cheated=true;
+            GameStatistic statistic=getGameObject().getGameStatistic();
 
             GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), testplayer, Orientation.SOUTH);
-            Soldier soldier=new Soldier(testplayer);
+            soldier=getFreeSoldier(testplayer.getId(), statistic);
             soldier.setX(49);
             soldier.setY(50);
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(testplayer, entry, new GameMapEntryPosition(49,50));
+            gameMove.setSoldierData(soldier.getData());
             sendCommand(new GameTurnCommand(gameMove));
             CheatMove cheatMove= new CheatMove(testplayer,soldier);
             cheatMove.setOriginalPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[0]));
             cheatMove.setNewPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[1]));
-            sendCommand(new CheatCommand(cheatMove));
+            sendCommand(new CheatCommand(cheatMove.getData()));
+            waitForResponse(500);
             assertTrue(returncommands.contains("cheat successfull."));
-            player1cheated=true;
 
         } else {
             Player two= new Player(playertwo.id,"detectcheat2");
+            GameStatistic statistic=getGameObject().getGameStatistic();
             GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), two, Orientation.SOUTH);
-            Soldier soldier=new Soldier(two);
+            soldier=getFreeSoldier(playertwo.id, statistic);
             soldier.setX(49);
             soldier.setY(50);
             entry.setSoldier(soldier,entry.getAlignedCardSides()[0]);
             GameMove gameMove = new GameMove(two, entry, new GameMapEntryPosition(49,50));
+            gameMove.setSoldierData(soldier.getData());
             sendCommand(new GameTurnCommand(gameMove),playertwo.objectOutputStream);
             CheatMove cheatMove= new CheatMove(two,soldier);
             cheatMove.setOriginalPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[0]));
             cheatMove.setNewPosition(new SoldierPlacement(soldier,entry.getAlignedCardSides()[1]));
-            sendCommand(new CheatCommand(cheatMove),playertwo.objectOutputStream);
+            sendCommand(new CheatCommand(cheatMove.getData()),playertwo.objectOutputStream);
+            waitForResponse(500);
             assertTrue(playertwo.returncommands.contains("cheat successfull."));
         }
 
         //cheat assembled;
 
         if(player1cheated){
-            Soldier soldier=new Soldier(new Player(playertwo.id,"detectcheat2"));
-            soldier.setX(49);
-            soldier.setY(50);
-            sendCommand(new DetectCheatCommand(soldier),playertwo.objectOutputStream);
+
+            sendCommand(new DetectCheatCommand(soldier.getData()),playertwo.objectOutputStream);
             assertTrue(playertwo.returncommands.contains("Cheat detection successfull."));
         }else{
-            Soldier soldier=new Soldier(testplayer);
-            soldier.setX(49);
-            soldier.setY(50);
-            sendCommand(new DetectCheatCommand(soldier));
+
+            sendCommand(new DetectCheatCommand(soldier.getData()));
             assertTrue(returncommands.contains("Cheat detection successfull."));
-            returncommands.removeLast();
-            LinkedList<CheatMove> cheats=(LinkedList<CheatMove>) returncommands.getLast();
-            assertEquals(cheats.pop().getCheater().getName(),"detectcheat2");
+
         }
 
 
@@ -441,7 +464,7 @@ public class GameTests {
         Soldier soldier=new Soldier(new Player(playertwo.id,"detectcheat"));
         soldier.setX(49);
         soldier.setY(49);
-        sendCommand(new DetectCheatCommand(soldier));
-        assertTrue(returncommands.contains("No such Cheat active."));
+        sendCommand(new DetectCheatCommand(soldier.getData()));
+        assertTrue(returncommands.contains("No Soldier found"));
     }
 }
