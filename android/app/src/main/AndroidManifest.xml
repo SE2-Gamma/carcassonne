@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Carcassonne">
         <service android:name="at.aau.se2.gamma.carcassonne.ShutdownService" android:stopWithTask="false" />
         <activity
-            android:name=".views.GameResultActivity"
+            android:name=".views.Endscreen.GameResultActivity"
             android:exported="false" />
         <activity
             android:name=".views.SelectNameActivity"
