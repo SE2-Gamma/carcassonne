@@ -6,30 +6,25 @@ public class GameCardTextures {
     public static GameCardTextures instance = null;
     public static Texture textures[] = new Texture[24];
 
-
-
     private GameCardTextures(){
-        if(instance == null){
-            instance = this;
             for(int i = 0; i<24; i++){
                 textures[i] = new Texture("Carc"+(i+1)+".jpg");
             }
-
-        }
     }
 
     public static GameCardTextures getInstance()
     {
-        if (instance == null)
+        if (instance == null){
             instance = new GameCardTextures();
-
+        }
         return instance;
     }
 
-    public void disposeTexutres(){
-        for(Texture t : textures){
-            t.dispose();
-        }
+    public void disposeTextures(){
+        instance = null;
+        //for(Texture t : textures){
+          //  t.dispose();
+        //}
     }
 
     public Texture getTextureFromCardID(String CardID){
