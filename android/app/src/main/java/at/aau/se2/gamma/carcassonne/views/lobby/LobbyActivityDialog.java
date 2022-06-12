@@ -49,6 +49,7 @@ public class LobbyActivityDialog extends AppCompatDialogFragment {
         btVoteYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btVoteYes.setEnabled(false);
                 ServerThread.instance.sendCommand(new KickPlayerCommand(playerToKick), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
@@ -59,12 +60,14 @@ public class LobbyActivityDialog extends AppCompatDialogFragment {
                             }
                         });
                         dismiss();
+                        btVoteYes.setEnabled(true);
                     }
 
                     @Override
                     public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
                         dismiss();
                         Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                        btVoteYes.setEnabled(true);
                     }
                 });
             }

@@ -36,6 +36,7 @@ public class JoinSessionActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
+                binding.btnEnter.setEnabled(false);
                 binding.pbJoinSessionActivity.setVisibility(View.INVISIBLE);
 
                 String userInput = binding.ptInputKey.getText().toString();
@@ -57,18 +58,21 @@ public class JoinSessionActivity extends BaseActivity {
                                 extras.putString("UserID", userID);
                                 intent.putExtras(extras);
                                 startActivity(intent);
+                                binding.btnEnter.setEnabled(true);
                         }
 
                         @Override
                         public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
                             binding.tvError.setText(((LinkedList<String>)payload).get(0));
                             binding.tvError.setVisibility(View.VISIBLE);
+                            binding.btnEnter.setEnabled(true);
                         }
                     });
                     binding.pbJoinSessionActivity.setVisibility(View.INVISIBLE);
                 }else{
-                    binding.tvError.setText("Bitte gib einen Game Key ein!");
+                    binding.tvError.setText("Please enter a valid Game-Key!");
                     binding.tvError.setVisibility(View.VISIBLE);
+                    binding.btnEnter.setEnabled(true);
                 }
             }
         });
