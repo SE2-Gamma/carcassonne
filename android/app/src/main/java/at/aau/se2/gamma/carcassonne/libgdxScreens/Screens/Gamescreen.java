@@ -145,7 +145,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         camPanGesture = new Vector2();
 
         //loading all gameCard Textures
-        CardTextures.getInstance();
+        CardTextures = CardTextures.getInstance();
 
         //error Texture for Testing
         errorTextur = new Texture("testTexture.jpg");
@@ -284,11 +284,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
             }
         });
-
-
-        //temp zeugs für testing
-        //camPos = new Vector2(0f*144f,0f*144f);
-        //myMap.setGamecard(3,1, new GameCard(getTextureFromCardID(starterCard.getCardId()), new Vector2(3f*144f,1f*144f), starterCard));
 
         ServerThread.instance.setBroadcastHandler(myBroadCastHandler);
 
@@ -814,7 +809,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 Log.i("LauncherGame", "Spieler ist nun an der Reihe");
                 at.aau.se2.gamma.core.models.impl.GameCard gm = (at.aau.se2.gamma.core.models.impl.GameCard) payload;
                 GameMapEntry gme = new GameMapEntry(gm, myPlayerID);
-                currentGameCard = new GameCard(GameCardTextures.getInstance().getTextureFromCardID(gm.getCardId()), new Vector2(0,0), gme);
+                currentGameCard = new GameCard(CardTextures.getTextureFromCardID(gm.getCardId()), new Vector2(0,0), gme);
                 hud.setNextCardTexture(currentGameCard.getGameCardTexture());
 
                 if(hud.getCurrentState().equals(Hud.Hud_State.VIEWING)){
@@ -825,9 +820,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 hud.showInfoText("It's Your turn!");
                 hud.setMyTurn(true);
                 myTurn = true;
-
-                //at.aau.se2.gamma.core.models.impl.GameMapEntry newCardFromDeck = new GameMapEntry(CardDeck.get((int)(Math.random()*20)), myPlayerID, Orientation.NORTH);
-                //currentGameCard = new GameCard(CardTextures.getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0),270f,newCardFromDeck);
 
                 //hud.setNextCardTexture(currentGameCard.getGameCardTexture());
             }else if(response.getPayload() instanceof FieldCompletedBroadcastCommand){
