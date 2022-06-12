@@ -41,7 +41,7 @@ Utils
 ## Git-Regeln
 ### App
 Main: main-app
-Dev: dev-app
+Dev: dev-app,
 Feature: issue-{feature-number}-app
 
 ### Server
