@@ -5,7 +5,6 @@ public class GlobalVariables {
         return adress;
     }
 
-
     public static void setAdress(String adress) {
         GlobalVariables.adress = adress;
     }
