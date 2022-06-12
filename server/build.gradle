@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id "org.sonarqube" version "3.3"
+    id 'jacoco'
 }
 
 group 'at.aau.se2.gamma'
@@ -12,6 +14,20 @@ dependencies {
     implementation project(path: ':core')
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
 test {
     useJUnitPlatform()
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "SE2-Gamma_carcassonne"
+        property "sonar.organization", "se2-gamma"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
