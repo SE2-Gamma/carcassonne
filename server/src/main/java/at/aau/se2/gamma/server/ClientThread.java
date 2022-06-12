@@ -227,6 +227,8 @@ public class ClientThread extends Thread {
             session.detectCheat((SoldierData) command.getPayload());
         } catch (NoSuchCheatActiveException e) {
             return ResponseCreator.getSuccess(command,"No such Cheat active.");
+        }catch (NoSuchElementException e){
+            return ResponseCreator.getSuccess(command,"No Soldier found");
         }
         return ResponseCreator.getSuccess(command,"Cheat detection successfull.");
 
@@ -264,6 +266,7 @@ public class ClientThread extends Thread {
         } catch (NoSuchElementException e) {
             return ResponseCreator.getError(command,"youre not ingame",Codes.ERROR.NOT_IN_GAME);
         }
+
         clientState = ClientState.INITIAl;
         return ResponseCreator.getSuccess(command,"Game Successfully left.");
         //todo:

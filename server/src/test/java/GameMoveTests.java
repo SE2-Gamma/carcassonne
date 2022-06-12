@@ -87,9 +87,17 @@ e.printStackTrace();
             responseConsumer.start();
             waitForResponse(200);
             sendName("player 1");
+            waitForResponse(50);
+            Object o =returncommands.getLast();
+            if(o instanceof String){
+                System.out.println("is this an ID?"+o);
+
+            }
+
+
             objectOutputStream.writeObject(new CreateGameCommand("testGame"));waitForResponse();
             objectOutputStream.writeObject(new PlayerReadyCommand(null));waitForResponse();
-            player1 = new Player("1", "player 1");
+            player1 = new Player((String)o, "player 1");
 
             waitForResponse();
 
@@ -148,6 +156,7 @@ e.printStackTrace();
     public void sendName(String name){
         try {
             objectOutputStream.writeObject(new InitialSetNameCommand(name));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -316,8 +325,7 @@ e.printStackTrace();
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
-        returncommands.removeLast(); //removing new gamecard
-        String response=(String)returncommands.getLast();
-        assertEquals("turn succesfull",response);
+        assertTrue(returncommands.contains("turn succesfull"));
+
     }
 }

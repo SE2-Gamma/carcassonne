@@ -42,6 +42,9 @@ public class SoldierData implements Serializable {
     int GameCardSideUID;
 
     public SoldierData(Soldier soldier) {
+        if(soldier.getSoldierPlacement()!=null){
+            this.GameCardSideUID=soldier.soldierPlacement.getGameCardSide().UID;
+        }
       this.SoldierID=soldier.getId();
       this.x=soldier.getX();
       this.y=soldier.getY();

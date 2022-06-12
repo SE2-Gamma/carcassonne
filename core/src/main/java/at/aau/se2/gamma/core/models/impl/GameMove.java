@@ -89,6 +89,9 @@ public class GameMove implements Serializable {
                 if (soldier.getId() == soldierPlacement.getSoldier().getId()) {;
                     soldier.setX(soldierData.x);
                     soldier.setY(soldierData.y);
+
+                    gameMapEntry.setSoldier(soldier,this.gameMapEntry.getCard().getGameCardSideWithUID(soldierData.getGameCardSideUID()));
+
                     soldierPlacement.setSoldier(soldier);
 
                     System.err.println("HEEREEEEEEEEEEEEEEEE");

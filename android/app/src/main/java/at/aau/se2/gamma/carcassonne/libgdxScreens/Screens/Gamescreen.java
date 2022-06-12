@@ -267,7 +267,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 gm.getGameMapEntry().getSoldierPlacements().get(0).setSoldier(lastCard.getGameMapEntry().getSoldierPlacements().get(0).getSoldier());
                 gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setX(playedCard_x);
                 gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().setY(playedCard_y);
-                gm.setSoldierData(new SoldierData(gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier()));
+                gm.setSoldierData(gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getData());
                 ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {

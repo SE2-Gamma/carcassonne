@@ -19,7 +19,7 @@ public class Session extends BaseModel implements Serializable {
     Deck deck;
     String id;
     int maxPlayers=5;
-    int amountOfSoldiers=3;
+    int amountOfSoldiers=8;
     final LinkedList<KickOffer>kickOffers=new LinkedList<>();
    // public LinkedList<Player> players = new LinkedList<>();
     public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
@@ -224,15 +224,15 @@ public class Session extends BaseModel implements Serializable {
             System.out.println("//placing soldier at X: "+soldierPlacement.getSoldier().getX()+", Y:  "+soldierPlacement.getSoldier().getY()+"//");
             gameturn.getGameMapEntry().getSoldierPlacements().clear();
         }
-
-        gameLoop.gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
-            //do gamemove, updating the gameobject. once updated, the gameloop will continue and send the updated gameobject to all clients
-
         // set soldier placement
         if (soldierPlacement != null) {
             gameturn.getGameMapEntry().setSoldier(soldierPlacement.getSoldier(), soldierPlacement.getGameCardSide());
             gameturn.setSoldierData(soldierPlacement.getSoldier().getData());
         }
+        gameLoop.gameObject.getGameMap().executeGameMove(gameturn); //if no exception is thrown, the gameloop will be interrupted and a succesfull message will be returned
+            //do gamemove, updating the gameobject. once updated, the gameloop will continue and send the updated gameobject to all clients
+
+
 
         System.out.print("//turn has been succesfull!//");
         while (!interruptable) { //if the gameloop is in another state than waiting for a turn we busywait for it to finish (only relevant if you enter a turn 1 ms after your turnstart)
@@ -361,7 +361,8 @@ public boolean interruptable=false;
             System.out.print("//stopping game//");
             gameLoop.playing=false;
             gameLoop.interrupt();
-            broadcastAllPlayers(new GameCompletedBroadcastCommand("game ended"));
+            gameLoop.gameObject.getGameStatistic().applyEndDetectionData(gameLoop.gameObject.getGameMap().createFinalPointsDetectionData(new ArrayList<>(players)));
+            broadcastAllPlayers(new GameCompletedBroadcastCommand(gameLoop.gameObject.getGameStatistic()));
             System.out.print("//all players have been notified. //");
             Server.SessionHandler.removeSession(session);
         }

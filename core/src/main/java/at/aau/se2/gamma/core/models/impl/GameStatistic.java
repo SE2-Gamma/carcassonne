@@ -80,7 +80,7 @@ public class GameStatistic implements Serializable {
                     SoldierPlacement soldierPlacement = soldier.getSoldierPlacement();
                     if (soldierPlacement != null) {
                         if (soldierPlacement.getGameCardSide() == gameCardSide) {
-
+                            System.out.println("Gamestatistic:"+player.getName()+"'s Soldier found");
                             // increase by 1 the soldiersPerPlayer for player with index
                             soldiersPerPlayer[players.indexOf(player)]++;
                             affectedSoldiers.add(soldier);
@@ -137,7 +137,7 @@ public class GameStatistic implements Serializable {
                     int points = 0;
                     for(GameCardSide side: closedFieldDetectionData.getGameCardSides()) {
                         for (GameCardSide currentCardSide: gameCard.getNeswmSides()) {
-                            if (currentCardSide == side) {
+                            if (currentCardSide == side ) {
                                 points = side.getPoints();
                                 multiplier *= side.getMultiplier();
                             }
