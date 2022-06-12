@@ -75,7 +75,8 @@ public class ClientThread extends Thread {
                     System.out.println("Size of responseCommand in Bytes: "+Server.sizeof(response));
                     checkingAvailability();
                    lock();
-
+                    objectOutputStream.flush();
+                    objectOutputStream.reset();
                     objectOutputStream.writeUnshared(response);
                     unlock();
                 }
@@ -139,7 +140,8 @@ public class ClientThread extends Thread {
             System.out.print("//available,locking");
             checkingAvailability();
             lock();
-
+            objectOutputStream.flush();
+            objectOutputStream.reset();
             objectOutputStream.writeUnshared(message);
             unlock();
             System.out.print("//unlocking//");

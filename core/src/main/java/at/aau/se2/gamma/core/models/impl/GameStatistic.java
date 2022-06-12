@@ -80,6 +80,7 @@ public class GameStatistic implements Serializable {
                     SoldierPlacement soldierPlacement = soldier.getSoldierPlacement();
                     if (soldierPlacement != null) {
                         if (soldierPlacement.getGameCardSide() == gameCardSide) {
+
                             // increase by 1 the soldiersPerPlayer for player with index
                             soldiersPerPlayer[players.indexOf(player)]++;
                             affectedSoldiers.add(soldier);

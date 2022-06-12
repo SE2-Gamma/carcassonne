@@ -231,7 +231,7 @@ public class Session extends BaseModel implements Serializable {
         // set soldier placement
         if (soldierPlacement != null) {
             gameturn.getGameMapEntry().setSoldier(soldierPlacement.getSoldier(), soldierPlacement.getGameCardSide());
-            gameturn.setSoldierData(new SoldierData(soldierPlacement.getSoldier()));
+            gameturn.setSoldierData(soldierPlacement.getSoldier().getData());
         }
 
         System.out.print("//turn has been succesfull!//");

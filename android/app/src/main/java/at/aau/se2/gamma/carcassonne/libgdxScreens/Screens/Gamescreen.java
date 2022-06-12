@@ -841,22 +841,14 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 //currentGameObject = (GameObject) payload;
                 GameMove gm = (GameMove) payload;
                 gm.setSoldierData(gm.getSoldierData());
-                try {
-                    Logger.debug("returned soldier X"+gm.getSoldierData().getSoldierID());
-                    Logger.debug("returned soldier X"+gm.getSoldierData().getX());
-                    Logger.debug("returned soldier X"+gm.getSoldierData().getY());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(gm.getSoldierData()==null){
+                    gm.changeToServerInstance(new ConcurrentLinkedDeque<>(currentGameObject.getGameStatistic().getPlayers()), currentGameObject.getGameMap());
+
+                }else{
+                    gm.changeToServerInstance(new ConcurrentLinkedDeque<>(currentGameObject.getGameStatistic().getPlayers()), currentGameObject.getGameMap(),gm.getSoldierData());
+
                 }
 
-                gm.changeToServerInstance(new ConcurrentLinkedDeque<>(currentGameObject.getGameStatistic().getPlayers()), currentGameObject.getGameMap(),gm.getSoldierData());
-                try {
-                    Logger.debug("returned soldier X"+gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getId());
-                    Logger.debug("returned soldier X"+gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getX());
-                    Logger.debug("returned soldier X"+gm.getGameMapEntry().getSoldierPlacements().get(0).getSoldier().getY());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 try {
                     currentGameObject.getGameMap().executeGameMove(gm);
                 } catch (Exception e) {
