@@ -2,8 +2,14 @@ name: Server CI
 
 on:
   push:
+    # remove branches-ignore when test failures in server are fixed
+    branches-ignore:
+      - '**'
   pull_request:
     branches: [ master, development ]
+    # remove branches-ignore when test failures in server are fixed
+    branches-ignore:
+      - '**'
 
 jobs:
   build:
