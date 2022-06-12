@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id "org.sonarqube" version "3.3"
+    id 'jacoco'
 }
 
 group 'at.aau.se2.gamma'
@@ -11,6 +12,12 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation project(path: ':core')
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
 }
 
 test {
