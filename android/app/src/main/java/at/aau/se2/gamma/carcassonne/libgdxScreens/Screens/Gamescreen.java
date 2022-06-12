@@ -1,13 +1,12 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.Screens;
 
+import android.os.SystemClock;
 import android.util.Log;
-import android.view.View;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,12 +16,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -32,11 +29,9 @@ import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCardTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
-import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.SoldierTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.UISkin;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Utility.InputCalculations;
 import at.aau.se2.gamma.carcassonne.network.ServerThread;
-import at.aau.se2.gamma.carcassonne.utils.Logger;
 import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveBroadcastCommand;
@@ -51,10 +46,6 @@ import at.aau.se2.gamma.core.commands.DetectCheatCommand;
 import at.aau.se2.gamma.core.commands.GameTurnCommand;
 import at.aau.se2.gamma.core.commands.LeaveGameCommand;
 import at.aau.se2.gamma.core.exceptions.CheatMoveImpossibleException;
-import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
-import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
-import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
-import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
 import at.aau.se2.gamma.core.factories.GameCardFactory;
 import at.aau.se2.gamma.core.models.impl.CheatData;
 import at.aau.se2.gamma.core.models.impl.CheatMove;
@@ -67,7 +58,6 @@ import at.aau.se2.gamma.core.models.impl.GameStatistic;
 import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Soldier;
-import at.aau.se2.gamma.core.models.impl.SoldierData;
 import at.aau.se2.gamma.core.models.impl.SoldierPlacement;
 
 public class Gamescreen extends ScreenAdapter implements GestureDetector.GestureListener {
@@ -135,6 +125,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     AndroidInterface androidInterface;
     String userName;
     String userID;
+
+    private static final long BTN_TIMEOUT = 1000L;
+    private long lastClick;
+
 
     public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
         touchedSoldier = null;
@@ -511,24 +505,29 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         Gdx.input.setCatchBackKey(true);
 
-        if(Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            Log.d("GameScreen: Render", "isKeyPressed");
-            ServerThread.instance.sendCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
-                @Override
-                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                    dispose();
-                    androidInterface.makeToast("You left the game!");
-                    Log.d("UserName", userName);
-                    Log.d("UserID", userID);
-                    androidInterface.startMainActivity();
-                }
 
-                @Override
-                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                    Log.d("LeaveGameCommand", "onFailure");
-                    androidInterface.makeToast("Something went wrong!");
-                }
-            });
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            long now = SystemClock.elapsedRealtime();
+            if(now-lastClick > BTN_TIMEOUT) {
+                Log.d("GameScreen: Render", "isKeyPressed");
+                ServerThread.instance.sendCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
+                    @Override
+                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                        dispose();
+                        androidInterface.makeToast("You left the game!");
+                        Log.d("UserName", userName);
+                        Log.d("UserID", userID);
+                        androidInterface.startMainActivity();
+                    }
+
+                    @Override
+                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                        Log.d("LeaveGameCommand", "onFailure");
+                        androidInterface.makeToast("Something went wrong!");
+                    }
+                });
+            }
+            lastClick = now;
         }
     }
 
