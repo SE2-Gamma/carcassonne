@@ -68,26 +68,31 @@ public class GameResultActivity extends BaseActivity {
                     case 5:
                         binding.tvNameWinner.setText(playerList.get(0).getPlayerName());
                         binding.tvPointsWinner.setText(playerList.get(0).getPlayerpoints());
+
                         binding.tvNamefifth.setVisibility(View.INVISIBLE);
                         binding.tvPointsFifth.setVisibility(View.INVISIBLE);
                     case 4:
                         binding.tvNameSecond.setText(playerList.get(1).getPlayerName());
                         binding.tvPointsSecond.setText(playerList.get(1).getPlayerpoints());
+
                         binding.tvNamefourth.setVisibility(View.INVISIBLE);
                         binding.tvPointsFourth.setVisibility(View.INVISIBLE);
                     case 3:
                         binding.tvNameThird.setText(playerList.get(2).getPlayerName());
                         binding.tvPointsThird.setText(playerList.get(2).getPlayerpoints());
+
                         binding.tvNameThird.setVisibility(View.INVISIBLE);
                         binding.tvPointsThird.setVisibility(View.INVISIBLE);
                     case 2:
                         binding.tvNamefourth.setText(playerList.get(3).getPlayerName());
                         binding.tvPointsFourth.setText(playerList.get(3).getPlayerpoints());
+
                         binding.tvNameSecond.setVisibility(View.INVISIBLE);
                         binding.tvPointsSecond.setVisibility(View.INVISIBLE);
                     case 1:
                         binding.tvNamefifth.setText(playerList.get(4).getPlayerName());
                         binding.tvPointsFifth.setText(playerList.get(4).getPlayerpoints());
+
                         binding.tvNameWinner.setVisibility(View.INVISIBLE);
                         binding.tvPointsWinner.setVisibility(View.INVISIBLE);
                         break;
@@ -99,23 +104,10 @@ public class GameResultActivity extends BaseActivity {
         binding.btnMainAc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendServerCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
-                    @Override
-                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
 
-                        Log.d("END", "onResponse: left Game successfully");
-                        Intent intent= new Intent(GameResultActivity.this, MainActivity.class);
-                        startActivity(intent);
+                Intent intent= new Intent(GameResultActivity.this, MainActivity.class);
+                startActivity(intent);
 
-                    }
-
-                    @Override
-                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-
-                        Log.d("END","Server not responding");
-
-                    }
-                });
             }
         });
 
