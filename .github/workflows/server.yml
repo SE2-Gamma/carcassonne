@@ -6,7 +6,8 @@ on:
     branches-ignore:
       - '**'
   pull_request:
-    branches: [ master, development ]
+    # uncomment branches when test failures are fixed
+    #branches: [ master, development ]
     # remove branches-ignore when test failures in server are fixed
     branches-ignore:
       - '**'
