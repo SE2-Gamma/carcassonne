@@ -2,27 +2,23 @@ package at.aau.se2.gamma.carcassonne;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.graphics.Cursor;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.GLVersion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
-import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMap;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.Screens.Gamescreen;
+import at.aau.se2.gamma.core.models.impl.GameMap;
+import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 
 public class LibgdxHudTest {
 
@@ -33,7 +29,7 @@ public class LibgdxHudTest {
         private OrthographicCamera playercam;
         private Viewport gameviewport;
 
-        private GameMap myMap;
+        private GameMapManager myMap;
         private SpriteBatch sb;
 
         private GameCard gc;
@@ -42,8 +38,10 @@ public class LibgdxHudTest {
 
         private Hud myHud;
 
+        private GameMap firstMap;
 
-       // @Before
+
+        //@Before
         public void before(){
 
             playercam = new OrthographicCamera();
@@ -60,15 +58,17 @@ public class LibgdxHudTest {
 
             myTexture = Mockito.mock(Texture.class);
             position = new Vector2(0,0);
-            gc = new GameCard(myTexture,position);
+            gc = new GameCard(myTexture,position, Mockito.mock(GameMapEntry.class));
 
+            firstMap = new GameMap();
+            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap, true, new ArrayList<>());
 
-            myMap = new GameMap(playercam, gameviewport, sb);
+            myMap = new GameMapManager(playercam, gameviewport, sb, firstMap, true, new ArrayList<>());
             Mockito.doNothing().when(sb).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
 
             //Viewport myViewport = Mockito.mock(ScreenViewport.class);
             //Mockito.when(myViewport.)
-            myHud = new Hud(sb);
+            myHud = new Hud(sb, Mockito.mock(Gamescreen.class));
 
             Graphics myG = Mockito.mock(Graphics.class);
 
@@ -83,7 +83,7 @@ public class LibgdxHudTest {
         public void Hud_draw_test(){
             //no textures set, thats why we have 0 sb.draw calls
 
-            myHud.drawStage("testing");
+            myHud.drawStage();
            // Mockito.verify(sb, Mockito.times(0)).draw(Mockito.any(Texture.class), Mockito.anyFloat(), Mockito.anyFloat());
 
             //myMap.setGamecard(new Vector2(10,10), gc);

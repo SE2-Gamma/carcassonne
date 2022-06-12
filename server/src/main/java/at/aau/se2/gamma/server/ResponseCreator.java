@@ -1,10 +1,9 @@
 package at.aau.se2.gamma.server;
 
 import at.aau.se2.gamma.core.ServerResponse;
-import at.aau.se2.gamma.core.commands.BaseCommand;
-import at.aau.se2.gamma.core.commands.PayloadResponseCommand;
-import at.aau.se2.gamma.core.commands.ServerResponseCommand;
-import at.aau.se2.gamma.core.commands.StringResponseCommand;
+import at.aau.se2.gamma.core.commands.*;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.BroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PayloadBroadcastCommand;
 import at.aau.se2.gamma.core.commands.error.Codes;
 import at.aau.se2.gamma.core.commands.error.ErrorCommand;
 
@@ -22,6 +21,14 @@ public class ResponseCreator {
 
     }
     static public ServerResponseCommand getSuccess(BaseCommand command, Object payload){
+        System.out.print("//success! payload: "+payload.toString()+"//");
         return new ServerResponseCommand(ServerResponse.success(new PayloadResponseCommand(payload)), command.getRequestId());
     }
+
+
+    static public ServerResponseCommand getBroadcastCommand(BroadcastCommand command){
+        return new ServerResponseCommand(ServerResponse.success(command), "-1");
+
+    }
+
 }

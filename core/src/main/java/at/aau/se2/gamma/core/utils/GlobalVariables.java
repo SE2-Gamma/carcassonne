@@ -5,14 +5,20 @@ public class GlobalVariables {
         return adress;
     }
 
-    static String adress="192.168.0.45";
+
+    public static void setAdress(String adress) {
+        GlobalVariables.adress = adress;
+    }
+
+    static String adress="172.19.192.1";
+
 
     public static String getDefaultname() {
         return defaultname;
     }
 
     private static String defaultname="XXXXXXXXXXXX";
-    private static int port=1234;
+    private static int port=53212;
     private static String defaultID="-1";
     public static String getDefaultID() {
         return defaultID;
