@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 import at.aau.se2.gamma.carcassonne.MainActivity;
 import at.aau.se2.gamma.carcassonne.base.BaseActivity;
@@ -31,23 +34,47 @@ public class GameResultActivity extends BaseActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        playerList = new LinkedList<>();
+        ArrayList<EndscreenPlayerDisplay> players = null;
 
-                playerList = new LinkedList<>();
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
 
-                //PayloadResponseCommand temp = (PayloadResponseCommand) payload;
-                ArrayList<Player> players = null; //TODO extract list from players
-                LinkedList<String> addedPlayers = new LinkedList<>();
-                int count = 0;
+        ArrayList<String> listPlayers = extras.getStringArrayList("PLAYERS");
+        ArrayList<Integer> listPoints = extras.getIntegerArrayList("POINTS");
+
+/*        try {
+            Scanner reader = new Scanner(statistics);
+            while(reader.hasNextLine()){
+                statisticsStr = reader.nextLine();
+                Log.i("Loaded Data", "Data loaded "+statisticsStr);
+            }
+            reader.close();
+        } catch (FileNotFoundException e) {
+            Log.e("Error","Failed reading statistic data from file");
+        }*/
+
+        //Go over string and extract the data with points and player
+/*        String[] statisticArr = statisticsStr.split("#");
+        for (int i = 0; i < statisticArr.length-1; i+=2) {
+            players.add(new EndscreenPlayerDisplay(statisticArr[i],Integer.parseInt(statisticArr[i+1])));
+        }*/
+
+
+        LinkedList<String> addedPlayers = new LinkedList<>();
+
                 int addedCount = 0;
-
+                int i;
                 EndscreenPlayerDisplay bestPlayer = new EndscreenPlayerDisplay("player",0);
-                while(addedCount<players.size()) {
-                    for (Player player:players) {
-                        if(!addedPlayers.contains(player.getName())&&player.getPoints()>=bestPlayer.getPlayerpoints()){
-                            bestPlayer.setPlayerName(player.getName());
-                            bestPlayer.setPlayerpoints(player.getPoints());
+                while(addedCount<listPlayers.size()) {
+                    i=0;
+                    for (String player:listPlayers) {
+                        if(!addedPlayers.contains(player)&&listPoints.get(i)>=bestPlayer.getPlayerpoints()){
+                            bestPlayer.setPlayerName(player);
+                            bestPlayer.setPlayerpoints(listPoints.get(i));
 
                         }
+                        i++;
                     }
                     playerList.add(bestPlayer);
                     addedPlayers.add(bestPlayer.getPlayerName());
@@ -110,10 +137,5 @@ public class GameResultActivity extends BaseActivity {
 
             }
         });
-
-
-
-
-
     }
 }
