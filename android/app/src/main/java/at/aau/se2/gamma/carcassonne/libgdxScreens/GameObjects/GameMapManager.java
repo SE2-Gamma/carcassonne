@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMap;
+import at.aau.se2.gamma.core.models.impl.GameObject;
 import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Soldier;
@@ -474,6 +475,33 @@ public class GameMapManager {
                 (PointX <= BoxX+BoxW)&&
                 (BoxY <= PointY)&&
                 (PointY <= BoxY+BoxH));
+    }
+
+    public void removeUnusedPlacementsOnGamemap(GameObject currentGameobject){
+        for (int j = 0; j < Playingfield.length; j++) {
+            for (int i = 0; i < Playingfield[j].length; i++) {
+                if(Playingfield[j][i] != null && Playingfield[j][i].getGameMapEntry() != null && Playingfield[j][i].getGameMapEntry().getSoldierPlacements() != null){
+                    for(SoldierPlacement sp : Playingfield[j][i].getGameMapEntry().getSoldierPlacements()){
+                        boolean removePlacement = true;
+                        for(Player p : currentGameobject.getGameStatistic().getPlayers()){
+                            if(p != null && p.getSoldiers() != null){
+                                for(Soldier s : p.getSoldiers()){
+                                    if(s.getSoldierPlacement() != null && s.getSoldierPlacement().getGameCardSide().UID == sp.getGameCardSide().UID){
+                                        removePlacement = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            }
+                        if(removePlacement){
+                            Playingfield[j][i].getGameMapEntry().getSoldierPlacements().clear();
+                        }
+                    }
+                }
+
+            }
+        }
+
     }
 
 

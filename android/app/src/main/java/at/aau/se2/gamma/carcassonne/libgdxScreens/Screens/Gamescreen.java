@@ -126,8 +126,11 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     private static final long BTN_TIMEOUT = 1000L;
     private long lastClick;
 
+    boolean statsUpdated;
+
 
     public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
+        statsUpdated = false;
         touchedSoldier = null;
         currentCheatMove = null;
         selectedCheatingSoldier = null;
@@ -453,7 +456,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
                 float speed = Math.abs(gyroX+gyroY+gyroZ - last_x - last_y - last_z) / delta * 10000;
                 //SHAKE_THRESHOLD
-                if (speed > 1500000) {
+                if (speed != 1500000) {
                     Log.d("sensor", "shake detected w/ speed: " + speed);
                     hud.showErrorText(""+speed);
                     //do things after smartphone was shaken
@@ -825,6 +828,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
                 try {
                     currentGameObject.getGameMap().executeGameMove(gm);
+                    if(statsUpdated){
+                        myMap.removeUnusedPlacementsOnGamemap(currentGameObject);
+                        statsUpdated = false;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -869,6 +876,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
             }else if(response.getPayload() instanceof FieldCompletedBroadcastCommand){
                 currentGameObject.setGameStatistic((GameStatistic) payload);
+                statsUpdated = true;
                 hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
             }else if(response.getPayload() instanceof CheatMoveBroadcastCommand){
                  CheatMove cheatMove=CheatMove.getMoveFromData((CheatData) payload,currentGameObject);
