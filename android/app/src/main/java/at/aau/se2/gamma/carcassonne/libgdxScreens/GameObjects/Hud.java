@@ -156,10 +156,6 @@ public class Hud {
         final TextButton button3 = new TextButton("Acc./Dec.", UISkin.getSkin(), "default");
         final TextButton button4 = new TextButton("ErrorTest", UISkin.getSkin(), "default");
 
-
-        //button.setWidth(1000f);
-        //button.setHeight(500f);
-        //button.setPosition(Gdx.graphics.getWidth() /2 - 500f, Gdx.graphics.getHeight()/2 - 250f);
         button.getLabel().setFontScale(5f);
         button.pack();
         button2.getLabel().setFontScale(5f);
@@ -189,7 +185,6 @@ public class Hud {
                 super.clicked(event, x, y);
                 //fadeOut also Changes map... NICE
                 //button.addAction(Actions.fadeOut(0.5f));
-                //button.remove();
                 changeHudState(Hud_State.VIEWING);
             }
         });
