@@ -39,6 +39,7 @@ public class CreateSessionActivity extends BaseActivity {
     }
 
     public void createSession(View view) {
+        binding.buttonCreateSession.setEnabled(false);
         binding.progressBarJoinSessionActivity.setVisibility(View.VISIBLE);
         sessionName = binding.editTextSessionname.getText().toString();
 
@@ -59,6 +60,7 @@ public class CreateSessionActivity extends BaseActivity {
                     extras.putString("UserID", userID);
                     intent.putExtras(extras);
                     startActivity(intent);
+                    binding.buttonCreateSession.setEnabled(true);
                 }
 
                 @Override
@@ -68,6 +70,7 @@ public class CreateSessionActivity extends BaseActivity {
                     binding.textViewError.setText(((LinkedList<String>)payload).get(0));
                     binding.textViewError.setVisibility(View.VISIBLE);
                     binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
+                    binding.buttonCreateSession.setEnabled(true);
                 }
 
             });
@@ -76,6 +79,7 @@ public class CreateSessionActivity extends BaseActivity {
             binding.textViewError.setText("Choose a name for your game!");
             binding.textViewError.setVisibility(View.VISIBLE);
             binding.progressBarJoinSessionActivity.setVisibility(View.INVISIBLE);
+            binding.buttonCreateSession.setEnabled(true);
         }
     }
 

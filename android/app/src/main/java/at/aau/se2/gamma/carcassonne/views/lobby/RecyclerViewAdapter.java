@@ -1,8 +1,6 @@
 package at.aau.se2.gamma.carcassonne.views.lobby;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +68,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View view) {
+            btn_kick_player.setEnabled(false);
             recyclerViewListener.onKickPlayerButtonClick(getAdapterPosition());
+            btn_kick_player.setEnabled(true);
         }
     }
 

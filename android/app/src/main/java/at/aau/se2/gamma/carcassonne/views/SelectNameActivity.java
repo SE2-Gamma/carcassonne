@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
-
 import java.util.LinkedList;
 
 import at.aau.se2.gamma.carcassonne.Launcher;
@@ -43,6 +41,8 @@ public class SelectNameActivity extends BaseActivity {
         binding.btnNameSelectEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.btnNameSelectEnter.setEnabled(false);
+
                 binding.pbSelectNameActivity.setVisibility(View.VISIBLE);
                 String userInput = binding.ptUserName.getText().toString();
 
@@ -67,6 +67,7 @@ public class SelectNameActivity extends BaseActivity {
                                     intent.putExtra("UserName", userInput);
                                     intent.putExtra("UserID", (String)payload);
                                     startActivity(intent);
+                                    binding.btnNameSelectEnter.setEnabled(true);
                                 }
 
                                 @Override
@@ -75,6 +76,7 @@ public class SelectNameActivity extends BaseActivity {
                                     binding.tvError.setText(((LinkedList<String>)payload).get(0));
                                     binding.pbSelectNameActivity.setVisibility(View.INVISIBLE);
                                     binding.tvError.setVisibility(View.VISIBLE);
+                                    binding.btnNameSelectEnter.setEnabled(true);
                                 }
                             });
                         }
@@ -82,6 +84,7 @@ public class SelectNameActivity extends BaseActivity {
                         public void onServerFailure(Exception e) {
                             Logger.debug("NOOOOOO :(");
                             binding.pbSelectNameActivity.setVisibility(View.INVISIBLE);
+                            binding.btnNameSelectEnter.setEnabled(true);
                         }
                     });
                     serverThread.start();
@@ -89,6 +92,7 @@ public class SelectNameActivity extends BaseActivity {
                     binding.pbSelectNameActivity.setVisibility(View.INVISIBLE);
                     binding.tvError.setText("Bitte gib einen Namen ein!");
                     binding.tvError.setVisibility(View.VISIBLE);
+                    binding.btnNameSelectEnter.setEnabled(true);
                 }
             }
         });

@@ -12,7 +12,6 @@ public class GlobalVariables {
 
     static String adress="192.168.0.69";
 
-
     public static String getDefaultname() {
         return defaultname;
     }

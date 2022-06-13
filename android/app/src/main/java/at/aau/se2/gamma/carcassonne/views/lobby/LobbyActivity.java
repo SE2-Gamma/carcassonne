@@ -216,7 +216,6 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                                         adapter.notifyItemChanged(playerList.indexOf(player));
                                     }
                                 });
-
                             }
 
                             @Override
@@ -257,17 +256,20 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
         binding.btnLeaveLobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.btnLeaveLobby.setEnabled(false);
                 sendServerCommand(new LeaveLobbyCommand(null), new ServerThread.RequestResponseHandler() {
                     @Override
                     public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
                         Intent intent = new Intent(LobbyActivity.this, MainActivity.class);
                         intent.putExtra("UserName", userName);
                         startActivity(intent);
+                        binding.btnLeaveLobby.setEnabled(true);
                     }
 
                     @Override
                     public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
                         Toast.makeText(LobbyActivity.this, "smth went wrong", Toast.LENGTH_SHORT).show();
+                        binding.btnLeaveLobby.setEnabled(true);
                     }
                 });
 
