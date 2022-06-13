@@ -126,8 +126,11 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     private static final long BTN_TIMEOUT = 1000L;
     private long lastClick;
 
+    boolean statsUpdated;
+
 
     public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
+        statsUpdated = false;
         touchedSoldier = null;
         currentCheatMove = null;
         selectedCheatingSoldier = null;
@@ -825,11 +828,18 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
                 try {
                     currentGameObject.getGameMap().executeGameMove(gm);
+                    if(statsUpdated){
+
+                        myMap.removeUnusedPlacementsOnGamemap(currentGameObject);
+                        Log.e("TAG", "removed unusred soldiers: " );
+                        statsUpdated = false;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 myMap.setGameMap(currentGameObject.getGameMap());
                 Log.i("LauncherGame", "Updated Map");
+                Log.e("TAG", "gamemovearrive");
             }else if(response.getPayload() instanceof PlayerXsTurnBroadcastCommand){
                 //wenn jemand anderes am zug ist
                 Log.i("LauncherGame", "jemand anderes ist nun an der Reihe");
@@ -868,7 +878,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 myTurn = true;
 
             }else if(response.getPayload() instanceof FieldCompletedBroadcastCommand){
+                Log.e("TAG", "fieldcompleted");
                 currentGameObject.setGameStatistic((GameStatistic) payload);
+                myMap.removeUnusedPlacementsOnGamemap(currentGameObject);
+
                 hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
             }else if(response.getPayload() instanceof CheatMoveBroadcastCommand){
                  CheatMove cheatMove=CheatMove.getMoveFromData((CheatData) payload,currentGameObject);
