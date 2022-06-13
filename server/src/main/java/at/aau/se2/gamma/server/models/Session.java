@@ -290,7 +290,7 @@ public class Session extends BaseModel implements Serializable {
         if(gameLoop.turnOrder.size()==0){
             gameLoop.gameEnded();
         }
-        if(gameLoop.onTurn.getId().equals(player.getId())){
+        if(gameLoop.playing&&gameLoop.onTurn.getId().equals(player.getId())){
             gameLoop.interrupt();
         }
         //remove player from gameobject?
