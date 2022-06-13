@@ -1,5 +1,7 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects;
 
+import android.util.Log;
+
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,9 +11,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import at.aau.se2.gamma.core.models.impl.GameCardSide;
 import at.aau.se2.gamma.core.models.impl.GameMap;
+import at.aau.se2.gamma.core.models.impl.GameMapEntry;
 import at.aau.se2.gamma.core.models.impl.GameObject;
 import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
@@ -478,28 +482,40 @@ public class GameMapManager {
     }
 
     public void removeUnusedPlacementsOnGamemap(GameObject currentGameobject){
+        LinkedList<GameMapEntry>entriesToClear=new LinkedList<>();
         for (int j = 0; j < Playingfield.length; j++) {
             for (int i = 0; i < Playingfield[j].length; i++) {
                 if(Playingfield[j][i] != null && Playingfield[j][i].getGameMapEntry() != null && Playingfield[j][i].getGameMapEntry().getSoldierPlacements() != null){
+                    if(Playingfield[j][i].getGameMapEntry().getSoldierPlacements()==null){
+                        Log.e("TAG", "soldierplacement null");
+                    }
                     for(SoldierPlacement sp : Playingfield[j][i].getGameMapEntry().getSoldierPlacements()){
                         boolean removePlacement = true;
                         for(Player p : currentGameobject.getGameStatistic().getPlayers()){
                             if(p != null && p.getSoldiers() != null){
                                 for(Soldier s : p.getSoldiers()){
                                     if(s.getSoldierPlacement() != null && s.getSoldierPlacement().getGameCardSide().UID == sp.getGameCardSide().UID){
-                                        removePlacement = false;
+                                      removePlacement = false;
                                         break;
                                     }
                                 }
                             }
                             }
                         if(removePlacement){
-                            Playingfield[j][i].getGameMapEntry().getSoldierPlacements().clear();
+                            Log.e("TAG", "removeUnusedPlacementsOnGamemap: " );
+                            entriesToClear.add(Playingfield[j][i].getGameMapEntry());
+                          //  Playingfield[j][i].getGameMapEntry().getSoldierPlacements().clear();
                         }
                     }
                 }
 
             }
+        }
+        Log.e("TAG", entriesToClear.toString() );
+        for (GameMapEntry entry:entriesToClear
+             ) {
+            Log.e("TAG", "removeUnusedPlacementsOnGamemap: " );
+            entry.getSoldierPlacements().clear();
         }
 
     }
