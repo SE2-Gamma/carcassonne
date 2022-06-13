@@ -28,6 +28,7 @@ public class Session extends BaseModel implements Serializable {
    // public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
    public  GameLoop gameLoop=null;
+   public boolean fieldcompleted=false;
 
 //--------------------------Lobby-Methods---------------------
     public void playerReady(Player player){
@@ -189,7 +190,7 @@ public class Session extends BaseModel implements Serializable {
         gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
             System.out.print("//field completed, sending broadcast command");
             gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
-            broadcastAllPlayers(new FieldCompletedBroadcastCommand(gameObject.getGameStatistic()));
+          fieldcompleted=true;
 
         });
          try {
@@ -242,6 +243,11 @@ public class Session extends BaseModel implements Serializable {
 
 
         broadcastAllPlayers(new GameTurnBroadCastCommand(gameturn));
+        if(fieldcompleted){
+            System.out.println("field completed broadcast command sent");
+            broadcastAllPlayers(new FieldCompletedBroadcastCommand(gameObject.getGameStatistic()));
+        }
+        fieldcompleted=false;
          gameLoop.interrupt();//interrupt waiting gameloop
 
     }
@@ -284,7 +290,7 @@ public class Session extends BaseModel implements Serializable {
         if(gameLoop.turnOrder.size()==0){
             gameLoop.gameEnded();
         }
-        if(gameLoop.onTurn.getId().equals(player.getId())){
+        if(gameLoop.playing&&gameLoop.onTurn.getId().equals(player.getId())){
             gameLoop.interrupt();
         }
         //remove player from gameobject?
