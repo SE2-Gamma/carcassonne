@@ -1,5 +1,6 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.Screens;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
@@ -121,6 +122,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     AndroidInterface androidInterface;
     String userName;
     String userID;
+
+    private static final long BTN_TIMEOUT = 1000L;
+    private long lastClick;
+
 
     public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
         touchedSoldier = null;
@@ -483,24 +488,29 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         Gdx.input.setCatchBackKey(true);
 
-        if(Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            Log.d("GameScreen: Render", "isKeyPressed");
-            ServerThread.instance.sendCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
-                @Override
-                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                    dispose();
-                    androidInterface.makeToast("You left the game!");
-                    Log.d("UserName", userName);
-                    Log.d("UserID", userID);
-                    androidInterface.startMainActivity();
-                }
 
-                @Override
-                public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                    Log.d("LeaveGameCommand", "onFailure");
-                    androidInterface.makeToast("Something went wrong!");
-                }
-            });
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            long now = SystemClock.elapsedRealtime();
+            if(now-lastClick > BTN_TIMEOUT) {
+                Log.d("GameScreen: Render", "isKeyPressed");
+                ServerThread.instance.sendCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
+                    @Override
+                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                        dispose();
+                        androidInterface.makeToast("You left the game!");
+                        Log.d("UserName", userName);
+                        Log.d("UserID", userID);
+                        androidInterface.startMainActivity();
+                    }
+
+                    @Override
+                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                        Log.d("LeaveGameCommand", "onFailure");
+                        androidInterface.makeToast("Something went wrong!");
+                    }
+                });
+            }
+            lastClick = now;
         }
     }
 
