@@ -19,10 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
-
 import at.aau.se2.gamma.carcassonne.AndroidInterface;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.CheatMoveSoldierPosition;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
@@ -55,7 +53,6 @@ import at.aau.se2.gamma.core.models.impl.GameMapEntryPosition;
 import at.aau.se2.gamma.core.models.impl.GameMove;
 import at.aau.se2.gamma.core.models.impl.GameObject;
 import at.aau.se2.gamma.core.models.impl.GameStatistic;
-import at.aau.se2.gamma.core.models.impl.Orientation;
 import at.aau.se2.gamma.core.models.impl.Player;
 import at.aau.se2.gamma.core.models.impl.Soldier;
 import at.aau.se2.gamma.core.models.impl.SoldierPlacement;
@@ -181,18 +178,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         playedCard_x = 0;
         playedCard_y = 0;
-
-        //for showcase of functionality, placed starter card.GameCardFactory.D()
-
-        at.aau.se2.gamma.core.models.impl.GameMapEntry starterEntry = new GameMapEntry(GameCardFactory.D(), null, Orientation.NORTH);
-        //myMap.setGamecard(49,49, new GameCard(CardTextures.getTextureFromCardID(starterEntry.getCard().getCardId()), new Vector2(49f*144f,49f*144f), 270f, starterEntry));
-
-        //set currentCard
-
-        //at.aau.se2.gamma.core.models.impl.GameMapEntry newCardFromDeck = new GameMapEntry(CardDeck.get((int)(Math.random()*20)), myPlayerID, Orientation.NORTH);
-        //currentGameCard = new GameCard(CardTextures.getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0),270f,newCardFromDeck);
-
-        //hud.setNextCardTexture(currentGameCard.getGameCardTexture());
 
         hud.changeHudState(Hud.Hud_State.VIEWING);
 
@@ -336,9 +321,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //hud.getPlay_button().setChecked(true);
                 super.clicked(event, x, y);
-                //hud.getButtonGroup().setChecked("PLAY");
                 if(!(hud.getCurrentState().equals(Hud.Hud_State.PLAYING)||hud.getCurrentState().equals(Hud.Hud_State.VIEWING))){
                     if(myTurn){
                         hud.changeHudState(Hud.Hud_State.PLAYING);
@@ -421,7 +404,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-
+                hud.changeHudState(Hud.Hud_State.CHEATING);
             }
         });
 
@@ -470,7 +453,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
                 float speed = Math.abs(gyroX+gyroY+gyroZ - last_x - last_y - last_z) / delta * 10000;
                 //SHAKE_THRESHOLD
-                if (speed != 1500000) {
+                if (speed > 1500000) {
                     Log.d("sensor", "shake detected w/ speed: " + speed);
                     hud.showErrorText(""+speed);
                     //do things after smartphone was shaken
@@ -646,8 +629,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 Log.i("ReportedPlayer", "Touched player");
                 Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+touchedSoldier.getPlayer().getId());
                 Log.i("ReportedPlayer", touchedSoldier.getX()+"|"+touchedSoldier.getY());
-                //if(!(myPlayerID.getId().equals(touchedSoldier.getPlayer().getId()))){
-                    //Log.i("ReportedPlayer", "myPlayerID: "+myPlayerID.getId()+" | touchedSoldier PlayerID: "+touchedSoldier.getPlayer().getId());
                     hud.changeHudState(Hud.Hud_State.ACCEPT_REPORTING);
                     hud.getReportAcceptButton().addListener(new ClickListener(){
                         @Override
@@ -761,7 +742,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                     break;
             }
 
-
+            hud.showErrorText("Shake to Accept");
             hud.changeHudState(Hud.Hud_State.ACCEPT_CHEATING);
 
         }
@@ -832,7 +813,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
             if(response.getPayload() instanceof GameTurnBroadCastCommand){
                 myTurn = false;
                 //nach einen zug
-                //currentGameObject = (GameObject) payload;
                 GameMove gm = (GameMove) payload;
                 gm.setSoldierData(gm.getSoldierData());
                 if(gm.getSoldierData()==null){
@@ -887,7 +867,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 hud.setMyTurn(true);
                 myTurn = true;
 
-                //hud.setNextCardTexture(currentGameCard.getGameCardTexture());
             }else if(response.getPayload() instanceof FieldCompletedBroadcastCommand){
                 currentGameObject.setGameStatistic((GameStatistic) payload);
                 hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
@@ -908,7 +887,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 LinkedList<CheatMove>moves=new LinkedList<>();
                 for (int i = 0; i <cheatData.size(); i++) {
                     moves.add(CheatMove.getMoveFromData(cheatData.get(i),currentGameObject));
-
                 }
 
                 currentGameObject.getGameMap().undoCheatMove(moves);
