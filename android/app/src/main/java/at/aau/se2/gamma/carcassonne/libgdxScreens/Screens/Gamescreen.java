@@ -456,7 +456,7 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
                 float speed = Math.abs(gyroX+gyroY+gyroZ - last_x - last_y - last_z) / delta * 10000;
                 //SHAKE_THRESHOLD
-                if (speed != 1500000) {
+                if (speed > 1500000) {
                     Log.d("sensor", "shake detected w/ speed: " + speed);
                     hud.showErrorText(""+speed);
                     //do things after smartphone was shaken
