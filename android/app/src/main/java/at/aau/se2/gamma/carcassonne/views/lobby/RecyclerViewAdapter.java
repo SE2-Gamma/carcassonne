@@ -19,9 +19,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<LobbyPlayerDisplay> players;
     private RecyclerViewListener recyclerViewListener;
     private Context context;
+    private String userName;
 
-    public RecyclerViewAdapter(List<LobbyPlayerDisplay> players, Context context, RecyclerViewListener recyclerViewListener) {
+    public RecyclerViewAdapter(List<LobbyPlayerDisplay> players, String userName, Context context, RecyclerViewListener recyclerViewListener) {
         this.players = players;
+        this.userName = userName;
         this.context = context;
         this.recyclerViewListener = recyclerViewListener;
     }
@@ -42,6 +44,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.itemView.setBackgroundResource(R.color.tertiary);
         }else{
             holder.itemView.setBackgroundResource(R.color.white);
+        }
+
+        if(userName.equals(item.getPlayerName())) {
+            holder.btn_kick_player.setVisibility(View.GONE);
         }
 
     }

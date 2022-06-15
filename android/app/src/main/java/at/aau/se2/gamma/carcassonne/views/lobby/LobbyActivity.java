@@ -73,7 +73,7 @@ public class LobbyActivity extends BaseActivity implements RecyclerViewAdapter.R
                 for(int i = 0; i < players.size(); i++) {
                     playerList.add(new LobbyPlayerDisplay(players.get(i)));
                 }
-                adapter = new RecyclerViewAdapter(playerList, LobbyActivity.this, LobbyActivity.this);
+                adapter = new RecyclerViewAdapter(playerList, userName,LobbyActivity.this, LobbyActivity.this);
                 binding.rvLobby.setAdapter(adapter);
                 binding.rvLobby.setLayoutManager(new LinearLayoutManager(LobbyActivity.this));
 
