@@ -15,6 +15,7 @@
         <service android:name="at.aau.se2.gamma.carcassonne.ShutdownService" android:stopWithTask="false" />
         <activity
             android:name=".views.Endscreen.GameResultActivity"
+            android:screenOrientation="landscape"
             android:exported="false" />
         <activity
             android:name=".views.SelectNameActivity"

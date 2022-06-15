@@ -23,7 +23,7 @@ import at.aau.se2.gamma.core.commands.RequestUserListCommand;
 import at.aau.se2.gamma.core.models.impl.Player;
 
 public class GameResultActivity extends BaseActivity {
-    private LinkedList<EndscreenPlayerDisplay> playerList;
+    private ArrayList<EndscreenPlayerDisplay> playerList;
 
 
     private ActivityGameResult2Binding binding;
@@ -33,8 +33,8 @@ public class GameResultActivity extends BaseActivity {
         binding = ActivityGameResult2Binding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
-        playerList = new LinkedList<>();
+        Log.d("DebugEnd","entered endactivity");
+        playerList = new ArrayList<>();
         ArrayList<EndscreenPlayerDisplay> players = null;
 
         Intent intent = getIntent();
@@ -42,6 +42,12 @@ public class GameResultActivity extends BaseActivity {
 
         ArrayList<String> listPlayers = extras.getStringArrayList("PLAYERS");
         ArrayList<Integer> listPoints = extras.getIntegerArrayList("POINTS");
+        for (String name:listPlayers) {
+            Log.d("PLayerListEND",name);
+        }
+        for (Integer points:listPoints) {
+            Log.d("PointsListEND", points.toString());
+        }
 
 /*        try {
             Scanner reader = new Scanner(statistics);
@@ -60,8 +66,7 @@ public class GameResultActivity extends BaseActivity {
             players.add(new EndscreenPlayerDisplay(statisticArr[i],Integer.parseInt(statisticArr[i+1])));
         }*/
 
-
-        LinkedList<String> addedPlayers = new LinkedList<>();
+        ArrayList<String> addedPlayers = new ArrayList<>();
 
                 int addedCount = 0;
                 int i;
@@ -78,7 +83,16 @@ public class GameResultActivity extends BaseActivity {
                     }
                     playerList.add(bestPlayer);
                     addedPlayers.add(bestPlayer.getPlayerName());
+                    addedCount++;
                 }
+                Log.d("DebugEnd","calculated order");
+
+        for (EndscreenPlayerDisplay player:playerList) {
+            Log.d("PLayerListEND","Player: "+player.getPlayerName()+" Points: "+player.getPlayerpoints());
+        }
+        for (String player:addedPlayers) {
+            Log.d("PLayerListEND","Player: "+player);
+        }
 
                 binding.tvNameWinner.setVisibility(View.INVISIBLE);
                 binding.tvPointsWinner.setVisibility(View.INVISIBLE);
@@ -91,37 +105,35 @@ public class GameResultActivity extends BaseActivity {
                 binding.tvNamefifth.setVisibility(View.INVISIBLE);
                 binding.tvPointsFifth.setVisibility(View.INVISIBLE);
 
-                switch (players.size()){
+                switch (addedCount){
                     case 5:
-                        binding.tvNameWinner.setText(playerList.get(0).getPlayerName());
-                        binding.tvPointsWinner.setText(playerList.get(0).getPlayerpoints());
+                        binding.tvNamefifth.setText(playerList.get(4).getPlayerName());
+                        binding.tvPointsFifth.setText(String.format(" %s Points",playerList.get(4).getPlayerpoints()));
+                        binding.tvNamefifth.setVisibility(View.VISIBLE);
+                        binding.tvPointsFifth.setVisibility(View.VISIBLE);
 
-                        binding.tvNamefifth.setVisibility(View.INVISIBLE);
-                        binding.tvPointsFifth.setVisibility(View.INVISIBLE);
                     case 4:
-                        binding.tvNameSecond.setText(playerList.get(1).getPlayerName());
-                        binding.tvPointsSecond.setText(playerList.get(1).getPlayerpoints());
+                        binding.tvNamefourth.setText(playerList.get(3).getPlayerName());
+                        binding.tvPointsFourth.setText(String.format(" %s Points",playerList.get(3).getPlayerpoints()));
+                        binding.tvNamefourth.setVisibility(View.VISIBLE);
+                        binding.tvPointsFourth.setVisibility(View.VISIBLE);
 
-                        binding.tvNamefourth.setVisibility(View.INVISIBLE);
-                        binding.tvPointsFourth.setVisibility(View.INVISIBLE);
                     case 3:
                         binding.tvNameThird.setText(playerList.get(2).getPlayerName());
-                        binding.tvPointsThird.setText(playerList.get(2).getPlayerpoints());
+                        binding.tvPointsThird.setText(String.format(" %s Points",playerList.get(2).getPlayerpoints()));
+                        binding.tvNameThird.setVisibility(View.VISIBLE);
+                        binding.tvPointsThird.setVisibility(View.VISIBLE);
 
-                        binding.tvNameThird.setVisibility(View.INVISIBLE);
-                        binding.tvPointsThird.setVisibility(View.INVISIBLE);
                     case 2:
-                        binding.tvNamefourth.setText(playerList.get(3).getPlayerName());
-                        binding.tvPointsFourth.setText(playerList.get(3).getPlayerpoints());
-
-                        binding.tvNameSecond.setVisibility(View.INVISIBLE);
-                        binding.tvPointsSecond.setVisibility(View.INVISIBLE);
+                        binding.tvNameSecond.setText(playerList.get(1).getPlayerName());
+                        binding.tvPointsSecond.setText(String.format(" %s Points",playerList.get(1).getPlayerpoints()));
+                        binding.tvNameSecond.setVisibility(View.VISIBLE);
+                        binding.tvPointsSecond.setVisibility(View.VISIBLE);
                     case 1:
-                        binding.tvNamefifth.setText(playerList.get(4).getPlayerName());
-                        binding.tvPointsFifth.setText(playerList.get(4).getPlayerpoints());
-
-                        binding.tvNameWinner.setVisibility(View.INVISIBLE);
-                        binding.tvPointsWinner.setVisibility(View.INVISIBLE);
+                        binding.tvNameWinner.setText(playerList.get(0).getPlayerName());
+                        binding.tvPointsWinner.setText(String.format(" %s Points",playerList.get(0).getPlayerpoints()));
+                        binding.tvNameWinner.setVisibility(View.VISIBLE);
+                        binding.tvPointsWinner.setVisibility(View.VISIBLE);
                         break;
                     default:
                         Log.d("END","No Players");
