@@ -146,6 +146,7 @@ public class ClientThread extends Thread {
             unlock();
             System.out.print("//unlocking//");
             System.out.print("//message sent");
+            System.out.println("// "+command.getClass().getName()+" broadcasted//");
         } catch (IOException e) {
             //e.printStackTrace();
         }

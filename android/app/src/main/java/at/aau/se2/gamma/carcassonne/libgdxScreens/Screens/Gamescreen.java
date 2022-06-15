@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -37,6 +38,7 @@ import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveDetectedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.FieldCompletedBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.GameCompletedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.GameTurnBroadCastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
@@ -906,6 +908,32 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
                 currentGameObject.getGameMap().undoCheatMove(moves);
                 myMap.setGameMap(currentGameObject.getGameMap());
+            }else if(response.getPayload() instanceof GameCompletedBroadcastCommand){
+
+                Log.i("Game end", "GOT RESPONSE FROM SERVER THAT GAME HAS FINISHED");
+                GameStatistic endStatistic = (GameStatistic) payload;
+                ArrayList<Player> players = endStatistic.getPlayers();
+/*                StringBuilder saveData = new StringBuilder();
+                for (Player player:players) {
+                    saveData.append(player.getName());
+                    saveData.append("#");
+                    saveData.append(player.getPoints());
+                    saveData.append("#");
+
+                }
+                File statisticFile = new File("statistics.txt");
+
+                try {
+                    FileWriter writer = new FileWriter(statisticFile.getName());
+                    writer.write(saveData.toString());
+                    writer.close();
+                    Log.i("Saved Data","Saved the data"+saveData);
+                } catch (IOException e) {
+                    Log.e("Error",e.toString());
+                }*/
+                dispose();
+                androidInterface.startEndActivity(players);
+
             }
 
         }
