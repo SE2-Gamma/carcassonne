@@ -316,49 +316,56 @@ public boolean interruptable=false;
             turnOrder=new LinkedList<>(session.players);
             shuffle(turnOrder);
             printTurnOrder(turnOrder);
+            boolean cardDrawn=false;
 
-            while (playing){
-                interruptable=false;
-                System.out.print("//a new iteration has started//");
-                onTurn=turnOrder.pop();
-                turnOrder.addLast(onTurn);
-                GameCard card=null;
-                System.out.println("//its "+onTurn.getName()+"'s turn!//");
-                try {
-                    card=deck.drawCard();
+                while (playing) {
+                    cardDrawn=false;
+                    interruptable = false;
+                    System.out.print("//a new iteration has started//");
+                    onTurn = turnOrder.pop();
+                    turnOrder.addLast(onTurn);
+                    GameCard card = null;
+                    System.out.println("//its " + onTurn.getName() + "'s turn!//");
+                    try {
+                        card = deck.drawCard();
 
-                   while(!gameObject.getGameMap().checkCardPlaceability(card)){
-                       System.out.print(card.getCardId()+" has been drawn//");
-                       System.out.print("//card not placable, draw new card//");
-                       deck.putBackCard(card);
-                       card=deck.drawCard();
-                   }
+                        while (!gameObject.getGameMap().checkCardPlaceability(card)) {
+                            System.out.print(card.getCardId() + " has been drawn//");
+                            System.out.print("//card not placable, draw new card//");
+                            deck.putBackCard(card);
+                            card = deck.drawCard();
+                        }
+                        cardDrawn = true;
+                        System.out.print(card.getCardId() + " has been drawn//");
+                    } catch (NoSuchElementException e) {
+                        System.out.println("----------------------game ended---------------------");
+                     //   gameEnded(); //todo: implement
+                    }
+                    if (cardDrawn) {
+                        Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card)); //throws socket exception end of stream if player disconnected
+                        System.out.print("//" + onTurn.getName() + " has been notified//");
+                        broadcastAllPlayers(new PlayerXsTurnBroadcastCommand(onTurn.getName()), onTurn);
+                        System.out.print("//notifying all players//");
 
-                    System.out.print(card.getCardId()+" has been drawn//");
-                } catch (NoSuchElementException e) {
-                    System.out.println("----------------------game ended---------------------");
-                    gameEnded(); //todo: implement
+                        try {
+                            interruptable = true;
+                            System.out.print("//waiting for move to be made//");
+                            Thread.sleep(timeout); //waiting for succesfull move to be made
+
+                        } catch (InterruptedException e) {
+                            System.out.print("//notifying all players a turn has been made//");
+                            // broadcastAllPlayers(new GameTurnBroadCastCommand(this.gameObject));
+
+                        }
+
+
+                    }else{
+                        System.out.println("//game ended//");
+                        break;
+                    }
                 }
-
-                Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card)); //throws socket exception end of stream if player disconnected
-                System.out.print("//"+onTurn.getName()+" has been notified//");
-                broadcastAllPlayers(new PlayerXsTurnBroadcastCommand(onTurn.getName()),onTurn);
-                System.out.print("//notifying all players//");
-
-                try {
-                    interruptable=true;
-                    System.out.print("//waiting for move to be made//");
-                    Thread.sleep(timeout); //waiting for succesfull move to be made
-
-                } catch (InterruptedException e) {
-                    System.out.print("//notifying all players a turn has been made//");
-                // broadcastAllPlayers(new GameTurnBroadCastCommand(this.gameObject));
-
-                }
-
-
-
-            }
+            System.out.println("//left gameloop//");
+            gameEnded();
 
 
         }
