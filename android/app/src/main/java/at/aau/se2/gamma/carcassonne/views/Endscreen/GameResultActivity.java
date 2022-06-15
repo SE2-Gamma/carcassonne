@@ -69,21 +69,23 @@ public class GameResultActivity extends BaseActivity {
         ArrayList<String> addedPlayers = new ArrayList<>();
 
                 int addedCount = 0;
-                int i;
-                EndscreenPlayerDisplay bestPlayer = new EndscreenPlayerDisplay("player",0);
+                EndscreenPlayerDisplay bestPlayer;
                 while(addedCount<listPlayers.size()) {
-                    i=0;
-                    for (String player:listPlayers) {
-                        if(!addedPlayers.contains(player)&&listPoints.get(i)>=bestPlayer.getPlayerpoints()){
-                            bestPlayer.setPlayerName(player);
+                    bestPlayer = new EndscreenPlayerDisplay("player",0);
+
+                    for (int i=0;i<listPlayers.size();i++) {
+                        if(!addedPlayers.contains(listPlayers.get(i))&&listPoints.get(i)>=bestPlayer.getPlayerpoints()){
+                            bestPlayer.setPlayerName(listPlayers.get(i));
                             bestPlayer.setPlayerpoints(listPoints.get(i));
 
                         }
-                        i++;
                     }
-                    playerList.add(bestPlayer);
-                    addedPlayers.add(bestPlayer.getPlayerName());
-                    addedCount++;
+                    if(!addedPlayers.contains(bestPlayer.getPlayerName())){
+                        playerList.add(bestPlayer);
+                        addedPlayers.add(bestPlayer.getPlayerName());
+                        Log.d("DebugEnd","Player: "+bestPlayer.getPlayerName()+" added");
+                        addedCount++;
+                    }
                 }
                 Log.d("DebugEnd","calculated order");
 
@@ -91,7 +93,7 @@ public class GameResultActivity extends BaseActivity {
             Log.d("PLayerListEND","Player: "+player.getPlayerName()+" Points: "+player.getPlayerpoints());
         }
         for (String player:addedPlayers) {
-            Log.d("PLayerListEND","Player: "+player);
+            Log.d("AddedPlayers","Player: "+player);
         }
 
                 binding.tvNameWinner.setVisibility(View.INVISIBLE);
@@ -144,8 +146,18 @@ public class GameResultActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent= new Intent(GameResultActivity.this, MainActivity.class);
-                startActivity(intent);
+                sendServerCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
+                    @Override
+                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                        Intent intent= new Intent(GameResultActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                        Log.e("Error","no response from server");
+                    }
+                });
 
             }
         });
