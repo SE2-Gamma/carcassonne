@@ -35,9 +35,7 @@ public class Deck implements Serializable {
         deck.toArray(arr);
         arrayShuffle(arr);
         deck.clear();
-        //deck.addAll(Arrays.asList(arr));
-        deck.add(GameCardFactory.J());
-        deck.add(GameCardFactory.J());
+        deck.addAll(Arrays.asList(arr));
 
     }
     static void arrayShuffle(Object[] arr)

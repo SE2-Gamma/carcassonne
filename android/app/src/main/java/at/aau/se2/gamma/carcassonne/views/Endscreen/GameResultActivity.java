@@ -35,65 +35,37 @@ public class GameResultActivity extends BaseActivity {
         setContentView(view);
         Log.d("DebugEnd","entered endactivity");
         playerList = new ArrayList<>();
-        ArrayList<EndscreenPlayerDisplay> players = null;
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
         ArrayList<String> listPlayers = extras.getStringArrayList("PLAYERS");
         ArrayList<Integer> listPoints = extras.getIntegerArrayList("POINTS");
-        for (String name:listPlayers) {
-            Log.d("PLayerListEND",name);
-        }
-        for (Integer points:listPoints) {
-            Log.d("PointsListEND", points.toString());
-        }
-
-/*        try {
-            Scanner reader = new Scanner(statistics);
-            while(reader.hasNextLine()){
-                statisticsStr = reader.nextLine();
-                Log.i("Loaded Data", "Data loaded "+statisticsStr);
-            }
-            reader.close();
-        } catch (FileNotFoundException e) {
-            Log.e("Error","Failed reading statistic data from file");
-        }*/
-
-        //Go over string and extract the data with points and player
-/*        String[] statisticArr = statisticsStr.split("#");
-        for (int i = 0; i < statisticArr.length-1; i+=2) {
-            players.add(new EndscreenPlayerDisplay(statisticArr[i],Integer.parseInt(statisticArr[i+1])));
-        }*/
 
         ArrayList<String> addedPlayers = new ArrayList<>();
 
-                int addedCount = 0;
-                EndscreenPlayerDisplay bestPlayer;
-                while(addedCount<listPlayers.size()) {
-                    bestPlayer = new EndscreenPlayerDisplay("player",0);
+        int addedCount = 0;
+        EndscreenPlayerDisplay bestPlayer;
+        while(addedCount<listPlayers.size()) {
+             bestPlayer = new EndscreenPlayerDisplay("player",0);
 
-                    for (int i=0;i<listPlayers.size();i++) {
-                        if(!addedPlayers.contains(listPlayers.get(i))&&listPoints.get(i)>=bestPlayer.getPlayerpoints()){
-                            bestPlayer.setPlayerName(listPlayers.get(i));
-                            bestPlayer.setPlayerpoints(listPoints.get(i));
-
-                        }
-                    }
-                    if(!addedPlayers.contains(bestPlayer.getPlayerName())){
-                        playerList.add(bestPlayer);
-                        addedPlayers.add(bestPlayer.getPlayerName());
-                        Log.d("DebugEnd","Player: "+bestPlayer.getPlayerName()+" added");
-                        addedCount++;
-                    }
+             for (int i=0;i<listPlayers.size();i++) {
+                if(!addedPlayers.contains(listPlayers.get(i))&&listPoints.get(i)>=bestPlayer.getPlayerpoints()){
+                     bestPlayer.setPlayerName(listPlayers.get(i));
+                     bestPlayer.setPlayerpoints(listPoints.get(i));
                 }
-                Log.d("DebugEnd","calculated order");
+            }
+            if(!addedPlayers.contains(bestPlayer.getPlayerName())){
+                playerList.add(bestPlayer);
+                addedPlayers.add(bestPlayer.getPlayerName());
+                Log.d("DebugEnd","Player: "+bestPlayer.getPlayerName()+" added");
+                addedCount++;
+            }
+        }
+        Log.d("DebugEnd","calculated order");
 
         for (EndscreenPlayerDisplay player:playerList) {
             Log.d("PLayerListEND","Player: "+player.getPlayerName()+" Points: "+player.getPlayerpoints());
-        }
-        for (String player:addedPlayers) {
-            Log.d("AddedPlayers","Player: "+player);
         }
 
                 binding.tvNameWinner.setVisibility(View.INVISIBLE);
