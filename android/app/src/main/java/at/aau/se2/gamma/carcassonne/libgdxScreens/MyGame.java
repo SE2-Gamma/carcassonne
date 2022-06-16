@@ -23,14 +23,14 @@ public class MyGame extends Game {
 
     //später fixen auf gutes singelton, wenn alles funktioniert
     public MyGame(String gameKey, String userName, String userID,  GameObject initialGameObject, AndroidInterface androidInterface){
-        if(INSTANCE == null){
+        //if(INSTANCE == null){
             INSTANCE = this;
             this.gameKey = gameKey;
             this.userName = userName;
             this.userID = userID;
             this.initialGameObject = initialGameObject;
             this.androidInterface = androidInterface;
-        }
+        //}
     }
 
     @Override
