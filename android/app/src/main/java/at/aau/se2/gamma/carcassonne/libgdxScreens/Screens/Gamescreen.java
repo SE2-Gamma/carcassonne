@@ -904,10 +904,15 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 LinkedList<CheatMove>moves=new LinkedList<>();
                 for (int i = 0; i <cheatData.size(); i++) {
                     moves.add(CheatMove.getMoveFromData(cheatData.get(i),currentGameObject));
-                }
 
+
+                }
+                if(moves.getFirst().getCheater()==currentGameObject.getGameStatistic().getPlayers().get(0)){
+                    Log.e("TAG", "correct player mapped: ");
+                }
                 currentGameObject.getGameMap().undoCheatMove(moves);
                 myMap.setGameMap(currentGameObject.getGameMap());
+                hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
             }else if(response.getPayload() instanceof GameCompletedBroadcastCommand){
 
                 Log.i("Game end", "GOT RESPONSE FROM SERVER THAT GAME HAS FINISHED");

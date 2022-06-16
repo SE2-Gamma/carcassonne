@@ -48,4 +48,14 @@ public class CheatData implements Serializable {
     int newCardSideUID;
     int x;
     int y;
+
+    public int getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(int penalty) {
+        this.penalty = penalty;
+    }
+
+    int penalty;
 }

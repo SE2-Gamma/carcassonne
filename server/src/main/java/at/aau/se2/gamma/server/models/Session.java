@@ -32,33 +32,7 @@ public class Session extends BaseModel implements Serializable {
    public boolean fieldcompleted=false;
 
 //--------------------------Lobby-Methods---------------------
-    public void playerLaunched(Player player) {
-        System.out.print("//"+player.getName()+" has launched//");
-        if(!launchedPlayers.contains(player)) {
-            launchedPlayers.add(player);
-            for (Player a:launchedPlayers
-            ) {
-                System.out.print("//"+a.getName()+" has launched.//");
 
-            }
-        }
-
-        if(launchedPlayers.size() == players.size()) {
-            System.out.println("//all players have launched//");
-            gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
-                System.out.print("//field completed, sending broadcast command");
-                gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
-                fieldcompleted=true;
-            });
-            setDeck(1);
-            deck.printDeck();
-            gameLoop=new GameLoop(this,gameObject);
-            gameLoop.start();
-            System.out.println();
-            System.out.println("//------------------Game "+id+" started--------------------------//");
-            System.out.println();
-        }
-    }
 
     public void playerReady(Player player){
         System.out.print("//"+player.getName()+"tells he is ready//");
@@ -236,6 +210,33 @@ public class Session extends BaseModel implements Serializable {
          System.out.println();*/
         //playerLaunched();
     }
+    public void playerLaunched(Player player) {
+        System.out.print("//"+player.getName()+" has launched//");
+        if(!launchedPlayers.contains(player)) {
+            launchedPlayers.add(player);
+            for (Player a:launchedPlayers
+            ) {
+                System.out.print("//"+a.getName()+" has launched.//");
+
+            }
+        }
+
+        if(launchedPlayers.size() == players.size()) {
+            System.out.println("//all players have launched//");
+            gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
+                System.out.print("//field completed, sending broadcast command");
+                gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
+                fieldcompleted=true;
+            });
+            setDeck(1);
+            deck.printDeck();
+            gameLoop=new GameLoop(this,gameObject);
+            gameLoop.start();
+            System.out.println();
+            System.out.println("//------------------Game "+id+" started--------------------------//");
+            System.out.println();
+        }
+    }
 
 
 
@@ -284,12 +285,16 @@ public class Session extends BaseModel implements Serializable {
     }
     public void executeCheat(CheatData cheatData,int penalty) throws CheatMoveImpossibleException {
         System.out.println("data position: xy "+cheatData.getX()+" "+cheatData.getY());
+        System.err.println("cheaterID "+cheatData.getCheaterID());
         CheatMove cheatMove=CheatMove.getMoveFromData(cheatData,gameLoop.gameObject);
         cheatMove.setPenalty(penalty);
         System.out.println("cheating soldier at position x: "+cheatMove.getSoldier().getX()+"  Y: "+cheatMove.getSoldier().getY());
         System.out.print("//checking cheatmove//");
 
         cheatMove.changeToServerInstance(players, gameLoop.gameObject.getGameMap());
+        System.out.println();
+        System.err.println(cheatMove.getCheater().getName()+"cheated!");
+        System.err.println("cheaterID "+cheatMove.getCheater().getId());
 
         gameLoop.gameObject.getGameMap().executeCheatMove(cheatMove);
         CheatData data=cheatMove.getData();
