@@ -285,12 +285,16 @@ public class Session extends BaseModel implements Serializable {
     }
     public void executeCheat(CheatData cheatData,int penalty) throws CheatMoveImpossibleException {
         System.out.println("data position: xy "+cheatData.getX()+" "+cheatData.getY());
+        System.err.println("cheaterID "+cheatData.getCheaterID());
         CheatMove cheatMove=CheatMove.getMoveFromData(cheatData,gameLoop.gameObject);
         cheatMove.setPenalty(penalty);
         System.out.println("cheating soldier at position x: "+cheatMove.getSoldier().getX()+"  Y: "+cheatMove.getSoldier().getY());
         System.out.print("//checking cheatmove//");
 
         cheatMove.changeToServerInstance(players, gameLoop.gameObject.getGameMap());
+        System.out.println();
+        System.err.println(cheatMove.getCheater().getName()+"cheated!");
+        System.err.println("cheaterID "+cheatMove.getCheater().getId());
 
         gameLoop.gameObject.getGameMap().executeCheatMove(cheatMove);
         CheatData data=cheatMove.getData();

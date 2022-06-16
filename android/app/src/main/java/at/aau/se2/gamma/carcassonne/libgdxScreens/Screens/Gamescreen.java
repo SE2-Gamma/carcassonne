@@ -905,7 +905,6 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 for (int i = 0; i <cheatData.size(); i++) {
                     moves.add(CheatMove.getMoveFromData(cheatData.get(i),currentGameObject));
 
-                    Log.e("TAG", "player cheated: "+moves.getFirst().getCheater().getName() );
 
                 }
                 if(moves.getFirst().getCheater()==currentGameObject.getGameStatistic().getPlayers().get(0)){
