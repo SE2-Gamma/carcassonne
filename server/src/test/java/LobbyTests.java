@@ -513,9 +513,14 @@ socket4.disconnect();
             objectOutputStream.writeObject(new PlayerReadyCommand(null));
             GameObject gameobject=(GameObject) ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertNotNull(gameobject);
-
             String response=(String)ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertEquals("Youre ready now",response);
+
+            objectOutputStream.writeObject(new LaunchSucceededCommand(null));
+
+
+            ServerResponseDecrypter.payloadRetriever(objectInputStream);
+
             GameCard gameCard=(GameCard)ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertNotNull(gameCard);
 
