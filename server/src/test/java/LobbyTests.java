@@ -533,6 +533,17 @@ socket4.disconnect();
 
     }
     @Test
+    void joinStartedGame(){
+        sendName("joinstartedgame");
+        TestSocket playertwo=createanotherSocket("startedgame2");
+        ResponseConsumer consumer=new ResponseConsumer();
+        consumer.start();
+        sendCommand(new CreateGameCommand("joinstartedgame"));
+        sendCommand(new PlayerReadyCommand(null));
+       // sendCommand(new (null));
+
+    }
+    @Test
     void unexcpectedlyDisconnectFromLobby(){
         sendName("unexpectedlydisconnectfromlobby");
         responseConsumer.start();
