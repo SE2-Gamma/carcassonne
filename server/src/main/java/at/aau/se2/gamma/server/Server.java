@@ -79,6 +79,9 @@ public  class Server implements Runnable {
         }
         public static Session joinSession(String sessionID, Player player)throws NoSuchElementException{
             Session temp= getSession(sessionID);
+            if(temp.gameLoop!=null){
+                throw new IllegalArgumentException();
+            }
             temp.joinGame(player);
             return temp;
         }

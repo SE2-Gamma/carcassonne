@@ -406,6 +406,8 @@ public class ClientThread extends Thread {
         } catch (NoSuchElementException e) {
             System.err.println("no Such session");
             return ResponseCreator.getError(command,"no such Session", Codes.ERROR.NO_SESSION_FOUND);
+        }catch(IllegalArgumentException e){
+            return ResponseCreator.getError(command,"Session has already started", Codes.ERROR.GAME_HAS_ALREADY_STARTED);
         }
         //set state
         clientState=ClientState.LOBBY;
