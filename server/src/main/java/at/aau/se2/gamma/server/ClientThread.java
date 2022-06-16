@@ -146,6 +146,7 @@ public class ClientThread extends Thread {
             unlock();
             System.out.print("//unlocking//");
             System.out.print("//message sent");
+            System.out.println("// "+command.getClass().getName()+" broadcasted//");
         } catch (IOException e) {
             //e.printStackTrace();
         }
@@ -204,6 +205,8 @@ public class ClientThread extends Thread {
         }else if(command instanceof DetectCheatCommand) {
             return detectCheat((DetectCheatCommand) command);
 
+        }else if (command instanceof LaunchSucceededCommand) {
+            return playerLaunched((LaunchSucceededCommand) command);
         }
         else{
             System.out.println("command not suitable for current state");
@@ -217,6 +220,14 @@ public class ClientThread extends Thread {
 
 
     //--------------------------------------commands-----------------------------------------------------
+    private BaseCommand playerLaunched(LaunchSucceededCommand command) {
+        if(!clientState.equals(ClientState.GAME)) {
+            return ResponseCreator.getError(command,"youre not ingame", Codes.ERROR.NOT_IN_GAME);
+        }
+
+        session.playerLaunched(player);
+        return ResponseCreator.getSuccess(command,"Your game has launched");
+    }
     private BaseCommand detectCheat(DetectCheatCommand command) {
         if(!clientState.equals(ClientState.GAME)){
             return ResponseCreator.getError(command,"youre not ingame", Codes.ERROR.NOT_IN_GAME);
