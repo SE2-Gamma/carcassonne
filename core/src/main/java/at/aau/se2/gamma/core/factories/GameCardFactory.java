@@ -411,9 +411,9 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
     }
     public static GameCard H() {
         return new GameCard(
-                GameCardSideFactory.createCastleSide(),
+                GameCardSideFactory.createClosedCastleSide(),
                 GameCardSideFactory.createGrasSide(),
-                GameCardSideFactory.createCastleSide(),
+                GameCardSideFactory.createClosedCastleSide(),
                 GameCardSideFactory.createGrasSide(),
 
                 null, "H");
@@ -460,8 +460,8 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
 
     public static GameCard M() {  //todo checkclosingsides
         return new GameCard(
-                GameCardSideFactory.createClosedCastleSide(),
-                GameCardSideFactory.createClosedCastleSide(),
+                GameCardSideFactory.createCastleSide(),
+                GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
 
@@ -471,8 +471,8 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
     }
     public static GameCard N() {
         return new GameCard(
-                GameCardSideFactory.createClosedCastleSide(),
-                GameCardSideFactory.createClosedCastleSide(),
+                GameCardSideFactory.createCastleSide(),
+                GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createGrasSide(),
 
@@ -482,8 +482,8 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
     }
     public static GameCard O() {
         return new GameCard(
-                GameCardSideFactory.createClosedCastleSide(),
-                GameCardSideFactory.createClosedCastleSide(),
+                GameCardSideFactory.createCastleSide(),
+                GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createStreetSide(),
                 GameCardSideFactory.createStreetSide(),
 
@@ -493,8 +493,8 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
     }
     public static GameCard P() {
         return new GameCard(
-                GameCardSideFactory.createClosedCastleSide(),
-                GameCardSideFactory.createClosedCastleSide(),
+                GameCardSideFactory.createCastleSide(),
+                GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createStreetSide(),
                 GameCardSideFactory.createStreetSide(),
 
@@ -507,7 +507,7 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
                 GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createCastleSide(),
-                GameCardSideFactory.createGrasSide(),
+                GameCardSideFactory.createClosedGrasSide(),
 
 
 
@@ -518,7 +518,7 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
                 GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createCastleSide(),
-                GameCardSideFactory.createGrasSide(),
+                GameCardSideFactory.createClosedGrasSide(),
 
 
                 null, "R");
@@ -528,7 +528,7 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
                 GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createCastleSide(),
-                GameCardSideFactory.createStreetSide(),
+                GameCardSideFactory.createClosedStreetSide(),
 
 
                 null, "S");
@@ -538,7 +538,7 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
                 GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createCastleSide(),
                 GameCardSideFactory.createCastleSide(),
-                GameCardSideFactory.createStreetSide(),
+                GameCardSideFactory.createClosedStreetSide(),
 
 
                 null, "T");
