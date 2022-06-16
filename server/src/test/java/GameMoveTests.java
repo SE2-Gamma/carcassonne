@@ -326,6 +326,7 @@ e.printStackTrace();
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
+        waitForResponse();
         assertTrue(returncommands.contains("turn succesfull"));
 
     }

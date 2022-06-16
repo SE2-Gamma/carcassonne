@@ -59,6 +59,7 @@ public class CheatMove implements Serializable {
         data.setCheaterID(cheater.getId());
         data.setNewCardSideUID(this.newPosition.getGameCardSide().UID);
         data.setOriginalCardSideUID(this.originalPosition.getGameCardSide().UID);
+        data.setPenalty(penalty);
         return data;
     }
    static public CheatMove getMoveFromData (CheatData data, GameObject o){
@@ -83,6 +84,7 @@ public class CheatMove implements Serializable {
 
        cheatmove.originalPosition=new SoldierPlacement(soldier,oldside);
        cheatmove.newPosition=new SoldierPlacement(soldier,newside);
+       cheatmove.setPenalty(data.getPenalty());
 
         return cheatmove;
     }
