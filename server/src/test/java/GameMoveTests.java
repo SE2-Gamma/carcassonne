@@ -87,7 +87,7 @@ e.printStackTrace();
             responseConsumer.start();
             waitForResponse(200);
             sendName("player 1");
-            waitForResponse(50);
+            waitForResponse(200);
             Object o =returncommands.getLast();
             if(o instanceof String){
                 System.out.println("is this an ID?"+o);

@@ -254,7 +254,7 @@ public  class Server implements Runnable {
         thread.start();
         System.out.println("server running");
 
-
+/*
         while(!input.equals("stop")){
             input= scanner.nextLine();
             if(input.equals("startgame")){
@@ -347,7 +347,7 @@ public  class Server implements Runnable {
                 SessionHandler.getSession(input).broadcastAllPlayers(new StringBroadcastCommand(scanner.nextLine()));
             }
         }
-
+*/
 
         System.out.println("closing clienthandler");
         server.closeAll();
