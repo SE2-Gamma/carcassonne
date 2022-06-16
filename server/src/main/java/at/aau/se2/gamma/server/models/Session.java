@@ -25,12 +25,41 @@ public class Session extends BaseModel implements Serializable {
     public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
     public ConcurrentLinkedDeque<Player>playerArchive=new ConcurrentLinkedDeque<>();
     public ConcurrentLinkedDeque<Player>readyPlayers=new ConcurrentLinkedDeque<>();
+    public ConcurrentLinkedDeque<Player>launchedPlayers = new ConcurrentLinkedDeque<>();
    // public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
    public  GameLoop gameLoop=null;
    public boolean fieldcompleted=false;
 
 //--------------------------Lobby-Methods---------------------
+    public void playerLaunched(Player player) {
+        System.out.print("//"+player.getName()+" has launched//");
+        if(!launchedPlayers.contains(player)) {
+            launchedPlayers.add(player);
+            for (Player a:launchedPlayers
+            ) {
+                System.out.print("//"+a.getName()+" has launched.//");
+
+            }
+        }
+
+        if(launchedPlayers.size() == players.size()) {
+            System.out.println("//all players have launched//");
+            gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
+                System.out.print("//field completed, sending broadcast command");
+                gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
+                fieldcompleted=true;
+            });
+            setDeck(1);
+            deck.printDeck();
+            gameLoop=new GameLoop(this,gameObject);
+            gameLoop.start();
+            System.out.println();
+            System.out.println("//------------------Game "+id+" started--------------------------//");
+            System.out.println();
+        }
+    }
+
     public void playerReady(Player player){
         System.out.print("//"+player.getName()+"tells he is ready//");
         if(!readyPlayers.contains(player)){
@@ -187,13 +216,13 @@ public class Session extends BaseModel implements Serializable {
 
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
 
-        gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
+        /*gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
             System.out.print("//field completed, sending broadcast command");
             gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
           fieldcompleted=true;
 
-        });
-         try {
+        });*/
+         /*try {
              Thread.sleep(3000);
          } catch (InterruptedException e) {
              e.printStackTrace();
@@ -204,9 +233,11 @@ public class Session extends BaseModel implements Serializable {
         gameLoop.start();
          System.out.println();
          System.out.println("//------------------Game "+id+" started--------------------------//");
-         System.out.println();
-
+         System.out.println();*/
+        //playerLaunched();
     }
+
+
 
 
 //-----------------------------Game-Activity--------------------------

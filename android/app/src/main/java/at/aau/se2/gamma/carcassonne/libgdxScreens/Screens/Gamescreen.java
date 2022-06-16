@@ -1,6 +1,5 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.Screens;
 
-import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -24,9 +23,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
+
 import at.aau.se2.gamma.carcassonne.AndroidInterface;
-import at.aau.se2.gamma.carcassonne.AndroidPlatform;
-import at.aau.se2.gamma.carcassonne.UtilityKlasse;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.CheatMoveSoldierPosition;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCardTextures;

@@ -121,6 +121,7 @@ public class SecureObjectInputStream extends ObjectInputStream {
             allowedClasses.add(GameState.class.getName());
             allowedClasses.add(CheatData.class.getName());
             allowedClasses.add(SoldierData.class.getName());
+            allowedClasses.add(LaunchSucceededCommand.class.getName());
 
 
             allowedClasses.add(java.lang.StackTraceElement.class.getName());
