@@ -87,7 +87,7 @@ e.printStackTrace();
             responseConsumer.start();
             waitForResponse(200);
             sendName("player 1");
-            waitForResponse(50);
+            waitForResponse(200);
             Object o =returncommands.getLast();
             if(o instanceof String){
                 System.out.println("is this an ID?"+o);
@@ -97,6 +97,7 @@ e.printStackTrace();
 
             objectOutputStream.writeObject(new CreateGameCommand("testGame"));waitForResponse();
             objectOutputStream.writeObject(new PlayerReadyCommand(null));waitForResponse();
+            objectOutputStream.writeObject(new LaunchSucceededCommand(null));waitForResponse();
             player1 = new Player((String)o, "player 1");
 
             waitForResponse();
@@ -171,7 +172,7 @@ e.printStackTrace();
 
         GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(48,49));
         try {
-            waitForResponse(4000);
+
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
             waitForResponse();
             LinkedList<Object>error= (LinkedList<Object>) returncommands.getLast();
@@ -190,7 +191,7 @@ e.printStackTrace();
         GameMapEntry entry = new GameMapEntry(GameCardFactory.createGrassCcastleStreetStreet(), player1, Orientation.NORTH);
         GameMove gameMove = new GameMove(player1, entry, new GameMapEntryPosition(49,49));
         try {
-            waitForResponse(4000);
+
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
             waitForResponse();
 
@@ -212,7 +213,7 @@ e.printStackTrace();
         System.out.println();
         System.out.println("testing first incorrect move");
         try {
-            waitForResponse(4000);
+
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));waitForResponse();
 
             System.out.println(returncommands);
@@ -270,7 +271,7 @@ e.printStackTrace();
          */
 
         try {
-            waitForResponse(4000);
+
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));waitForResponse();
 
             System.out.println(returncommands);
@@ -318,13 +319,14 @@ e.printStackTrace();
          */
 
         try {
-            waitForResponse(4000);
+
             objectOutputStream.writeObject(new GameTurnCommand(gameMove));
            waitForResponse();
 
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
+        waitForResponse();
         assertTrue(returncommands.contains("turn succesfull"));
 
     }

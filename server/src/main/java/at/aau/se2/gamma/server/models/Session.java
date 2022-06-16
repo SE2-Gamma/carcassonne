@@ -25,12 +25,15 @@ public class Session extends BaseModel implements Serializable {
     public ConcurrentLinkedDeque<Player>players=new ConcurrentLinkedDeque<>();
     public ConcurrentLinkedDeque<Player>playerArchive=new ConcurrentLinkedDeque<>();
     public ConcurrentLinkedDeque<Player>readyPlayers=new ConcurrentLinkedDeque<>();
+    public ConcurrentLinkedDeque<Player>launchedPlayers = new ConcurrentLinkedDeque<>();
    // public LinkedList<Player> readyPlayers = new LinkedList<>();
     GameState gameState=null;
    public  GameLoop gameLoop=null;
    public boolean fieldcompleted=false;
 
 //--------------------------Lobby-Methods---------------------
+
+
     public void playerReady(Player player){
         System.out.print("//"+player.getName()+"tells he is ready//");
         if(!readyPlayers.contains(player)){
@@ -187,13 +190,13 @@ public class Session extends BaseModel implements Serializable {
 
         broadcastAllPlayers(new GameStartedBroadcastCommand(gameObject));
 
-        gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
+        /*gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
             System.out.print("//field completed, sending broadcast command");
             gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
           fieldcompleted=true;
 
-        });
-         try {
+        });*/
+         /*try {
              Thread.sleep(3000);
          } catch (InterruptedException e) {
              e.printStackTrace();
@@ -204,9 +207,38 @@ public class Session extends BaseModel implements Serializable {
         gameLoop.start();
          System.out.println();
          System.out.println("//------------------Game "+id+" started--------------------------//");
-         System.out.println();
-
+         System.out.println();*/
+        //playerLaunched();
     }
+    public void playerLaunched(Player player) {
+        System.out.print("//"+player.getName()+" has launched//");
+        if(!launchedPlayers.contains(player)) {
+            launchedPlayers.add(player);
+            for (Player a:launchedPlayers
+            ) {
+                System.out.print("//"+a.getName()+" has launched.//");
+
+            }
+        }
+
+        if(launchedPlayers.size() == players.size()) {
+            System.out.println("//all players have launched//");
+            gameObject.getGameMap().setGameMapHandler((GameMapHandler) detectionData -> {
+                System.out.print("//field completed, sending broadcast command");
+                gameObject.getGameStatistic().applyClosedFieldDetectionData(detectionData);
+                fieldcompleted=true;
+            });
+            setDeck(1);
+            deck.printDeck();
+            gameLoop=new GameLoop(this,gameObject);
+            gameLoop.start();
+            System.out.println();
+            System.out.println("//------------------Game "+id+" started--------------------------//");
+            System.out.println();
+        }
+    }
+
+
 
 
 //-----------------------------Game-Activity--------------------------
@@ -253,12 +285,16 @@ public class Session extends BaseModel implements Serializable {
     }
     public void executeCheat(CheatData cheatData,int penalty) throws CheatMoveImpossibleException {
         System.out.println("data position: xy "+cheatData.getX()+" "+cheatData.getY());
+        System.err.println("cheaterID "+cheatData.getCheaterID());
         CheatMove cheatMove=CheatMove.getMoveFromData(cheatData,gameLoop.gameObject);
         cheatMove.setPenalty(penalty);
         System.out.println("cheating soldier at position x: "+cheatMove.getSoldier().getX()+"  Y: "+cheatMove.getSoldier().getY());
         System.out.print("//checking cheatmove//");
 
         cheatMove.changeToServerInstance(players, gameLoop.gameObject.getGameMap());
+        System.out.println();
+        System.err.println(cheatMove.getCheater().getName()+"cheated!");
+        System.err.println("cheaterID "+cheatMove.getCheater().getId());
 
         gameLoop.gameObject.getGameMap().executeCheatMove(cheatMove);
         CheatData data=cheatMove.getData();
@@ -316,49 +352,56 @@ public boolean interruptable=false;
             turnOrder=new LinkedList<>(session.players);
             shuffle(turnOrder);
             printTurnOrder(turnOrder);
+            boolean cardDrawn=false;
 
-            while (playing){
-                interruptable=false;
-                System.out.print("//a new iteration has started//");
-                onTurn=turnOrder.pop();
-                turnOrder.addLast(onTurn);
-                GameCard card=null;
-                System.out.println("//its "+onTurn.getName()+"'s turn!//");
-                try {
-                    card=deck.drawCard();
+                while (playing) {
+                    cardDrawn=false;
+                    interruptable = false;
+                    System.out.print("//a new iteration has started//");
+                    onTurn = turnOrder.pop();
+                    turnOrder.addLast(onTurn);
+                    GameCard card = null;
+                    System.out.println("//its " + onTurn.getName() + "'s turn!//");
+                    try {
+                        card = deck.drawCard();
 
-                   while(!gameObject.getGameMap().checkCardPlaceability(card)){
-                       System.out.print(card.getCardId()+" has been drawn//");
-                       System.out.print("//card not placable, draw new card//");
-                       deck.putBackCard(card);
-                       card=deck.drawCard();
-                   }
+                        while (!gameObject.getGameMap().checkCardPlaceability(card)) {
+                            System.out.print(card.getCardId() + " has been drawn//");
+                            System.out.print("//card not placable, draw new card//");
+                            deck.putBackCard(card);
+                            card = deck.drawCard();
+                        }
+                        cardDrawn = true;
+                        System.out.print(card.getCardId() + " has been drawn//");
+                    } catch (NoSuchElementException e) {
+                        System.out.println("----------------------game ended---------------------");
+                     //   gameEnded(); //todo: implement
+                    }
+                    if (cardDrawn) {
+                        Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card)); //throws socket exception end of stream if player disconnected
+                        System.out.print("//" + onTurn.getName() + " has been notified//");
+                        broadcastAllPlayers(new PlayerXsTurnBroadcastCommand(onTurn.getName()), onTurn);
+                        System.out.print("//notifying all players//");
 
-                    System.out.print(card.getCardId()+" has been drawn//");
-                } catch (NoSuchElementException e) {
-                    System.out.println("----------------------game ended---------------------");
-                    gameEnded(); //todo: implement
+                        try {
+                            interruptable = true;
+                            System.out.print("//waiting for move to be made//");
+                            Thread.sleep(timeout); //waiting for succesfull move to be made
+
+                        } catch (InterruptedException e) {
+                            System.out.print("//notifying all players a turn has been made//");
+                            // broadcastAllPlayers(new GameTurnBroadCastCommand(this.gameObject));
+
+                        }
+
+
+                    }else{
+                        System.out.println("//game ended//");
+                        break;
+                    }
                 }
-
-                Server.identify(onTurn).getClientThread().broadcastMessage(new YourTurnBroadcastCommand(card)); //throws socket exception end of stream if player disconnected
-                System.out.print("//"+onTurn.getName()+" has been notified//");
-                broadcastAllPlayers(new PlayerXsTurnBroadcastCommand(onTurn.getName()),onTurn);
-                System.out.print("//notifying all players//");
-
-                try {
-                    interruptable=true;
-                    System.out.print("//waiting for move to be made//");
-                    Thread.sleep(timeout); //waiting for succesfull move to be made
-
-                } catch (InterruptedException e) {
-                    System.out.print("//notifying all players a turn has been made//");
-                // broadcastAllPlayers(new GameTurnBroadCastCommand(this.gameObject));
-
-                }
-
-
-
-            }
+            System.out.println("//left gameloop//");
+            gameEnded();
 
 
         }
