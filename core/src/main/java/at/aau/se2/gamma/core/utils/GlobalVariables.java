@@ -12,6 +12,7 @@ public class GlobalVariables {
 
     static String adress="se2-demo.aau.at";
 
+
     public static String getDefaultname() {
         return defaultname;
     }

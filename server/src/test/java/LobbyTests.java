@@ -538,6 +538,20 @@ socket4.disconnect();
 
     }
     @Test
+    void joinStartedGame(){
+        sendName("joinstartedgame");
+        TestSocket playertwo=createanotherSocket("startedgame2");
+        ResponseConsumer consumer=new ResponseConsumer();
+        consumer.start();
+        sendCommand(new CreateGameCommand("joinstartedgame"),playertwo.objectOutputStream);
+        sendCommand(new PlayerReadyCommand(null),playertwo.objectOutputStream);
+        sendCommand(new LaunchSucceededCommand(null),playertwo.objectOutputStream);
+        waitForResponse(200);
+        sendCommand(new InitialJoinCommand("joinstartedgame"));
+        LinkedList<Object> errorlist=(LinkedList<Object>) returncommands.getLast();
+        assertEquals("Session has already started", errorlist.pop());
+    }
+    @Test
     void unexcpectedlyDisconnectFromLobby(){
         sendName("unexpectedlydisconnectfromlobby");
         responseConsumer.start();

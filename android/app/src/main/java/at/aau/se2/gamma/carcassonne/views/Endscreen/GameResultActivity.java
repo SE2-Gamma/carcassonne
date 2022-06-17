@@ -24,6 +24,8 @@ import at.aau.se2.gamma.core.models.impl.Player;
 
 public class GameResultActivity extends BaseActivity {
     private ArrayList<EndscreenPlayerDisplay> playerList;
+    private String userName;
+    private String userID;
 
 
     private ActivityGameResult2Binding binding;
@@ -41,6 +43,8 @@ public class GameResultActivity extends BaseActivity {
 
         ArrayList<String> listPlayers = extras.getStringArrayList("PLAYERS");
         ArrayList<Integer> listPoints = extras.getIntegerArrayList("POINTS");
+        userName = extras.getString("UserName");
+        userID = extras.getString("UserID");
 
         ArrayList<String> addedPlayers = new ArrayList<>();
 
@@ -114,24 +118,11 @@ public class GameResultActivity extends BaseActivity {
 
                 }
 
-        binding.btnMainAc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                sendServerCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
-                    @Override
-                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                        Intent intent= new Intent(GameResultActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                        Log.e("Error","no response from server");
-                    }
-                });
-
-            }
+        binding.btnMainAc.setOnClickListener(view1 -> {
+            Intent intent1 = new Intent(GameResultActivity.this, MainActivity.class);
+            intent1.putExtra("UserName",userName);
+            intent1.putExtra("UserID",userID);
+            startActivity(intent1);
         });
     }
 }
