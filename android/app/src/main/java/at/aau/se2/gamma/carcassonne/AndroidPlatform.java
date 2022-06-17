@@ -65,6 +65,8 @@ public class AndroidPlatform implements AndroidInterface{
         Bundle extras = new Bundle();
         extras.putStringArrayList("PLAYERS",playersStr);
         extras.putIntegerArrayList("POINTS",pointsStr);
+        extras.putString("UserName",userName);
+        extras.putString("UserID",userID);
         intent.putExtras(extras);
         context.startActivity(intent);
     }
