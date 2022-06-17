@@ -416,6 +416,8 @@ public boolean interruptable=false;
             System.out.print("//setting states to initial states.//");
             for (Player player:players
                  ) {
+                player.setPlayerPoints(new PlayerPoints(0));
+                player.setSoldiers(new ArrayList<>());
                 Server.identify(player).getClientThread().setClientState(ClientState.INITIAl);
             }
             Server.SessionHandler.removeSession(session);
