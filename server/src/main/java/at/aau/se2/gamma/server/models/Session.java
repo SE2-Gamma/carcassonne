@@ -413,6 +413,11 @@ public boolean interruptable=false;
             gameLoop.gameObject.getGameStatistic().applyEndDetectionData(gameLoop.gameObject.getGameMap().createFinalPointsDetectionData(new ArrayList<>(players)));
             broadcastAllPlayers(new GameCompletedBroadcastCommand(gameLoop.gameObject.getGameStatistic()));
             System.out.print("//all players have been notified. //");
+            System.out.print("//setting states to initial states.//");
+            for (Player player:players
+                 ) {
+                Server.identify(player).getClientThread().setClientState(ClientState.INITIAl);
+            }
             Server.SessionHandler.removeSession(session);
         }
 

@@ -114,24 +114,9 @@ public class GameResultActivity extends BaseActivity {
 
                 }
 
-        binding.btnMainAc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                sendServerCommand(new LeaveGameCommand(null), new ServerThread.RequestResponseHandler() {
-                    @Override
-                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                        Intent intent= new Intent(GameResultActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
-                        Log.e("Error","no response from server");
-                    }
-                });
-
-            }
+        binding.btnMainAc.setOnClickListener(view1 -> {
+            Intent intent1 = new Intent(GameResultActivity.this, MainActivity.class);
+            startActivity(intent1);
         });
     }
 }

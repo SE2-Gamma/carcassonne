@@ -7,7 +7,7 @@ public class ErrorCommand extends BaseCommand {
 
     //Payload = LinkedList<Object>
     //1. entry: String message
-    //2. entry: ErrorCode (TODO: Implement ENUM for error codes in own file)
+    //2. entry: ErrorCode
 
     public ErrorCommand(Object payload) {
         super(payload);
