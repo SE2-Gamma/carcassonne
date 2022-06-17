@@ -27,7 +27,7 @@ public class MyGame extends Game {
        // if(INSTANCE == null){
 
      
- development
+
             INSTANCE = this;
             this.gameKey = gameKey;
             this.userName = userName;
