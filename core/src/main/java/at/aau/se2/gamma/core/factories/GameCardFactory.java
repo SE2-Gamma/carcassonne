@@ -292,9 +292,9 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
     }
     public static GameCard createCgrassStreetCgrassStreet() {
         return new GameCard(
-                GameCardSideFactory.createClosedGrasSide(),
+                GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createStreetSide(),
-                GameCardSideFactory.createClosedGrasSide(),
+                GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createStreetSide(),
 
 
@@ -545,9 +545,9 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
     }
     public static GameCard U() {
         return new GameCard(
-                GameCardSideFactory.createClosedGrasSide(),
+                GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createStreetSide(),
-                GameCardSideFactory.createClosedGrasSide(),
+                GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createStreetSide(),
 
 
@@ -566,7 +566,7 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
     public static GameCard W() {
         return new GameCard(
                 GameCardSideFactory.createClosedStreetSide(),
-                GameCardSideFactory.createClosedGrasSide(),
+                GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createClosedStreetSide(),
                 GameCardSideFactory.createClosedStreetSide(),
 
