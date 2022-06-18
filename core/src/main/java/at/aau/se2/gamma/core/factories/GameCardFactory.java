@@ -313,7 +313,7 @@ public static LinkedList<GameCard> getDeck(int multfaktor){
     public static GameCard createCstreetCGrassCstreetCstreet() {
         return new GameCard(
                 GameCardSideFactory.createClosedStreetSide(),
-                GameCardSideFactory.createClosedGrasSide(),
+                GameCardSideFactory.createGrasSide(),
                 GameCardSideFactory.createClosedStreetSide(),
                 GameCardSideFactory.createClosedStreetSide(),
 
