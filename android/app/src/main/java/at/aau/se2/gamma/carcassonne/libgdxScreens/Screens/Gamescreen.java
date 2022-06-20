@@ -456,37 +456,37 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 float gyroX = Gdx.input.getGyroscopeX();
                 float gyroY = Gdx.input.getGyroscopeY();
                 float gyroZ = Gdx.input.getGyroscopeZ();
+                if(gyroX > -50f && gyroY > -50f && gyroZ > -50f){
+                    float speed = Math.abs(gyroX+gyroY+gyroZ - last_x - last_y - last_z) / delta * 10000;
+                    //SHAKE_THRESHOLD
+                    if (speed > 1500000) {
+                        Log.d("sensor", "shake detected w/ speed: " + speed +" gyroX: "+gyroX+" gyroY: "+gyroY +"gyroZ: "+gyroZ);
+                        //hud.showErrorText(""+speed);
+                        //do things after smartphone was shaken
+                        ServerThread.instance.sendCommand(new CheatCommand(currentCheatMove.getData()), new ServerThread.RequestResponseHandler() {
+                            @Override
+                            public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                                String responseString = (String) payload;
+                                Log.i("LauncherGame", responseString);
+                                //if(!responseString.equals("sucessfull")){
+                                hud.showErrorText(responseString);
+                                //}
 
+                            }
 
-                float speed = Math.abs(gyroX+gyroY+gyroZ - last_x - last_y - last_z) / delta * 10000;
-                //SHAKE_THRESHOLD
-                if (speed > 1500000) {
-                    Log.d("sensor", "shake detected w/ speed: " + speed);
-                    hud.showErrorText(""+speed);
-                    //do things after smartphone was shaken
-                    ServerThread.instance.sendCommand(new CheatCommand(currentCheatMove.getData()), new ServerThread.RequestResponseHandler() {
-                                @Override
-                                public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
-                                    String responseString = (String) payload;
-                                    Log.i("LauncherGame", responseString);
-                                    //if(!responseString.equals("sucessfull")){
-                                    hud.showErrorText(responseString);
-                                    //}
+                            @Override
+                            public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
 
-                        }
+                            }
+                        });
 
-                        @Override
-                        public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+                        hud.changeHudState(Hud.Hud_State.CHEATING);
 
-                        }
-                    });
-
-                    hud.changeHudState(Hud.Hud_State.CHEATING);
-
+                    }
+                    last_x = gyroX;
+                    last_y = gyroY;
+                    last_z = gyroZ;
                 }
-                last_x = gyroX;
-                last_y = gyroY;
-                last_z = gyroZ;
 
             }else {
                 hud.showErrorText("BRUHHH NO Gyroscope YIKES");

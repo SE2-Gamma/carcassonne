@@ -76,20 +76,6 @@ public class MainActivity extends BaseActivity implements ServerThread.Broadcast
             }
         });
 
-        binding.btnUiElements.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, UIElementsActivity.class));
-            }
-        });
-
-        binding.btnGameplayTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, Launcher.class));
-            }
-        });
-
         binding.btnBackToLobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

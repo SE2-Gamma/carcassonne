@@ -97,12 +97,6 @@ public class SelectNameActivity extends BaseActivity {
             }
         });
 
-        binding.btnGameplayTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SelectNameActivity.this, Launcher.class));
-            }
-        });
     }
 
     @Override
