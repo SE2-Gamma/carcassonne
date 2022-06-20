@@ -11,7 +11,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.Matchers.not;
 
 import android.view.View;
 import android.widget.EditText;
@@ -102,30 +101,6 @@ public class CreateSessionActivityTest {
         } catch (NoServerInstanceException e) {
             Logger.error(e.getMessage());
         }
-    }
-
-    @Test
-    public void test_navigate_MainActivity() {
-        //check MainActivity
-        onView(withId(R.id.btn_navigate_create_session)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_navigate_join_session)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_BackToLobby)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.pb_menu)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.btn_gameplay_test)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_ui_elements)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void test_navigate_CreateSessionActivity() {
-        //navigate to CreateSessionActivity
-        onView(withId(R.id.btn_navigate_create_session)).perform(forceClick());
-
-        //check CreateSessionActivity
-        onView(withId(R.id.textView_instruction_sessionname)).check(matches(isDisplayed()));
-        onView(withId(R.id.editText_sessionname)).check(matches(isDisplayed()));
-        onView(withId(R.id.button_create_session)).check(matches(isDisplayed()));
-        onView(withId(R.id.textView_error)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.progressBar_JoinSessionActivity)).check(matches(not(isDisplayed())));
     }
 
     @Test

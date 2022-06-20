@@ -10,7 +10,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.Matchers.not;
 
 import android.view.View;
 import android.widget.EditText;
@@ -101,20 +100,6 @@ public class JoinSessionActivityTest {
         } catch (NoServerInstanceException e) {
             Logger.error(""+e.getMessage());
         }
-    }
-
-    @Test
-    public void test_navigate_JoinSessionActivity() {
-
-        //navigate to JoinSessionActivity
-        onView(withId(R.id.btn_navigate_join_session)).perform(forceClick());
-
-        //check JoinSessionActivity
-        onView(withId(R.id.textView)).check(matches(isDisplayed()));
-        onView(withId(R.id.pt_InputKey)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_Enter)).check(matches(isDisplayed()));
-        onView(withId(R.id.pb_JoinSessionActivity)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.tv_error)).check(matches(not(isDisplayed())));
     }
 
     @Test
