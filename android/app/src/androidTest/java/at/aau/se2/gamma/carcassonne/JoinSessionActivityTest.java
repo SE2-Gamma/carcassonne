@@ -1,6 +1,7 @@
 package at.aau.se2.gamma.carcassonne;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.hamcrest.Matcher;
@@ -33,7 +35,7 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.DisconnectCommand;
 
-public class SelectNameActivityTest {
+public class JoinSessionActivityTest {
 
     @Rule
     public ActivityScenarioRule<SelectNameActivity> activityRule = new ActivityScenarioRule<>(SelectNameActivity.class);
@@ -49,6 +51,29 @@ public class SelectNameActivityTest {
             e.printStackTrace();
         }
 */
+
+        String etText = getTextOfEditText(onView(withId(R.id.pt_UserName)));
+
+        //enter a Name if empty
+        if(etText == "" || etText == null){
+            onView(withId(R.id.pt_UserName)).perform(typeText("Test-User"), ViewActions.closeSoftKeyboard());
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //navigate to MainActivity
+        onView(withId(R.id.btn_NameSelectEnter)).perform(forceClick());
+
+        //wait for server response
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @After
@@ -79,13 +104,30 @@ public class SelectNameActivityTest {
     }
 
     @Test
+    public void test_navigate_JoinSessionActivity() {
+
+        //navigate to JoinSessionActivity
+        onView(withId(R.id.btn_navigate_join_session)).perform(forceClick());
+
+        //check JoinSessionActivity
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+        onView(withId(R.id.pt_InputKey)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_Enter)).check(matches(isDisplayed()));
+        onView(withId(R.id.pb_JoinSessionActivity)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.tv_error)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
     public void test_with_input() {
 
-        //enter a Name
-        setTextOfEditText(onView(withId(R.id.pt_UserName)), "Test-User");
+        //navigate to JoinSessionActivity
+        onView(withId(R.id.btn_navigate_join_session)).perform(forceClick());
 
-        //navigate to MainActivity
-        onView(withId(R.id.btn_NameSelectEnter)).perform(forceClick());
+        //enter Sessionname
+        onView(withId(R.id.pt_InputKey)).perform(typeText("Test-Session"), ViewActions.closeSoftKeyboard());
+
+        //navigate to Lobby
+        onView(withId(R.id.btn_Enter)).perform(forceClick());
 
         //wait for server response
         try {
@@ -94,32 +136,22 @@ public class SelectNameActivityTest {
             e.printStackTrace();
         }
 
-        //check navigation to MainActivity
-        onView(withId(R.id.btn_navigate_create_session)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_navigate_join_session)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_BackToLobby)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.pb_menu)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.btn_gameplay_test)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_ui_elements)).check(matches(isDisplayed()));
+        //check server response
+        onView(withId(R.id.tv_error)).check(matches(isDisplayed()));
     }
 
     @Test
     public void test_without_input() {
 
-        String etText = getTextOfEditText(onView(withId(R.id.pt_UserName)));
-        Logger.debug("without_input_EditText: " + etText);
+        //navigate to JoinSessionActivity
+        onView(withId(R.id.btn_navigate_join_session)).perform(forceClick());
 
-        //clear Name
-        if (etText != "" || etText != null) {
-            setTextOfEditText(onView(withId(R.id.pt_UserName)), "");
-        }
+        //click join button
+        onView(withId(R.id.btn_Enter)).perform(forceClick());
 
-        //click select name button
-        onView(withId(R.id.btn_NameSelectEnter)).perform(forceClick());
-
-        //check if tv_Error is displayed with correct text
-        onView(withId(R.id.tv_Error)).check(matches(isDisplayed()));
-        onView(withId(R.id.tv_Error)).check(matches(withText("Bitte gib einen Namen ein!")));
+        //check if tv_error is displayed with correct text
+        onView(withId(R.id.tv_error)).check(matches(isDisplayed()));
+        onView(withId(R.id.tv_error)).check(matches(withText("Bitte gib einen Game Key ein!")));
     }
 
     public static ViewAction forceClick() {
@@ -167,31 +199,6 @@ public class SelectNameActivityTest {
 
         } catch (Exception e) {
             return e.toString();
-        }
-    }
-
-    public static void setTextOfEditText(ViewInteraction vi, String text) {
-        try {
-            vi.perform(new ViewAction() {
-                @Override
-                public Matcher<View> getConstraints() {
-                    return isAssignableFrom(EditText.class);
-                }
-
-                @Override
-                public String getDescription() {
-                    return "set text";
-                }
-
-                @Override
-                public void perform(UiController uiController, View view) {
-                    EditText editText = (EditText) view;
-                    editText.setText(text);
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
