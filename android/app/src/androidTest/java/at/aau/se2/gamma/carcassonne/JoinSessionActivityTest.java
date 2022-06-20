@@ -9,7 +9,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 import static org.hamcrest.CoreMatchers.allOf;
 
 import android.view.View;
@@ -35,14 +34,14 @@ import at.aau.se2.gamma.core.ServerResponse;
 import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.DisconnectCommand;
 
-public class CreateSessionActivityTest {
+public class JoinSessionActivityTest {
 
     @Rule
     public ActivityScenarioRule<SelectNameActivity> activityRule = new ActivityScenarioRule<>(SelectNameActivity.class);
 
     @Before
     public void setUp() throws Exception {
-        /*
+/*
         //use this delay to start the server after starting the test if you get classNotFoundException
         Logger.debug("Server starten!");
         try {
@@ -50,7 +49,7 @@ public class CreateSessionActivityTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        */
+*/
 
         String etText = getTextOfEditText(onView(withId(R.id.pt_UserName)));
 
@@ -99,25 +98,21 @@ public class CreateSessionActivityTest {
             });
 
         } catch (NoServerInstanceException e) {
-            Logger.error(e.getMessage());
+            Logger.error(""+e.getMessage());
         }
     }
 
     @Test
     public void test_with_input() {
-        onView(withId(R.id.btn_navigate_create_session)).perform(forceClick());
+
+        //navigate to JoinSessionActivity
+        onView(withId(R.id.btn_navigate_join_session)).perform(forceClick());
 
         //enter Sessionname
-        onView(withId(R.id.editText_sessionname)).perform(typeText("Test-Session"), ViewActions.closeSoftKeyboard());
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        onView(withId(R.id.pt_InputKey)).perform(typeText("Test-Session"), ViewActions.closeSoftKeyboard());
 
-        //click create session button
-        onView(withId(R.id.button_create_session)).perform(forceClick());
-        //onView(withId(R.id.textView_error)).check(matches(withText("Session created!")));
+        //navigate to Lobby
+        onView(withId(R.id.btn_Enter)).perform(forceClick());
 
         //wait for server response
         try {
@@ -126,23 +121,22 @@ public class CreateSessionActivityTest {
             e.printStackTrace();
         }
 
-        //check if lobby is displayed
-        onView(withId(R.id.tv_lobby_name)).check(matches(isDisplayed()));
-        onView(withId(R.id.tv_player_count)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_LeaveLobby)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_ready)).check(matches(isDisplayed()));
-        onView(withId(R.id.rv_lobby)).check(matches(isDisplayed()));
+        //check server response
+        onView(withId(R.id.tv_error)).check(matches(isDisplayed()));
     }
 
     @Test
     public void test_without_input() {
-        onView(withId(R.id.btn_navigate_create_session)).perform(forceClick());
 
-        //click create session button
-        onView(withId(R.id.button_create_session)).perform(forceClick());
+        //navigate to JoinSessionActivity
+        onView(withId(R.id.btn_navigate_join_session)).perform(forceClick());
 
-        //check if textView_error is displayed with correct text
-        onView(withId(R.id.textView_error)).check(matches(withText("Choose a name for your game!")));
+        //click join button
+        onView(withId(R.id.btn_Enter)).perform(forceClick());
+
+        //check if tv_error is displayed with correct text
+        onView(withId(R.id.tv_error)).check(matches(isDisplayed()));
+        onView(withId(R.id.tv_error)).check(matches(withText("Please enter a valid Game-Key!")));
     }
 
     public static ViewAction forceClick() {

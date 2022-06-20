@@ -1,9 +1,6 @@
 package at.aau.se2.gamma.carcassonne;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.clearText;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -20,7 +17,6 @@ import android.widget.EditText;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.hamcrest.Matcher;
@@ -121,7 +117,7 @@ public class SelectNameActivityTest {
 
         //check if tv_Error is displayed with correct text
         onView(withId(R.id.tv_Error)).check(matches(isDisplayed()));
-        onView(withId(R.id.tv_Error)).check(matches(withText("Bitte gib einen Namen ein!")));
+        onView(withId(R.id.tv_Error)).check(matches(withText("Please enter a name!")));
     }
 
     public static ViewAction forceClick() {
