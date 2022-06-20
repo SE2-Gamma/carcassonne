@@ -132,6 +132,11 @@ public class GameStatistic implements Serializable {
                     }
                 }
             } else {
+                // return if the sides are gras type, because this should only recognized at the end
+                if (closedFieldDetectionData.getGameCardSides().size() > 0
+                        && closedFieldDetectionData.getGameCardSides().get(0).getType() == GameCardSide.Type.GRAS) {
+                    return;
+                }
                 for(GameCard gameCard: closedFieldDetectionData.getGameCards()) {
                     int multiplier = 1;
                     int points = 0;
