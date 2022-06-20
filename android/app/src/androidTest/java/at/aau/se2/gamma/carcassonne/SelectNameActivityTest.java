@@ -119,7 +119,7 @@ public class SelectNameActivityTest {
 
         //check if tv_Error is displayed with correct text
         onView(withId(R.id.tv_Error)).check(matches(isDisplayed()));
-        onView(withId(R.id.tv_Error)).check(matches(withText("Bitte gib einen Namen ein!")));
+        onView(withId(R.id.tv_Error)).check(matches(withText("Please enter a name!")));
     }
 
     public static ViewAction forceClick() {

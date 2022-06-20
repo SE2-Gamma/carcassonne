@@ -151,7 +151,7 @@ public class JoinSessionActivityTest {
 
         //check if tv_error is displayed with correct text
         onView(withId(R.id.tv_error)).check(matches(isDisplayed()));
-        onView(withId(R.id.tv_error)).check(matches(withText("Bitte gib einen Game Key ein!")));
+        onView(withId(R.id.tv_error)).check(matches(withText("Please enter a valid Game-Key!")));
     }
 
     public static ViewAction forceClick() {
