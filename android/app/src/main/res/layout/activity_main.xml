@@ -49,20 +49,5 @@
         android:layout_width="131dp"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/btn_gameplay_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Gameplay Test Funktions (Dev)"
-        style="@style/PrimaryButton"/>
-
-    <Button
-        android:id="@+id/btn_ui_elements"
-        style="@style/PrimaryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:insetBottom="@dimen/spaceDefault"
-        android:text="UI Elements (Dev)" />
-
 
 </LinearLayout>
