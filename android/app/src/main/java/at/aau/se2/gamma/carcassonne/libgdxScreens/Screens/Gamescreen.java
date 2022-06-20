@@ -19,8 +19,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
+
 import at.aau.se2.gamma.carcassonne.AndroidInterface;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.CheatMoveSoldierPosition;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
@@ -35,6 +38,7 @@ import at.aau.se2.gamma.core.commands.BaseCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.CheatMoveDetectedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.FieldCompletedBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.GameCompletedBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.GameTurnBroadCastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
 import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
@@ -126,8 +130,11 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     private static final long BTN_TIMEOUT = 1000L;
     private long lastClick;
 
+    boolean statsUpdated;
+
 
     public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject, AndroidInterface androidInterface){
+        statsUpdated = false;
         touchedSoldier = null;
         currentCheatMove = null;
         selectedCheatingSoldier = null;
@@ -825,11 +832,18 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
                 try {
                     currentGameObject.getGameMap().executeGameMove(gm);
+                    if(statsUpdated){
+
+                        myMap.removeUnusedPlacementsOnGamemap(currentGameObject);
+                        Log.e("TAG", "removed unusred soldiers: " );
+                        statsUpdated = false;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 myMap.setGameMap(currentGameObject.getGameMap());
                 Log.i("LauncherGame", "Updated Map");
+                Log.e("TAG", "gamemovearrive");
             }else if(response.getPayload() instanceof PlayerXsTurnBroadcastCommand){
                 //wenn jemand anderes am zug ist
                 Log.i("LauncherGame", "jemand anderes ist nun an der Reihe");
@@ -868,7 +882,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 myTurn = true;
 
             }else if(response.getPayload() instanceof FieldCompletedBroadcastCommand){
+                Log.e("TAG", "fieldcompleted");
                 currentGameObject.setGameStatistic((GameStatistic) payload);
+                myMap.removeUnusedPlacementsOnGamemap(currentGameObject);
+
                 hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
             }else if(response.getPayload() instanceof CheatMoveBroadcastCommand){
                  CheatMove cheatMove=CheatMove.getMoveFromData((CheatData) payload,currentGameObject);
@@ -887,10 +904,41 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
                 LinkedList<CheatMove>moves=new LinkedList<>();
                 for (int i = 0; i <cheatData.size(); i++) {
                     moves.add(CheatMove.getMoveFromData(cheatData.get(i),currentGameObject));
-                }
 
+
+                }
+                if(moves.getFirst().getCheater()==currentGameObject.getGameStatistic().getPlayers().get(0)){
+                    Log.e("TAG", "correct player mapped: ");
+                }
                 currentGameObject.getGameMap().undoCheatMove(moves);
                 myMap.setGameMap(currentGameObject.getGameMap());
+                hud.setHud_scoreboard(currentGameObject.getGameStatistic().getPlayers());
+            }else if(response.getPayload() instanceof GameCompletedBroadcastCommand){
+
+                Log.i("Game end", "GOT RESPONSE FROM SERVER THAT GAME HAS FINISHED");
+                GameStatistic endStatistic = (GameStatistic) payload;
+                ArrayList<Player> players = endStatistic.getPlayers();
+/*                StringBuilder saveData = new StringBuilder();
+                for (Player player:players) {
+                    saveData.append(player.getName());
+                    saveData.append("#");
+                    saveData.append(player.getPoints());
+                    saveData.append("#");
+
+                }
+                File statisticFile = new File("statistics.txt");
+
+                try {
+                    FileWriter writer = new FileWriter(statisticFile.getName());
+                    writer.write(saveData.toString());
+                    writer.close();
+                    Log.i("Saved Data","Saved the data"+saveData);
+                } catch (IOException e) {
+                    Log.e("Error",e.toString());
+                }*/
+                dispose();
+                androidInterface.startEndActivity(players);
+
             }
 
         }

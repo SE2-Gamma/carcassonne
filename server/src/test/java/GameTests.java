@@ -165,8 +165,10 @@ public class GameTests {
             playertwo.objectOutputStream.writeObject(new InitialJoinCommand("leavegame"));
             waitForResponse();
             objectOutputStream.writeObject(new PlayerReadyCommand(null));
+            objectOutputStream.writeObject(new LaunchSucceededCommand(null));
             waitForResponse();
             playertwo.objectOutputStream.writeObject(new PlayerReadyCommand(null));
+            playertwo.objectOutputStream.writeObject(new LaunchSucceededCommand(null));
             waitForResponse();
             waitForResponse(4000);
             playertwo.objectOutputStream.writeObject(new LeaveGameCommand(null));
@@ -206,7 +208,9 @@ public class GameTests {
             waitForResponse();
             objectOutputStream.writeObject(new PlayerReadyCommand(null));
             waitForResponse();
-            waitForResponse(4000);
+            objectOutputStream.writeObject(new LaunchSucceededCommand(null));
+            waitForResponse();
+
             objectOutputStream.writeObject(new LeaveGameCommand(null));
             waitForResponse();
             assertTrue(returncommands.contains("Game Successfully left."));
@@ -227,8 +231,11 @@ public class GameTests {
             waitForResponse();
             objectOutputStream.writeObject(new PlayerReadyCommand(null));
             waitForResponse();
+            objectOutputStream.writeObject(new LaunchSucceededCommand(null));
+            waitForResponse();
             sendCommand(new PlayerReadyCommand(null), playertwo.objectOutputStream);
-            waitForResponse(2000);
+            sendCommand(new LaunchSucceededCommand(null), playertwo.objectOutputStream);
+
             sendCommand(new RequestUserListCommand(null), objectOutputStream);
             LinkedList<String> list = (LinkedList<String>) returncommands.getLast();
             assertTrue(list.contains("requestuserlistingame"));
@@ -249,15 +256,19 @@ public class GameTests {
             playertwo.objectOutputStream.writeObject(new InitialJoinCommand("requestuserlistingamel"));
             waitForResponse();
             objectOutputStream.writeObject(new PlayerReadyCommand(null));
+
             waitForResponse();
             sendCommand(new PlayerReadyCommand(null), playertwo.objectOutputStream);
-            waitForResponse(4000);
+            sendCommand(new LaunchSucceededCommand(null), playertwo.objectOutputStream);
+            objectOutputStream.writeObject(new LaunchSucceededCommand(null));
+            waitForResponse();
+
             sendCommand(new RequestUserListCommand(null), objectOutputStream);
             LinkedList<String> list = (LinkedList<String>) returncommands.getLast();
             assertTrue(list.contains("requestuserlistingamel"));
             assertTrue(list.contains("requestuserlistingamel2"));
             sendCommand(new LeaveGameCommand(null), playertwo.objectOutputStream);
-            waitForResponse(4000);//in case it was playertwos turn
+          //  waitForResponse(4000);//in case it was playertwos turn
             sendCommand(new RequestUserListCommand(null), objectOutputStream);
             LinkedList<String> list2 = (LinkedList<String>) returncommands.getLast();
             assertTrue(list2.contains("requestuserlistingamel"));
@@ -291,7 +302,7 @@ public class GameTests {
         sendName("disconnectfromgame");
         sendCommand(new CreateGameCommand("testdisconnectfromgame"));
         sendCommand(new PlayerReadyCommand(null));
-        waitForResponse(3000);
+        sendCommand(new LaunchSucceededCommand(null));
         sendCommand(new DisconnectCommand(null));
         assertTrue(returncommands.contains("Disconnect initiated"));
 
@@ -302,8 +313,8 @@ public class GameTests {
         sendName("cheatOnMyTurn");
         sendCommand(new CreateGameCommand("cheatOnMyTurn"));
         sendCommand(new PlayerReadyCommand(null));
-        waitForResponse(5000);
-        sendCommand(new CheatCommand(new CheatData()));
+        sendCommand(new LaunchSucceededCommand(null));
+       sendCommand(new CheatCommand(new CheatData()));
         LinkedList<Object> error = (LinkedList<Object>) returncommands.getLast();
         Codes.ERROR response = (Codes.ERROR) error.getLast();
         assertEquals(Codes.ERROR.INVALID_CHEATMOVE, response);
@@ -336,9 +347,12 @@ public class GameTests {
         sendCommand(new PlayerReadyCommand(null));
         sendCommand(new PlayerReadyCommand(null), playertwo.objectOutputStream);
 
+        sendCommand(new LaunchSucceededCommand(null));
+        sendCommand(new LaunchSucceededCommand(null), playertwo.objectOutputStream);
 
 
-        waitForResponse(4000);
+
+
         Object gamestarted = returncommands.getLast();
 
 
@@ -390,11 +404,13 @@ public class GameTests {
         sendCommand(new InitialJoinCommand("testcheat"), playertwo.objectOutputStream);
         sendCommand(new PlayerReadyCommand(null));
         sendCommand(new PlayerReadyCommand(null), playertwo.objectOutputStream);
+
+        sendCommand(new LaunchSucceededCommand(null));
+        sendCommand(new LaunchSucceededCommand(null), playertwo.objectOutputStream);
         Soldier soldier=null;
-
-
-        waitForResponse(4000);
         Object gamestarted = returncommands.getLast();
+
+
 
 
         if (gamestarted instanceof GameCard) {
@@ -460,7 +476,9 @@ public class GameTests {
         sendCommand(new InitialJoinCommand("detectCheat"), playertwo.objectOutputStream);
         sendCommand(new PlayerReadyCommand(null));
         sendCommand(new PlayerReadyCommand(null), playertwo.objectOutputStream);
-        waitForResponse(4000);
+
+        sendCommand(new LaunchSucceededCommand(null));
+        sendCommand(new LaunchSucceededCommand(null), playertwo.objectOutputStream);
         Soldier soldier=new Soldier(new Player(playertwo.id,"detectcheat"));
         soldier.setX(49);
         soldier.setY(49);

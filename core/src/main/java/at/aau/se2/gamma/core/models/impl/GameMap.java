@@ -78,7 +78,12 @@ public class GameMap implements Serializable {
         //todo: give each cheater the correct penalty (CheatMove.getPlayername <- the cheater
         // CheatMove.getPenalty <- the correct number of points lost. is independent from detected cheats but number of cheats done.
         // so if a player has done 4 cheats but the very first is detected he only loses 1 points, but if the last cheat is detected first he loses 2^4 points.
-        cheatMove.cheater.addPlayerPoints(cheatMove.penalty);
+        for (CheatMove move:moves
+             ) {
+            System.out.print("//"+move.cheater.getName()+"lost "+move.getPenalty()+" points.//");
+            move.cheater.addPlayerPoints((move.penalty*(-1)));
+        }
+
     }
 
     public GameMap() {
@@ -146,26 +151,8 @@ public class GameMap implements Serializable {
         }
 
         // check if new entry matches to neighbours
-        for(int i = 0; i < neswSurroundingFields.length; i++) {
-            GameMapEntry neighbour = neswSurroundingFields[i];
-
-            if (neighbour != null) {
-                // get orientation side where the neighbour is located
-                Orientation side;
-                switch (i) {
-                    case 1: side = Orientation.EAST; break;
-                    case 2: side = Orientation.SOUTH; break;
-                    case 3: side = Orientation.WEST; break;
-                    default: side = Orientation.NORTH;
-                }
-
-                System.out.println("side: "+i+" - "+side.toString());
-
-                // if it can't connect to each other, throw error
-                if (!neighbour.canConnectTo(entryCandidate, side)) {
-                    throw new SurroundingConflictGameMapException();
-                }
-            }
+        if (!gameCardMatchesNeighbors(neswSurroundingFields,entryCandidate)) {
+            throw new SurroundingConflictGameMapException();
         }
 
         // place the movement
@@ -670,7 +657,7 @@ public class GameMap implements Serializable {
                 //es werden alle positionen gefunden in denen bereits eine Karte liegt da nur an diese eine neue angefügt werden kann
                 //in diesen Positionen werden dann alle leeren Nachbarn überprüft ob die momemtane Karte in irgendeiner
                 //Orientierung hineingelegt werden kann
-                if(!(mapArray[y][x] == null)){
+                if((mapArray[y][x] != null)){
 
                     for (Orientation orientation:orientationArr) {
                         if(y< mapArray.length-1&&mapArray[y+1][x] == null){

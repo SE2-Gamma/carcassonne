@@ -513,9 +513,14 @@ socket4.disconnect();
             objectOutputStream.writeObject(new PlayerReadyCommand(null));
             GameObject gameobject=(GameObject) ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertNotNull(gameobject);
-
             String response=(String)ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertEquals("Youre ready now",response);
+
+            objectOutputStream.writeObject(new LaunchSucceededCommand(null));
+
+
+            ServerResponseDecrypter.payloadRetriever(objectInputStream);
+
             GameCard gameCard=(GameCard)ServerResponseDecrypter.payloadRetriever(objectInputStream);
             assertNotNull(gameCard);
 
@@ -531,6 +536,20 @@ socket4.disconnect();
             e.printStackTrace();
         }
 
+    }
+    @Test
+    void joinStartedGame(){
+        sendName("joinstartedgame");
+        TestSocket playertwo=createanotherSocket("startedgame2");
+        ResponseConsumer consumer=new ResponseConsumer();
+        consumer.start();
+        sendCommand(new CreateGameCommand("joinstartedgame"),playertwo.objectOutputStream);
+        sendCommand(new PlayerReadyCommand(null),playertwo.objectOutputStream);
+        sendCommand(new LaunchSucceededCommand(null),playertwo.objectOutputStream);
+        waitForResponse(200);
+        sendCommand(new InitialJoinCommand("joinstartedgame"));
+        LinkedList<Object> errorlist=(LinkedList<Object>) returncommands.getLast();
+        assertEquals("Session has already started", errorlist.pop());
     }
     @Test
     void unexcpectedlyDisconnectFromLobby(){

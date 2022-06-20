@@ -17,10 +17,18 @@ public class CheatMove implements Serializable {
 
     public void changeToServerInstance(ConcurrentLinkedDeque<Player> players, GameMap gameMap) throws CheatMoveImpossibleException {
         boolean playerFound = false;
-
+        Player soldierowned=null;
+        //find cheater
+        for(Player player: players) {
+            if (this.cheater.getId().equals(player.getId())) {
+                setCheater(player);
+                playerFound = true;
+            }
+        }
+        //find owned of cheated soldier
         for(Player player: players) {
             if (this.soldier.getPlayer().getId().equals(player.getId())) {
-                this.setCheater(player);
+                soldierowned=player;
                 playerFound = true;
             }
         }
@@ -28,14 +36,15 @@ public class CheatMove implements Serializable {
         if (!playerFound) {
             throw new CheatMoveImpossibleException("Player not found");
         }
-
+        //find correct soldier
         boolean soldierFound = false;
-        for(Soldier soldier: this.getCheater().getSoldiers()) {
+        for(Soldier soldier: soldierowned.getSoldiers()) {
             if (soldier.getId() == this.getSoldier().getId()) {
                 this.setSoldier(soldier);
                 soldierFound = true;
             }
         }
+
 
         if (!soldierFound) {
             throw new CheatMoveImpossibleException("Soldier not found");
@@ -59,6 +68,7 @@ public class CheatMove implements Serializable {
         data.setCheaterID(cheater.getId());
         data.setNewCardSideUID(this.newPosition.getGameCardSide().UID);
         data.setOriginalCardSideUID(this.originalPosition.getGameCardSide().UID);
+        data.setPenalty(penalty);
         return data;
     }
    static public CheatMove getMoveFromData (CheatData data, GameObject o){
@@ -67,6 +77,7 @@ public class CheatMove implements Serializable {
              ) {
             if(data.cheaterID.equals(player.getId())){
                 cheater=player;
+                break;
             }
         }
         if(cheater==null){
@@ -83,6 +94,7 @@ public class CheatMove implements Serializable {
 
        cheatmove.originalPosition=new SoldierPlacement(soldier,oldside);
        cheatmove.newPosition=new SoldierPlacement(soldier,newside);
+       cheatmove.setPenalty(data.getPenalty());
 
         return cheatmove;
     }
