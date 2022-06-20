@@ -111,8 +111,6 @@ public class CreateSessionActivityTest {
         onView(withId(R.id.btn_navigate_join_session)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_BackToLobby)).check(matches(not(isDisplayed())));
         onView(withId(R.id.pb_menu)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.btn_gameplay_test)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_ui_elements)).check(matches(isDisplayed()));
     }
 
     @Test
