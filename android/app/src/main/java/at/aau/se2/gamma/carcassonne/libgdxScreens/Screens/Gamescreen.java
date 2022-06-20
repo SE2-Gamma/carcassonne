@@ -1,5 +1,7 @@
 package at.aau.se2.gamma.carcassonne.libgdxScreens.Screens;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
@@ -16,10 +18,35 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.LinkedList;
+
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCard;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameCardTextures;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.GameMapManager;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.Hud;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.SoldierTextures;
+import at.aau.se2.gamma.carcassonne.libgdxScreens.GameObjects.UISkin;
 import at.aau.se2.gamma.carcassonne.libgdxScreens.Utility.InputCalculations;
+import at.aau.se2.gamma.carcassonne.network.ServerThread;
+import at.aau.se2.gamma.core.ServerResponse;
+import at.aau.se2.gamma.core.commands.BaseCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.GameTurnBroadCastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.PlayerXsTurnBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.StringBroadcastCommand;
+import at.aau.se2.gamma.core.commands.BroadcastCommands.YourTurnBroadcastCommand;
+import at.aau.se2.gamma.core.commands.GameTurnCommand;
+import at.aau.se2.gamma.core.exceptions.InvalidPositionGameMapException;
+import at.aau.se2.gamma.core.exceptions.NoSurroundingCardGameMapException;
+import at.aau.se2.gamma.core.exceptions.PositionNotFreeGameMapException;
+import at.aau.se2.gamma.core.exceptions.SurroundingConflictGameMapException;
+import at.aau.se2.gamma.core.factories.GameCardFactory;
+import at.aau.se2.gamma.core.models.impl.GameMapEntry;
+import at.aau.se2.gamma.core.models.impl.GameMapEntryPosition;
+import at.aau.se2.gamma.core.models.impl.GameMove;
+import at.aau.se2.gamma.core.models.impl.GameObject;
+import at.aau.se2.gamma.core.models.impl.Orientation;
+import at.aau.se2.gamma.core.models.impl.Player;
+import at.aau.se2.gamma.core.models.impl.Soldier;
 
 public class Gamescreen extends ScreenAdapter implements GestureDetector.GestureListener {
 
@@ -30,8 +57,9 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     private OrthographicCamera playercam;
     private Viewport gameviewport;
     private SpriteBatch batch;
-    Texture textures[];
+    GameCardTextures CardTextures;
     Texture errorTextur;
+
     Hud hud;
 
     GestureDetector gestureDetecor;
@@ -58,9 +86,24 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     int playedCard_x;
     int playedCard_y;
 
+    //storing currently GameCard.
+    GameCard currentGameCard;
+    GameCard lastCard;
 
-    public Gamescreen (){
+    //Card Deck, Just for testing stored locally
+    LinkedList<at.aau.se2.gamma.core.models.impl.GameCard> CardDeck = GameCardFactory.getDeck(1);
 
+    //dataFromServer
+    GameObject currentGameObject;
+    Player myPlayerID;
+
+
+
+
+
+    public Gamescreen (String gameKey, String userName, String UserID, GameObject initialGameObject){
+        currentGameObject = initialGameObject;
+        myPlayerID = new Player(UserID, userName);
 
         playercam = new OrthographicCamera();
         playercam.setToOrtho(false);
@@ -68,12 +111,12 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         //type of Viewport changes how game is displayed on screen -> stretched, black bars,...
         gameviewport = new ExtendViewport(MY_WORLD_WIDTH,MY_WORLD_HEIGHT,playercam);
 
-
         batch = new SpriteBatch();
         hud = new Hud(batch, this);
 
         shaprenderer = new ShapeRenderer();
 
+        //0 mit 49 später ersätzen
         camPos = new Vector2(49f*144f+(128f/2f),49f*144f+(128f/2f));
         playercam.position.set(camPos.x,camPos.y,1);
         playercam.update();
@@ -84,48 +127,132 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
         camPanGesture = new Vector2();
 
-        //setting up playable area / map
-        myMap = new GameMapManager(playercam, gameviewport, batch);
-
+        //loading all gameCard Textures
+        CardTextures.getInstance();
 
         //error Texture for Testing
         errorTextur = new Texture("testTexture.jpg");
 
-        //loading all gameCard Textures
-        textures = new Texture[21];
-        textures[0]=new Texture("Carc1.jpg");
-        textures[1]=new Texture("Carc2.jpg");
-        textures[2]=new Texture("Carc3.jpg");
-        textures[3]=new Texture("Carc4.jpg");
-        textures[4]=new Texture("Carc5.jpg");
-        textures[5]=new Texture("Carc6.jpg");
-        textures[6]=new Texture("Carc7.jpg");
-        textures[7]=new Texture("Carc8.jpg");
-        textures[8]=new Texture("Carc9.jpg");
-        textures[9]=new Texture("Carc10.jpg");
-        textures[10]=new Texture("Carc11.jpg");
-        textures[11]=new Texture("Carc12.jpg");
-        textures[12]=new Texture("Carc13.jpg");
-        textures[13]=new Texture("Carc14.jpg");
-        textures[14]=new Texture("Carc15.jpg");
-        textures[15]=new Texture("Carc16.jpg");
-        textures[16]=new Texture("Carc17.jpg");
-        textures[17]=new Texture("Carc18.jpg");
-        textures[18]=new Texture("Carc19.jpg");
-        textures[19]=new Texture("Carc20.jpg");
-        textures[20]=new Texture("Carc21.jpg");
+        //setting up playable area / map
+        myMap = new GameMapManager(playercam, gameviewport, batch, currentGameObject.getGameMap());
 
-        hud.setNextCardTexture(textures[(int)(Math.random()*20)]);
-        currentCard = hud.getCurrentTexture();
-        playedCard = null;
         playedCard_x = 0;
         playedCard_y = 0;
 
-        //for showcase of functionality, placed a random starter card.
-        myMap.setGamecard(49,49, new GameCard(textures[(int)(Math.random()*20)], new Vector2(49f*144f,49f*144f)));
+        //for showcase of functionality, placed starter card.GameCardFactory.D()
+
+        at.aau.se2.gamma.core.models.impl.GameMapEntry starterEntry = new GameMapEntry(GameCardFactory.D(), null, Orientation.NORTH);
+        //myMap.setGamecard(49,49, new GameCard(CardTextures.getTextureFromCardID(starterEntry.getCard().getCardId()), new Vector2(49f*144f,49f*144f), 270f, starterEntry));
+
+        //set currentCard
+
+        //at.aau.se2.gamma.core.models.impl.GameMapEntry newCardFromDeck = new GameMapEntry(CardDeck.get((int)(Math.random()*20)), myPlayerID, Orientation.NORTH);
+        //currentGameCard = new GameCard(CardTextures.getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0),270f,newCardFromDeck);
+
+        //hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+
+        hud.changeHudState(Hud.Hud_State.VIEWING);
+
 
         InputMultiplexer im = new InputMultiplexer(hud.getStage(), gestureDetecor);
         Gdx.input.setInputProcessor(im);
+
+        hud.getAcceptButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.setNextCardTexture(null);
+                hud.changeHudState(Hud.Hud_State.PLACING_SOLDIER);
+            }
+        });
+
+        hud.getDeclineButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.changeHudState(Hud.Hud_State.PLAYING);
+                currentGameCard = lastCard;
+                lastCard = null;
+                myMap.setGamecard(playedCard_x, playedCard_y, null);
+            }
+        });
+
+        hud.getAcceptButton_Soldiers().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.changeHudState(Hud.Hud_State.VIEWING);
+                GameMove gm = new GameMove(myPlayerID, lastCard.getGameMapEntry(), new GameMapEntryPosition(playedCard_x, playedCard_y));
+                ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
+                    @Override
+                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                        String responseString = (String) payload;
+                        Log.i("LauncherGame", responseString);
+                        if(!responseString.equals("turn succesfull")){
+                            hud.showErrorText(responseString);
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
+                    }
+                });
+
+
+                lastCard = null;
+                //HERE send GameMove with gameMapEntry etc. later
+
+            }
+        });
+
+        hud.getDeclineButton_Soldiers().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.changeHudState(Hud.Hud_State.PLACING_SOLDIER);
+
+                //clears the SoldierPlacements Array to remove placed Soldiers
+                // Works ONLY for new Card with single Soldier
+                lastCard.getGameMapEntry().getSoldierPlacements().clear();
+            }
+        });
+
+        hud.getNoSoldierButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                hud.changeHudState(Hud.Hud_State.VIEWING);
+                //HERE send GameMove with gameMapEntry etc. later
+                //When no Soldier has been placed
+                GameMove gm = new GameMove(myPlayerID, lastCard.getGameMapEntry(), new GameMapEntryPosition(playedCard_x, playedCard_y));
+                ServerThread.instance.sendCommand(new GameTurnCommand(gm), new ServerThread.RequestResponseHandler() {
+                    @Override
+                    public void onResponse(ServerResponse response, Object payload, BaseCommand request) {
+                        String responseString = (String) payload;
+                            Log.i("LauncherGame", responseString);
+                            if(!responseString.equals("turn succesfull")){
+                                hud.showErrorText(responseString);
+                            }
+
+                    }
+
+                    @Override
+                    public void onFailure(ServerResponse response, Object payload, BaseCommand request) {
+
+                    }
+                });
+
+            }
+        });
+
+
+        //temp zeugs für testing
+        //camPos = new Vector2(0f*144f,0f*144f);
+        //myMap.setGamecard(3,1, new GameCard(getTextureFromCardID(starterCard.getCardId()), new Vector2(3f*144f,1f*144f), starterCard));
+
+        ServerThread.instance.setBroadcastHandler(myBroadCastHandler);
 
 
     }
@@ -158,30 +285,10 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
         //shaprenderer.rect(5.0f, 5.0f, 200.0f, 200.0f);
         //shaprenderer.end();
 
-        hud.drawStage(String.format("fps:%.2f | x pos: %f |",(float)(1/delta), playercam.position.x));
+        //String.format("fps:%.2f | x pos: %f |",(float)(1/delta), playercam.position.x)
+        hud.drawStage();
 
-        hud.getAcceptButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                hud.setNextCardTexture(textures[(int)(Math.random()*20)]);
-                hud.setRotation(0);
-                hud.changeHudState(Hud.Hud_State.PLAYING);
-                currentCard = hud.getCurrentTexture();
-                playedCard = null;
-                hud.changeHudState(Hud.Hud_State.VIEWING);
-            }
-        });
 
-        hud.getDeclineButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                hud.changeHudState(Hud.Hud_State.PLAYING);
-                currentCard = playedCard;
-                myMap.setGamecard(playedCard_y, playedCard_x, null);
-            }
-        });
 
 
     }
@@ -196,12 +303,11 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     public void dispose() {
         myfont.dispose();
         batch.dispose();
-        for(Texture t : textures){
-            t.dispose();
-        }
+        CardTextures.disposeTexutres();
         shaprenderer.dispose();
         hud.dispose();
         myMap.dispose();
+        UISkin.disposeSkin();
         super.dispose();
 
     }
@@ -220,15 +326,63 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
-        if(currentCard != null && hud.getCurrentState().equals(Hud.Hud_State.PLAYING)){
+        if(currentGameCard != null && hud.getCurrentState().equals(Hud.Hud_State.PLAYING)){
             Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            if(myMap.setGamecard(mapPos, new GameCard(hud.getCurrentTexture(), new Vector2(0f,0f), hud.getRotation()))){
+            currentGameCard.setRotation(hud.getRotation());
+            if(myMap.setGamecard(mapPos, currentGameCard)){
                 playedCard_x = (int) mapPos.x / 144;
                 playedCard_y = (int) mapPos.y / 144;
-                playedCard = currentCard;
-                currentCard = null;
+                lastCard = currentGameCard;
+                currentGameCard = null;
                 hud.changeHudState(Hud.Hud_State.ACCEPT_ACTION);
             }
+        }else if(lastCard != null &&hud.getCurrentState().equals(Hud.Hud_State.PLACING_SOLDIER)){
+            Vector2 mapPos = InputCalculations.touch_to_GameWorld_coordinates(x, y, playercam, gameviewport, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+            Vector2 oldPos = lastCard.getPosition();
+
+            //change lenght when churches are implemented/ no idea how my teammates planned them right now
+            float[] allDistances = new float[4];
+
+            Vector2 point_left = new Vector2(oldPos.x, oldPos.y+64);
+            Vector2 point_right = new Vector2(oldPos.x+128, oldPos.y+64);
+            Vector2 point_top = new Vector2(oldPos.x+64, oldPos.y+128);
+            Vector2 point_bottom = new Vector2(oldPos.x+64, oldPos.y);
+            //Vector2 point_middle = new Vector2(oldPos.x+64, oldPos.y+64);
+
+            allDistances[0] = distance(mapPos, point_left);
+            allDistances[1] = distance(mapPos, point_right);
+            allDistances[2] = distance(mapPos, point_top);
+            allDistances[3] = distance(mapPos, point_bottom);
+            //allDistances[4] = distance(mapPos, point_middle);
+
+            Soldier mySoldier = new Soldier(myPlayerID);
+
+            //getting smallest distance
+            int smallestIndex = 0;
+            for(int i = 0; i<allDistances.length; i++){
+                if(allDistances[i]<allDistances[smallestIndex]){
+                    smallestIndex = i;
+                }
+            }
+
+            switch (smallestIndex){
+                case 0:
+                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[3]);
+                    break;
+                case 1:
+                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[1]);
+                    break;
+                case 2:
+                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[0]);
+                    break;
+                case 3:
+                    lastCard.getGameMapEntry().setSoldier(mySoldier, lastCard.getGameMapEntry().getAlignedCardSides()[2]);
+                    break;
+                //case 4:
+            }
+            hud.changeHudState(Hud.Hud_State.ACCEPT_PLACING_SOLDIER);
+
         }
         //Log.e("info"," mapPos.x: "+ mapPos.x + " mapPos.y:" + mapPos.y + "  : yCam Bottom "+(camPos.y-(playercam.viewportHeight*playercam.zoom/2)) + " | gameviewport.getWorldHeight()"+gameviewport.getWorldHeight()+ " camPos.y: "+camPos.y + " letzer teril " +((gameviewport.getWorldHeight()/Gdx.graphics.getHeight())*y*playercam.zoom));
         //Log.e("info", "button: "+button + " | count: "+count);
@@ -275,4 +429,72 @@ public class Gamescreen extends ScreenAdapter implements GestureDetector.Gesture
     public void pinchStop() {
 
     }
+
+    //calulate distance between 2 points with the Pythagorean theorem
+    private float distance(Vector2 object1, Vector2 object2){
+        return (float)Math.sqrt(Math.pow((object2.x - object1.x), 2) + Math.pow((object2.y - object1.y), 2));
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        Log.i("Launcher", "HELLO Broadcast test");
+        ServerThread.instance.setBroadcastHandler(myBroadCastHandler);
+    }
+
+    ServerThread.BroadcastHandler myBroadCastHandler = new ServerThread.BroadcastHandler() {
+        @Override
+        public void onBroadcastResponse(ServerResponse response, Object payload) {
+            if(response.getPayload() instanceof StringBroadcastCommand){
+                Log.i("LauncherGame", "alles");
+            }else
+            if(response.getPayload() instanceof GameTurnBroadCastCommand){
+                //nach einen zug
+                //currentGameObject = (GameObject) payload;
+                GameMove gm = (GameMove) payload;
+                try {
+                    currentGameObject.getGameMap().executeGameMove(gm);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                myMap.setGameMap(currentGameObject.getGameMap());
+                Log.i("LauncherGame", "Updated Map");
+            }else if(response.getPayload() instanceof PlayerXsTurnBroadcastCommand){
+                //wenn jemand anderes am zug ist
+                Log.i("LauncherGame", "jemand anderes ist nun an der Reihe");
+
+                if(hud.getCurrentState().equals(Hud.Hud_State.ACCEPT_ACTION)){
+                    hud.changeHudState(Hud.Hud_State.VIEWING);
+                    currentGameCard = lastCard;
+                    lastCard = null;
+                    myMap.setGamecard(playedCard_x, playedCard_y, null);
+                }
+
+                hud.changeHudState(Hud.Hud_State.VIEWING);
+                currentGameCard = null;
+                hud.setNextCardTexture(null);
+                hud.showInfoText("It's "+ (String)payload +"'s turn!");
+
+            } else if(response.getPayload() instanceof YourTurnBroadcastCommand){
+                Log.i("LauncherGame", "Spieler ist nun an der Reihe");
+                at.aau.se2.gamma.core.models.impl.GameCard gm = (at.aau.se2.gamma.core.models.impl.GameCard) payload;
+                GameMapEntry gme = new GameMapEntry(gm, myPlayerID);
+                currentGameCard = new GameCard(GameCardTextures.getInstance().getTextureFromCardID(gm.getCardId()), new Vector2(0,0), gme);
+                hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+                hud.changeHudState(Hud.Hud_State.PLAYING);
+                Log.i("LauncherGame", "Spieler ist nun an der Reihe mit dieser karte:  "+ currentGameCard.getGameMapEntry().getCard().getCardId());
+                hud.showInfoText("It's Your turn!");
+
+                //at.aau.se2.gamma.core.models.impl.GameMapEntry newCardFromDeck = new GameMapEntry(CardDeck.get((int)(Math.random()*20)), myPlayerID, Orientation.NORTH);
+                //currentGameCard = new GameCard(CardTextures.getTextureFromCardID(newCardFromDeck.getCard().getCardId()), new Vector2(0,0),270f,newCardFromDeck);
+
+                //hud.setNextCardTexture(currentGameCard.getGameCardTexture());
+            }
+        }
+
+        @Override
+        public void onBroadcastFailure(ServerResponse response, Object payload) {
+
+        }
+    };
 }

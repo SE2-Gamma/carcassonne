@@ -27,6 +27,7 @@ public class JoinSessionActivity extends BaseActivity {
         setContentView(view);
 
         String userName = getIntent().getStringExtra("UserName");
+        String userID = getIntent().getStringExtra("UserID");
         binding.pbJoinSessionActivity.setVisibility(View.INVISIBLE);
         binding.tvError.setVisibility(View.INVISIBLE);
 
@@ -53,6 +54,7 @@ public class JoinSessionActivity extends BaseActivity {
                                 Bundle extras = new Bundle();
                                 extras.putString("GameKey", userInput);
                                 extras.putString("UserName", userName);
+                                extras.putString("UserID", userID);
                                 intent.putExtras(extras);
                                 startActivity(intent);
                         }

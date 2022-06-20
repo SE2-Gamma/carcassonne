@@ -5,6 +5,8 @@ public class LobbyPlayerDisplay {
 
     String playerName;
 
+    Boolean playerState = false;
+
     public LobbyPlayerDisplay(String playerName) {
         this.playerName = playerName;
     }
@@ -13,5 +15,7 @@ public class LobbyPlayerDisplay {
         return playerName;
     }
 
+    public Boolean getPlayerState() {return playerState;}
 
+    public void setPlayerState(Boolean playerState) {this.playerState = playerState;}
 }

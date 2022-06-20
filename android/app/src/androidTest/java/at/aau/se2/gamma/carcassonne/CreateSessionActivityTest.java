@@ -43,7 +43,7 @@ public class CreateSessionActivityTest {
 
     @Before
     public void setUp() throws Exception {
-/*
+        /*
         //use this delay to start the server after starting the test if you get classNotFoundException
         Logger.debug("Server starten!");
         try {
@@ -51,7 +51,7 @@ public class CreateSessionActivityTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-*/
+        */
 
         String etText = getTextOfEditText(onView(withId(R.id.pt_UserName)));
 
@@ -155,7 +155,7 @@ public class CreateSessionActivityTest {
         onView(withId(R.id.tv_lobby_name)).check(matches(isDisplayed()));
         onView(withId(R.id.tv_player_count)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_LeaveLobby)).check(matches(isDisplayed()));
-        //onView(withId(R.id.btn_ready)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_ready)).check(matches(isDisplayed()));
         onView(withId(R.id.rv_lobby)).check(matches(isDisplayed()));
     }
 
